@@ -59,7 +59,7 @@ ROOT_URLCONF = 'senpick.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # 템플릿 경로 설정정
+        'DIRS': [BASE_DIR / 'templates'], # 템플릿 경로 설정
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
