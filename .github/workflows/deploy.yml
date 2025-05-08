@@ -3,8 +3,8 @@ name: Deploy to Server
 on:
   push:
     branches: 
-      [main, dev] # main 브랜치에 push될 때만 실행
-
+      - main
+      - dev
 jobs:
   deploy:
     runs-on: ubuntu-latest
