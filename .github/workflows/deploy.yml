@@ -3,8 +3,8 @@ name: Deploy to Server
 on:
   push:
     branches: 
-      - main v# main 브랜치에 push될 때만 실행
-      - de
+      - main # main 브랜치에 push될 때만 실행
+      - dev
 
 jobs:
   deploy:
