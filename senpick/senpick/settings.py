@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'app', # 앱 이름 추가가
 ]
 
 MIDDLEWARE = [
@@ -58,7 +59,7 @@ ROOT_URLCONF = 'senpick.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'], # 템플릿 경로 설정정
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,16 +77,16 @@ WSGI_APPLICATION = 'senpick.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DDATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mydatabase',  # 데이터베이스 이름
-        'USER': 'root',        # MySQL 사용자
-        'PASSWORD': 'root', # MySQL 비밀번호
-        'HOST': '127.0.0.1',   # 로컬 호스트
-        'PORT': '3306',        # MySQL 포트
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'mydatabase',  # 데이터베이스 이름
+#         'USER': 'root',        # MySQL 사용자
+#         'PASSWORD': 'root', # MySQL 비밀번호
+#         'HOST': '127.0.0.1',   # 로컬 호스트
+#         'PORT': '3306',        # MySQL 포트
+#     }
+# }
 
 
 # Password validation
