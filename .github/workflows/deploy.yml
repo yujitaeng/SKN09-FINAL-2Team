@@ -23,4 +23,4 @@ jobs:
           cd SKN09-FINAL-2Team/senpick/  # 서버에서 실제 프로젝트 위치로 이동
           git pull
           git checkout dev
-          docker-compose up --build
+          docker-compose up --build -d
