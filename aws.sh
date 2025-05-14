@@ -2,7 +2,8 @@
 sudo yum update -y
 
 # 2. Docker 설치
-sudo yum install -y docker libxcrypt-compat
+sudo yum install -y docker libxcrypt-compat git # docker-compose
+# sudo apt-get install -y docker libxcrypt-compat git # docker-compose
 
 # 3. Docker 서비스 시작
 sudo systemctl start docker

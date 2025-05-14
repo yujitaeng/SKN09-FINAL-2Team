@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app', # 앱 이름 추가가
+    'app', # 앱 이름 추가
 ]
 
 MIDDLEWARE = [
@@ -88,7 +88,6 @@ WSGI_APPLICATION = 'senpick.wsgi.application'
 #     }
 # }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -125,8 +124,8 @@ USE_TZ = True
 
 # STATIC_URL = 'static/'
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS = [BASE_DIR / "static"] # 로컬 세팅
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') # 배포용 세팅
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
