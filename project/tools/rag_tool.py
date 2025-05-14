@@ -7,15 +7,17 @@ from qdrant_client import QdrantClient
 from pathlib import Path                             # 상대 경로를 사용하기 위함
 
 
-# 상대 경로 기반 Qdrant 경로 지정
-base_path = Path(__file__).resolve().parent.parent
-qdrant = QdrantClient(path=str(base_path / "qdrant"))
+# Docker에서 실행 중인 Qdrant에 연결
+# 프로젝트 루트 디렉토리에서 Qdrant 실행 (구글 드라이브의 qdrant_storage 다운받아 루트에 압축 해제 (SKN09-FINAL-2TEAM/qdrant_storage))
+# docker run -d -p 6333:6333 -p 6334:6334 -v $(pwd)/qdrant_storage:/qdrant/storage --name qdrant qdrant/qdrant (맥 환경)
+# docker run -d -p 6333:6333 -p 6334:6334 -v $(PWD)/qdrant_storage:/qdrant/storage --name qdrant qdrant/qdrant (윈도우 파워쉘 환경 가능, cmd에서는 사용 불가)
+qdrant = QdrantClient(url="http://localhost:6333", prefer_grpc=False)
 
 embedding = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-large-instruct")
 
 vectorstore = Qdrant(
     client=qdrant,
-    collection_name="my_documents",
+    collection_name="senpick",
     embeddings=embedding,
     content_payload_key="page_content",  # ✅ 반드시 저장한 필드명과 일치해야 함
 )
