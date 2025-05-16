@@ -1,32 +1,26 @@
-import os
 import json
 import ast
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain.chains import ConversationChain, LLMChain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.prompts import (
     ChatPromptTemplate, HumanMessagePromptTemplate,
     MessagesPlaceholder, PromptTemplate
 )
 from langchain.memory import ConversationBufferMemory
-from tools.rag_tool import vectorstore
-
-
-# ▶️ API 키 설정
-api_key = os.getenv("OPENAI_API_KEY")
-if not api_key:
-    raise ValueError("환경 변수 OPENAI_API_KEY가 설정되어 있지 않습니다.")
+# from tools.rag_tool import vectorstore
+from agent import create_agent
 
 # ▶️ GPT 모델 초기화
 chat_model = ChatOpenAI(
     temperature=0.7,
     model_name="gpt-4o-mini",
-    openai_api_key=api_key
 )
 
 # ▶️ 대화 메모리
 memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
+# retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
 
 # ▶️ 초기 사용자 정보
 recipient_info = {
@@ -80,12 +74,13 @@ chat_prompt = ChatPromptTemplate.from_messages([
     MessagesPlaceholder(variable_name="chat_history"),
     HumanMessagePromptTemplate.from_template("{input}")
 ])
-conversation = RunnableWithMessageHistory(
-    chat_model,
-    chat_prompt,
-    memory=memory
-)
+# conversation = RunnableWithMessageHistory(
+#     chat_model,
+#     chat_prompt,
+#     memory=memory
+# )
 
+conversation = ConversationChain(llm=chat_model, prompt=chat_prompt, memory=memory, verbose=False)
 # ▶️ 상황 정보 추론 프롬프트
 situation_info_prompt = PromptTemplate(
     input_variables=["chat_history", "current_info"],
@@ -113,7 +108,9 @@ situation_info_prompt = PromptTemplate(
 코드블럭 없이 JSON 형식으로 정확히 출력하세요.
 """
 )
-situation_info_chain = chat_model.bind(tags=["situation_info"]).with_fallbacks([chat_model])
+
+# situation_info_chain = chat_model.bind(tags=["situation_info"]).with_fallbacks([chat_model])
+situation_info_chain = situation_info_prompt | chat_model
 
 # ▶️ 검색 키워드 프롬프트
 search_query_prompt = PromptTemplate(
@@ -130,7 +127,9 @@ search_query_prompt = PromptTemplate(
 → 상황에 가장 적합한 상품을 검색할 수 있도록 핵심 키워드를 한 문장으로 출력해 주세요.
 """
 )
-search_query_chain = LLMChain(llm=chat_model, prompt=search_query_prompt)
+
+# search_query_chain = LLMChain(llm=chat_model, prompt=search_query_prompt)
+search_query_chain = search_query_prompt | chat_model
 
 # ▶️ 추천 이유 프롬프트
 recommend_prompt = PromptTemplate(
@@ -145,7 +144,9 @@ recommend_prompt = PromptTemplate(
 위 정보를 바탕으로 따뜻하고 자연스럽게 추천 이유를 설명해주세요.
 """
 )
-rag_response_chain = LLMChain(llm=chat_model, prompt=recommend_prompt)
+
+# rag_response_chain = LLMChain(llm=chat_model, prompt=recommend_prompt)
+# recommend_response_chain = recommend_prompt | chat_model
 
 # ▶️ 상품 포맷
 def format_products(docs):
@@ -162,11 +163,11 @@ def update_situation():
     chat_history_str = "\n".join([
         f"{msg.type}: {msg.content}" for msg in memory.chat_memory.messages
     ])
-    result = situation_info_chain.run(
-        chat_history=chat_history_str,
-        current_info=json.dumps(situation_info, ensure_ascii=False)
-    )
-    updated = robust_json_extract(result)
+    result = situation_info_chain.invoke({
+        "chat_history":chat_history_str,
+        "current_info":json.dumps(situation_info, ensure_ascii=False)
+    })
+    updated = robust_json_extract(result.content)
     if updated:
         for k in situation_info:
             val = updated.get(k, "").strip()
@@ -182,18 +183,17 @@ def generate_response(user_input):
     turn_count += 1
 
     print(f"[👤 사용자 입력]\n{user_input}\n")
-    llm_response = conversation.run(input=user_input)
+    llm_response = conversation.invoke({"input":user_input})
     chat_history_str = update_situation()
     print(f"[📌 현재 상황 정보]\n{situation_info}")
 
     if turn_count >= 2:
-
         if is_situation_complete(situation_info):
             print("\n🎯 상황 정보가 완성되었습니다. 상품 추천을 시작합니다.")
-            query = search_query_chain.run(
-                chat_history=chat_history_str,
-                situation_info=json.dumps(situation_info, ensure_ascii=False)
-            ).strip()
+            query = search_query_chain.invoke({
+                "chat_history":chat_history_str,
+                "situation_info":json.dumps(situation_info, ensure_ascii=False)
+            }).content.strip()
             print(query)
             
             # 에이전트를 통한 검색 및 응답 생성
@@ -201,17 +201,21 @@ def generate_response(user_input):
                 "input": f"{user_input}\n\n검색 키워드: {query}",
                 "chat_history": memory.chat_memory.messages
             })
-            
-            # 에이전트 응답 처리
             if agent_response and 'output' in agent_response:
-                docs = retriever.invoke(f"query: {query}")
-                context = format_products(docs)
-                reason = rag_response_chain.run(query=user_input, context=context)
-                return f"\n📦 추천 상품 목록:\n{context}\n\n🎁 추천 이유:\n{reason}\n\n💬 에이전트 응답:\n{agent_response['output']}"
+                return f"\n💬 에이전트 응답:\n{agent_response['output']}"
             else:
                 return "적절한 추천을 찾지 못했습니다."
+            # 에이전트 응답 처리
+            # if agent_response and 'output' in agent_response:
+            #     docs = retriever.invoke(f"query: {query}")
+            #     context = format_products(docs)
+            #     # reason = recommend_response_chain.invoke({"query":user_input, "context":context})
+            #     return f"\n📦 추천 상품 목록:\n{context}\n\n💬 에이전트 응답:\n{agent_response['output']}"
+            #     return f"\n📦 추천 상품 목록:\n{context}\n\n🎁 추천 이유:\n{reason}\n\n💬 에이전트 응답:\n{agent_response['output']}"
+            # else:
+            #     return "적절한 추천을 찾지 못했습니다."
 
-    return f"\n[💬 챗봇 응답]\n{llm_response}"
+    return f"\n[💬 챗봇 응답]\n{llm_response['response']}"
 
 # ▶️ 실행 루프
 def chat():
@@ -225,9 +229,6 @@ def chat():
             break
         response = generate_response(user_input)
         print(response)
-
-# 에이전트 불러오기
-from agent import create_agent, llm
 
 # 에이전트 초기화
 agent_executor = create_agent()
