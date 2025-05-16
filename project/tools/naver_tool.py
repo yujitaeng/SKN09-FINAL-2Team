@@ -33,7 +33,7 @@ def naver_shop_search(user_input: str) -> str:
     출력:
     """
     try:
-        search_query = llm.predict(prompt).strip()
+        search_query = llm.invoke(prompt).content.strip()
     except Exception as e:
         return f"쿼리 정제 중 오류가 발생했습니다: {e}"
 
@@ -54,13 +54,13 @@ def naver_shop_search(user_input: str) -> str:
     response = requests.get(url, headers=headers, params=params)
     
     if response.status_code != 200:
-        return "상품 검색 중 오류가 발생했습니다."
+        return "\n상품 검색 중 오류가 발생했습니다.\n"
 
     items = response.json().get("items", [])
     if not items:
-        return "검색 결과가 없습니다."
+        return "\n검색 결과가 없습니다.\n"
 
-    result = f"🔍 검색어: {search_query}\n\n"
+    result = f"\n🔍 검색어: {search_query}\n\n"
     for item in items:
         title = re.sub(r'<.*?>', '', item['title'])
         price = item['lprice']

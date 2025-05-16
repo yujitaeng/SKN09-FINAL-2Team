@@ -17,7 +17,7 @@ class MySQLQueryInput(BaseModel):
 
 class MySQLQueryTool(BaseTool):
     name: str = "mysql_query_tool"
-    description: str = "RDS의 MySQL에 SELECT 쿼리를 날릴 수 있는 도구입니다. 반드시 SELECT 문만 사용하세요."
+    description: str = "\nRDS의 MySQL에 SELECT 쿼리를 날릴 수 있는 도구입니다. 반드시 SELECT 문만 사용하세요.\n"
     args_schema: Type[BaseModel] = MySQLQueryInput
 
     host: str

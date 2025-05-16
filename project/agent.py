@@ -7,12 +7,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # LangChain
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.prompts import (
     ChatPromptTemplate, SystemMessagePromptTemplate,
     MessagesPlaceholder, HumanMessagePromptTemplate
 )
-from langchain_core.agents import create_react_agent
+# from langchain_core.agents import create_react_agent
+from langchain.agents import create_react_agent
 from langchain.agents import AgentExecutor
 from langchain.tools import Tool
 
@@ -107,29 +108,30 @@ Tool Names: {tool_names}
 """)
 ])
 
+rag_tool = Tool(
+    name="rag_tool",
+    func=retrieve_from_qdrant,
+    description="Qdrant 벡터 데이터베이스에서 유사한 문서 검색"
+)
+
+rds_tool = Tool(
+    name="rds_tool",
+    func=MySQLQueryTool(
+        host=os.getenv('RDS_HOST', 'localhost'),
+        user=os.getenv('RDS_USER', 'root'),
+        password=os.getenv('RDS_PASSWORD', ''),
+        database=os.getenv('RDS_DATABASE', 'product_db')
+    )._run,
+    description="RDS의 MySQL에서 제품 정보 검색"
+)
+naver_tool = Tool(
+    name="naver_tool",
+    func=naver_shop_search,
+    description="네이버 쇼핑에서 제품 검색"
+)
+
 # 도구 리스트
-tools = [
-    Tool(
-        name="rag_tool",
-        func=retrieve_from_qdrant,
-        description="Qdrant 벡터 데이터베이스에서 유사한 문서 검색"
-    ),
-    Tool(
-        name="rds_tool",
-        func=MySQLQueryTool(
-            host=os.getenv('RDS_HOST', 'localhost'),
-            user=os.getenv('RDS_USER', 'root'),
-            password=os.getenv('RDS_PASSWORD', ''),
-            database=os.getenv('RDS_DATABASE', 'product_db')
-        )._run,
-        description="RDS의 MySQL에서 제품 정보 검색"
-    ),
-    Tool(
-        name="naver_tool",
-        func=naver_shop_search,
-        description="네이버 쇼핑에서 제품 검색"
-    )
-]
+tools = [rag_tool, rds_tool, naver_tool]
 
 # 에이전트 생성 함수
 def create_agent():
@@ -143,7 +145,8 @@ def create_agent():
         tools=tools,
         verbose=True,
         handle_parsing_errors=True,
-        max_iterations=3
+        max_iterations=3,
+        max_execution_time=9999,
     )
 
 # llm 외부에서도 사용 가능하도록 export
