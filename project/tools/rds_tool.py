@@ -17,7 +17,20 @@ class MySQLQueryInput(BaseModel):
 
 class MySQLQueryTool(BaseTool):
     name: str = "mysql_query_tool"
-    description: str = "\nRDS의 MySQL에 SELECT 쿼리를 날릴 수 있는 도구입니다. 반드시 SELECT 문만 사용하세요.\n"
+    description: str = """RDS의 MySQL 데이터베이스에서 상품 및 관련 정보를 검색합니다. 반드시 SELECT 쿼리만 사용해야 하며, 상품 이름, 가격대, 브랜드, 카테고리 등 구체적인 정보를 검색할 때 유용합니다. 복잡한 조건 필터링에 강점이 있습니다. 
+        The `PRODUCT` table has the following structure:
+        - BRAND: Brand name
+        - NAME: Product name
+        - CATEGORY: Main category
+        - SUB_CATEGORY: Subcategory
+        - OPTIONS: Options such as size, color, etc.
+        - PRICE: Price (integer, in KRW)
+
+        Supported main categories (`CATEGORY` values):
+        '유아동', '선물권/교환권', '테마/기념일 선물', '레저/스포츠/자동차',
+        '건강', '식품/음료', '디지털/가전', '뷰티',
+        '리빙/인테리어', '반려동물', '패션', '생활', '프리미엄 선물'
+    """
     args_schema: Type[BaseModel] = MySQLQueryInput
 
     host: str
