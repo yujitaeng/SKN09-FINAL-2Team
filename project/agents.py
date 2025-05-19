@@ -1,5 +1,3 @@
-# agent.py
-
 import os
 from dotenv import load_dotenv
 
@@ -26,7 +24,6 @@ from tools.naver_tool import naver_shop_search
 llm = ChatOpenAI(
     model="gpt-4o-mini",
     temperature=0,
-    openai_api_key=os.getenv("OPENAI_API_KEY")
 )
 
 # 시스템 프롬프트 정의
@@ -61,8 +58,11 @@ TOOL STRATEGY:
   2. 이미지 링크 (Image URL)  
   3. 상품 링크 (Product Link)  
   4. 가격 (Price, e.g., "₩72,000")  
-  5. 간단한 설명 (Brief Description)
+  5. 추천이유 (Recommendation Reason - why it's a good choice based on the user's request) 
 
+🧠 VALIDATION RULE:
+- 각 도구의 Observation 결과를 사용자 입력과 비교하여, 상품이 요청한 조건(가격, 카테고리, 브랜드, 감성 등)에 부합하는지 평가하세요.
+- 부적합한 경우, 다른 도구를 사용하여 더 적절한 상품을 찾으세요.
 ---
 
 🧪 FEW-SHOT EXAMPLES:
@@ -86,28 +86,28 @@ Final Answer: 다음은 감동적인 결혼기념일에 어울리는 10만원 �
 - **가격**: ₩38,000  
 - **이미지**: https://example.com/candle.jpg  
 - **링크**: https://giftshop.com/candle  
-- **설명**: 은은한 향으로 분위기를 더해주는 감성적인 캔들입니다.
+- **추천이유**: 은은한 향으로 분위기를 더해주는 감성적인 캔들입니다.
 
 2.  
 - **상품명**: 커스텀 메시지 목걸이  
 - **가격**: ₩55,000  
 - **이미지**: https://example.com/necklace.jpg  
 - **링크**: https://giftshop.com/necklace  
-- **설명**: 감동적인 문구를 새길 수 있어 의미 있는 선물입니다.
+- **추천이유**: 감동적인 문구를 새길 수 있어 의미 있는 선물입니다.
 
 3.  
 - **상품명**: 드라이 플라워 박스  
 - **가격**: ₩47,000  
 - **이미지**: https://example.com/flowerbox.jpg  
 - **링크**: https://giftshop.com/flowerbox  
-- **설명**: 시들지 않는 꽃으로 추억을 오래 간직할 수 있습니다.
+- **추천이유**: 시들지 않는 꽃으로 추억을 오래 간직할 수 있습니다.
 
 4.  
 - **상품명**: 에세이 + 허브차 세트  
 - **가격**: ₩32,000  
 - **이미지**: https://example.com/booktea.jpg  
 - **링크**: https://giftshop.com/booktea  
-- **설명**: 감성적인 책과 향긋한 차의 조합으로 힐링을 선물하세요.
+- **추천이유**: 감성적인 책과 향긋한 차의 조합으로 힐링을 선물하세요.
 
 ---
 
@@ -129,9 +129,7 @@ Final Answer:
 - 가격: ...  
 - 이미지: ...  
 - 링크: ...  
-- 설명: ...
-
-(총 4개 제공)
+- 추천 이유: ...
 
 ---
 '''

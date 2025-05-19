@@ -66,13 +66,6 @@ situation_info_prompt = PromptTemplate(
 chat_chain = chat_prompt | chat_model
 situation_info_chain = situation_info_prompt | chat_model
 
-recipient_info = {
-    'GENDER': "여성",
-    'AGE_GROUP': "30대",
-    'RELATION': "연인",
-    'ANNIVERSARY': "100일",
-}
-
 situation_info = {
     "closeness": "",
     "emotion": "",
@@ -80,13 +73,16 @@ situation_info = {
     "price_range": ""
 }
 
-user_message = f"""
-다음 정보를 바탕으로 기념일 선물을 추천해줘.
-성별: {recipient_info['GENDER']}
-연령대: {recipient_info['AGE_GROUP']}
-관계: {recipient_info['RELATION']}
-기념일 종류: {recipient_info['ANNIVERSARY']}
-"""
+if "recipient_info" in st.session_state:
+    recipient_info = st.session_state.recipient_info
+
+    user_message = f"""
+    다음 정보를 바탕으로 기념일 선물을 추천해줘.
+    성별: {recipient_info['GENDER']}
+    연령대: {recipient_info['AGE_GROUP']}
+    관계: {recipient_info['RELATION']}
+    기념일 종류: {recipient_info['ANNIVERSARY']}
+    """
 
 def check_situation_info(info: dict) -> bool:
     return all(info.get(k) not in ["", "없다", "모름", "없음"] for k in ["emotion", "preferred_style", "price_range"])
@@ -179,12 +175,43 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+if "recipient_info" not in st.session_state:
+    with st.form("recipient_info_form"):
+        st.markdown("### 🎯 받는 사람의 정보를 입력해 주세요")
+        cols1, cols2 = st.columns(2)
+        with cols1:
+            gender = st.selectbox("성별", [
+                "선택안함", "여성", "남성"
+            ])
+            age_group = st.selectbox("연령대", [
+                "10대 이하", "10대", "20대", "30대", "40대", "50대", "60대 이상", "나이모름" 
+            ])
+        with cols2:
+            relation = st.selectbox("관계", [
+                "부모", "형제", "친구", "연인/배우자", "직장 동료/상사", "지인", "스승/멘토", "아이/청소년", "기타"])
+            anniversary = st.selectbox("기념일 종류", ["생일", "결혼/웨딩", "승진/입사/퇴사", 
+"입학/졸업", "감사/고마움", "격려/응원", 
+"명절/연말/새해", "그냥"])
+        submitted = st.form_submit_button("입력 완료")
+
+    if submitted:
+        st.session_state.recipient_info = {
+            'GENDER': gender,
+            'AGE_GROUP': age_group,
+            'RELATION': relation,
+            'ANNIVERSARY': anniversary,
+        }
+        st.rerun()
+    else:
+        st.stop()  # 입력 완료 전에는 아래 채팅로직 실행하지 않도록 중단
+
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
     res = chat_chain.invoke({
         "input": user_message,
         "chat_history": st.session_state.chat_history
     })
+    
     st.session_state.chat_history.append((res.content, False, datetime.now().strftime("%Y-%m-%d %H:%M")))
     
 if "liked_items" not in st.session_state:
@@ -193,7 +220,9 @@ if "show_favorites" not in st.session_state:
     st.session_state.show_favorites = False
 
 st.title("🎁 센픽 챗봇")
+
 st.markdown("어떤 선물이 필요하신가요?")
+st.json(recipient_info, expanded=True)
 
 if st.button("❤️ 찜한 선물 보기" if not st.session_state.show_favorites else "❌ 찜 목록 닫기"):
     st.session_state.show_favorites = not st.session_state.show_favorites
