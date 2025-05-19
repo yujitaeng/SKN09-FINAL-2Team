@@ -1,5 +1,5 @@
 from datetime import datetime
-import json
+import json, re
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.prompts import (
@@ -100,6 +100,32 @@ def build_llm_chat_history():
             llm_chat_history.append(AIMessage(content=content))
     return llm_chat_history
 
+def extract_products_from_response(data):
+    # 상품 블록 분리
+    data = re.split(r'\n\d+\.\s*', data.strip())
+    msg = data[0]
+    blocks = data[1:]
+
+    # JSON 배열 구성
+    items = []
+    for idx, block in enumerate(blocks):
+        name = re.search(r'-\s*\*?\*?상품명\*?\*?:\s*(.*)', block).group(1)
+        price = re.search(r'-\s*\*?\*?가격\*?\*?:\s*₩([\d,]+)', block).group(1)
+        image = re.search(r'-\s*\*?\*?이미지\*?\*?:\s*!\[.*?\]\((.*?)\)', block).group(1)
+        link = re.search(r'-\s*\*?\*?링크\*?\*?:\s*\[.*?\]\((.*?)\)', block).group(1)
+        reason = re.search(r'-\s*\*?\*?\s*추천\s*이유\s*\*?\*?\s*:\s*(.*)', block).group(1)
+
+        items.append({
+            # "id": len(st.session_state.all_products) + idx,
+            "title": name,
+            "price": price,
+            "img": image,
+            "link": link,
+            "reason": reason
+        })
+
+    return msg, items
+
 def get_bot_response(user_input):
     now_time = datetime.now().strftime("%Y-%m-%d %H:%M")
     chat_history_for_llm = build_llm_chat_history()
@@ -119,18 +145,22 @@ def get_bot_response(user_input):
     if check_situation_info(situation_info):
         agent = create_agent()
         agent_response = agent.invoke({
-            "input": f"기념일 선물 추천을 위한 쿼리: {situation_info}",
+            "input": f"선물 추천을 위한 쿼리: {situation_info}",
             "chat_history": chat_history_for_llm
         })
         output_text = agent_response['output']
+        print("에이전트 응답:", output_text)
+        _, products = extract_products_from_response(output_text)
+        st.session_state.all_products.extend(products)
     else:
         output_text = res.content
-
+        
     st.session_state.chat_history.append((output_text, False, now_time))
+    
     return {"type": "text", "text": output_text}
 
 # Streamlit 구성
-st.set_page_config(page_title="센픽 GPT 채팅", layout="centered")
+st.set_page_config(page_title="Senpick", layout="centered")
 
 # CSS 스타일
 st.markdown("""
@@ -215,60 +245,143 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history.append((res.content, False, datetime.now().strftime("%Y-%m-%d %H:%M")))
     
 if "liked_items" not in st.session_state:
-    st.session_state.liked_items = set()
-if "show_favorites" not in st.session_state:
-    st.session_state.show_favorites = False
-
+    st.session_state.liked_items = {}
+# if "show_favorites" not in st.session_state:
+#     st.session_state.show_favorites = False
+# if "recommend" not in st.session_state:
+#     st.session_state.recommend = False
+if "all_products" not in st.session_state:
+    st.session_state.all_products = []
 st.title("🎁 센픽 챗봇")
 
 st.markdown("어떤 선물이 필요하신가요?")
 st.json(recipient_info, expanded=True)
+st.sidebar.title("🎁 추천 선물 목록")
 
-if st.button("❤️ 찜한 선물 보기" if not st.session_state.show_favorites else "❌ 찜 목록 닫기"):
-    st.session_state.show_favorites = not st.session_state.show_favorites
-    st.rerun()
+with st.sidebar:
+    all_products = st.session_state.all_products
 
-if st.session_state.show_favorites:
-    st.markdown("### ❤️ 찜한 선물 목록")
-    liked_ids = st.session_state.liked_items
-    all_products = {
-        "p1": {"title": "[센픽] 코롱 9ML 선물세트", "img": "https://via.placeholder.com/100", "link": "https://example.com/1"},
-        "p2": {"title": "[센픽] 뷰티 키트", "img": "https://via.placeholder.com/100", "link": "https://example.com/2"},
-        "p3": {"title": "[센픽] 건강식품 세트", "img": "https://via.placeholder.com/100", "link": "https://example.com/3"},
-        "p4": {"title": "[센픽] 디퓨저 선물", "img": "https://via.placeholder.com/100", "link": "https://example.com/4"},
-    }
-    liked_products = [all_products[pid] for pid in liked_ids if pid in all_products]
-    if liked_products:
-        cols = st.columns(len(liked_products))
-        for i, product in enumerate(liked_products):
-            with cols[i]:
-                st.image(product["img"], use_container_width=True)
-                st.caption(product["title"])
-                st.markdown(f"[자세히 보기]({product['link']})", unsafe_allow_html=True)
+    if not all_products:
+        st.warning("아직 추천된 선물이 없습니다.")
     else:
-        st.info("아직 찜한 선물이 없어요!")
+        for i, product in enumerate(all_products):
+            if i%2 == 0:
+                cols = st.columns(2)
+            with cols[i%2]:
+                # 이미지 처리 (fallback 있을 때 기본 이미지로)
+                if not product["img"] or "fallback" in product["img"]:
+                    st.image("./gift.jpg", use_container_width=True)
+                else:
+                    st.image(product["img"], use_container_width=True)
+
+                st.caption(f"📌 {product['title']}")
+                st.markdown(f"💰 **가격**: ₩{product['price']}", unsafe_allow_html=True)
+                st.markdown(f"[🔗 자세히 보기]({product['link']})", unsafe_allow_html=True)
+                st.caption("📝 " + product["reason"])
+                like_key = f"like_{product['id']}"
+                liked = product["id"] in st.session_state.liked_items
+
+                # if st.button("💖 좋아요" if not liked else "✅ 찜 완료", key=like_key):
+                #     if liked:
+                #         st.session_state.liked_items.remove(product["id"])
+                #     else:
+                #         st.session_state.liked_items.add(product["id"])
+                #     print(st.session_state.liked_items)
+                #     st.rerun()
+                st.markdown("---")  # 구분선
+# if st.button("추천 선물 보기"):         
+#     st.session_state.recommend = not st.session_state.recommend
+# if st.session_state.recommend:
+#     all_products = st.session_state.all_products
+#     if not all_products:
+#         st.warning("아직 추천된 선물이 없습니다.")
+#     else:
+#         for i, product in enumerate(all_products):
+#             if i%4 == 0:
+#                 cols = st.columns(4)
+#             with cols[i%4]:
+#                 if not product["img"] or "fallback" in product["img"]:
+#                     st.image("./gift.jpg", use_container_width=True)
+#                 else:
+#                     st.image(product["img"], use_container_width=True)
+#                 st.caption(product["title"])
+#                 st.markdown(f"가격: ₩{product['price']}", unsafe_allow_html=True)
+#                 st.markdown(f"[자세히 보기]({product['link']})", unsafe_allow_html=True)
+#                 st.caption("추천 이유:" + product["reason"])
+                # like_key = f"like_{product['id']}"
+                # liked = product["id"] in st.session_state.liked_items
+                # if st.button("💖 좋아요" if not liked else "✅ 찜 완료", key=like_key):
+                #     if liked:
+                #         st.session_state.liked_items.remove(product["id"])
+                #     else:
+                #         st.session_state.liked_items.add(product["id"])
+    
+# if st.button("❤️ 찜한 선물 보기" if not st.session_state.show_favorites else "❌ 찜 목록 닫기"):
+#     st.session_state.show_favorites = not st.session_state.show_favorites
+#     st.rerun()
+
+# if st.session_state.show_favorites:
+#     st.markdown("### ❤️ 찜한 선물 목록")
+#     liked_ids = st.session_state.liked_items
+#     all_products = st.session_state.all_products
+    
+#     liked_products = [all_products[pid] for pid in liked_ids if pid in all_products]
+#     if liked_products:
+#         cols = st.columns(len(liked_products))
+#         for i, product in enumerate(liked_products):
+#             with cols[i]:
+#                 st.image(product["img"], use_container_width=True)
+#                 st.caption(product["title"])
+#                 st.markdown(f"[자세히 보기]({product['link']})", unsafe_allow_html=True)
+#     else:
+#         st.info("아직 찜한 선물이 없어요!")
 
 for msg, is_user, timestamp in st.session_state.chat_history:
     role = "user" if is_user else "bot"
     with st.container():
         if isinstance(msg, str):
+            msg, products = extract_products_from_response(msg)
+
             st.markdown(f"<div class='chat-container'><div class='chat-message {role}'>{msg}</div><div class='timestamp {role}'>{timestamp}</div></div>", unsafe_allow_html=True)
-        elif isinstance(msg, dict) and msg.get("type") == "product":
-            st.markdown(f"<div class='chat-container'><div class='chat-message bot'>🎁 추천 선물입니다!</div></div>", unsafe_allow_html=True)
-            cols = st.columns(len(msg["products"]))
-            for i, product in enumerate(msg["products"]):
-                with cols[i]:
-                    st.image(product["img"], use_container_width=True)
+            cols = st.columns(4)
+            for idx, product in enumerate(products):
+                with cols[idx%4]: 
+                    if not product["img"] or "fallback" in product["img"]:
+                        st.image("./gift.jpg", use_container_width=True)
+                    else:
+                        st.image(product["img"], use_container_width=True)
                     st.caption(product["title"])
+                    st.markdown(f"가격: ₩{product['price']}", unsafe_allow_html=True)
                     st.markdown(f"[자세히 보기]({product['link']})", unsafe_allow_html=True)
-                    like_key = f"like_{product['id']}"
-                    liked = product["id"] in st.session_state.liked_items
-                    if st.button("💖 좋아요" if not liked else "✅ 찜 완료", key=like_key):
-                        if liked:
-                            st.session_state.liked_items.remove(product["id"])
-                        else:
-                            st.session_state.liked_items.add(product["id"])
-            st.markdown(f"<div class='timestamp bot'>{time}</div>", unsafe_allow_html=True)
+                    st.caption("추천 이유:" + product["reason"])
+                    # like_key = f"like_{product['id']}"
+                    # liked = product["id"] in st.session_state.liked_items
+                    # if st.button("💖 좋아요" if not liked else "✅ 찜 완료", key=like_key):
+                    #     if liked:
+                    #         st.session_state.liked_items.remove(product["id"])
+                    #     else:
+                    #         st.session_state.liked_items.add(product["id"])
+                    #     st.rerun()
+                    #     st.sidebar.rerun()
+                        
+                        
+        # elif isinstance(msg, dict) and msg.get("type") == "product":
+        #     st.markdown(f"<div class='chat-container'><div class='chat-message bot'>🎁 추천 선물입니다!</div></div>", unsafe_allow_html=True)
+        #     extract_products_from_response(msg)
+        #     cols = st.columns(len(msg["products"]))
+        #     for i, product in enumerate(msg["products"]):
+        #         with cols[i]:
+        #             st.image(product["img"], use_container_width=True)
+        #             st.caption(product["title"])
+        #             st.markdown(f"[자세히 보기]({product['link']})", unsafe_allow_html=True)
+        #             like_key = f"like_{product['id']}"
+        #             liked = product["id"] in st.session_state.liked_items
+        #             if st.button("💖 좋아요" if not liked else "✅ 찜 완료", key=like_key):
+        #                 if liked:
+        #                     st.session_state.liked_items.remove(product["id"])
+        #                 else:
+        #                     st.session_state.liked_items.add(product["id"])
+        #     st.markdown(f"<div class='timestamp bot'>{time}</div>", unsafe_allow_html=True)
 
 user_input = st.chat_input("원하시는 선물 조건을 알려주세요!")
 
