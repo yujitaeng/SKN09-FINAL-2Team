@@ -278,8 +278,8 @@ with st.sidebar:
                 st.markdown(f"💰 **가격**: ₩{product['price']}", unsafe_allow_html=True)
                 st.markdown(f"[🔗 자세히 보기]({product['link']})", unsafe_allow_html=True)
                 st.caption("📝 " + product["reason"])
-                like_key = f"like_{product['id']}"
-                liked = product["id"] in st.session_state.liked_items
+                # like_key = f"like_{product['id']}"
+                # liked = product["id"] in st.session_state.liked_items
 
                 # if st.button("💖 좋아요" if not liked else "✅ 찜 완료", key=like_key):
                 #     if liked:
