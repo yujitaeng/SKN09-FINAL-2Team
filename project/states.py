@@ -1,14 +1,27 @@
 import json, ast, re
 
+# SITUATION_EXTRACTION_PROMPT = """
+# 아래 항목을 반드시 오직 JSON 한 줄로만 출력하세요.
+# - 코드블럭, 설명, 줄바꿈, 따옴표 감싸기, 추가 텍스트 모두 금지!
+# 예시:
+# {"closeness": "...", "emotion": "...", "preferred_style": "...", "price_range": "..."}
+# 정보가 불명확하면 "모름" 또는 "없다"로 채우세요.
+# JSON 외에는 아무것도 출력하지 마세요!
+# """
 SITUATION_EXTRACTION_PROMPT = """
-아래 항목을 반드시 오직 JSON 한 줄로만 출력하세요.
-- 코드블럭, 설명, 줄바꿈, 따옴표 감싸기, 추가 텍스트 모두 금지!
+다음은 사용자와 챗봇 간의 대화입니다:
+
+{chat_history}
+
+위 대화를 바탕으로 아래 항목들을 추론하세요.
+- 오직 JSON 한 줄로만 출력
+- 설명/줄바꿈/코드블럭 금지!
 예시:
-{"closeness": "...", "emotion": "...", "preferred_style": "...", "price_range": "..."}
+{{"closeness": "...", "emotion": "...", "preferred_style": "...", "price_range": "..."}}
+
 정보가 불명확하면 "모름" 또는 "없다"로 채우세요.
 JSON 외에는 아무것도 출력하지 마세요!
 """
-
 
 
 def robust_json_extract(text: str):
@@ -47,8 +60,20 @@ def extract_situation(state, llm=None, prompt_template=None) -> dict:
         prompt = prompt_template.format(chat_history=chat_str)
         llm_response = llm.invoke(prompt)
         print("\n--- [LLM 응답 원문] ---")
+
         print(llm_response)
-        extracted = robust_json_extract(llm_response)
+
+        # LLM 응답에서 실제 텍스트만 추출
+        if hasattr(llm_response, "content"):
+            llm_text = llm_response.content
+        else:
+            llm_text = str(llm_response)  # fallback
+
+        print(f"[LLM 최종 텍스트 응답]: {llm_text}")
+            
+        # JSON 파싱 시도
+        extracted = robust_json_extract(llm_text)
+        # extracted = robust_json_extract(llm_response)
         print("--- [파싱 결과] ---")
         print(extracted)
         print("-----------------------")
