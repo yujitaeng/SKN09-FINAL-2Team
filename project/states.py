@@ -90,17 +90,32 @@ def ask_for_missing_info(state) -> dict:
             "output": "추가 질문 생성 중 에러가 발생했습니다."
         }
 
-def call_agent(state, agent_executor=None) -> dict:
+def call_agent(state, agent_executor=None):
     try:
         user_intent = (
-            f"감정: {state['situation_info']['emotion']}, "
-            f"스타일: {state['situation_info']['preferred_style']}, "
-            f"예산: {state['situation_info']['price_range']}원"
+            f"감정: {state['situation_info'].get('emotion')}, "
+            f"스타일: {state['situation_info'].get('preferred_style')}, "
+            f"예산: {state['situation_info'].get('price_range')}원"
         )
-        agent_response = agent_executor.invoke({
-            "input": user_intent,
-            "chat_history": state.get("chat_history", [])
-        }) if agent_executor else "에이전트가 없습니다."
+
+        # 실시간 스트리밍 출력 받기
+        stream_result = ""
+        if agent_executor:
+            for chunk in agent_executor.stream({
+                "input": user_intent,
+                "chat_history": state.get("chat_history", [])
+            }):
+                # chunk가 dict 타입일 수 있음
+                if isinstance(chunk, dict):
+                    value = chunk.get("output") or chunk.get("text") or str(chunk)
+                else:
+                    value = str(chunk)
+                print(value, end="", flush=True)   # 콘솔에서 실시간으로 출력
+                stream_result += value
+            agent_response = stream_result
+        else:
+            agent_response = "에이전트가 없습니다."
+        
         return {
             "chat_history": state.get("chat_history", []),
             "situation_info": state.get("situation_info", {}),
@@ -113,7 +128,6 @@ def call_agent(state, agent_executor=None) -> dict:
             "situation_info": state.get("situation_info", {}),
             "output": "추천 처리 중 에러가 발생했습니다."
         }
-
 
 
 def final_response(state) -> dict:
