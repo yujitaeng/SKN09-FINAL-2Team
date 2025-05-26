@@ -91,9 +91,11 @@ def ask_for_missing_info(state) -> dict:
         }
 
 def call_agent(state, agent_executor=None):
+    history_str = "\n".join(state.get("chat_history", [])[-10:])
     try:
         user_intent = (
-            f"감정: {state['situation_info'].get('emotion')}, "
+            f"[대화 맥락]\n{history_str}\n"
+            f"[추출된 조건]\n감정: {state['situation_info'].get('emotion')}, "
             f"스타일: {state['situation_info'].get('preferred_style')}, "
             f"예산: {state['situation_info'].get('price_range')}원"
         )
@@ -144,5 +146,20 @@ def final_response(state) -> dict:
             "situation_info": {},
             "output": "최종 응답 생성 중 에러가 발생했습니다."
         }
+    
+def handle_feedback(state):
+    user_feedback = input("🤖: 추천 결과에 대해 어떻게 생각하시나요? (예: 더 저렴한, 다른 스타일, 다시 추천, 종료 등)\nuser: ").strip()
+    state["chat_history"].append(f"user: {user_feedback}")
+    state["user_feedback"] = user_feedback
+    return state
+
+def feedback_condition(state):
+    fb = state.get("user_feedback", "").lower()
+    if any(x in fb for x in ["다시", "변경", "더", "싫어", "아니", "없어", "재추천"]):
+        return "modify"
+    elif any(x in fb for x in ["마음에 들어", "좋아", "고마워", "종료", "끝"]):
+        return "end"
+    else:
+        return "ask_again"
 
    # <-- 반드시 output key만 반환

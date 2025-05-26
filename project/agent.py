@@ -68,6 +68,7 @@ Final Answer:
 - 감정(emotion), 스타일(preferred_style), 예산(price_range), 친밀도(closeness) 조건을 반드시 반영
 - 예산은 범위 해석(예: 7만원대 = 70000~79999)
 - 예산 초과, 중복 상품 금지
+- 조건에 맞는 상품이 1~2종류로만 반복 추천된다면,인접 카테고리나 유사 분위기의 다른 상품을 추가로 추천해도 됩니다.
 
 [Final Answer]
 - Final Answer는 반드시 Observation(도구 결과)에 기반한 4개 상품만 포함
