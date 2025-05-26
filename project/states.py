@@ -21,17 +21,28 @@ CONVERSATION_PROMPT = """
 """
 
 SITUATION_EXTRACTION_PROMPT = """
-다음은 사용자와 챗봇 간의 대화입니다:
+엄격한 정보 추출 가이드라인:
+1. 대화 내용에 명시적으로 언급된 정보만 추출
+2. 추론이나 임의 해석 금지
+3. 언급되지 않은 필드는 빈 문자열로 유지
 
+대화 내용:
 {chat_history}
 
-위 대화를 바탕으로 아래 항목들을 추론하세요.
-- 오직 JSON 한 줄로만 출력
-- 설명/줄바꿈/코드블럭 금지!
-예시:
-{{"closeness": "...", "emotion": "...", "preferred_style": "...", "price_range": "..."}}
-정보가 불명확하면 "모름" 또는 "없다"로 채우세요.
-JSON 외에는 아무것도 출력하지 마세요!
+현재 상황 정보:
+{current_info}
+
+사용자의 응답에서 다음과 같은 정보를 추론하여 추출하세요.
+[추론해야하는 정보]
+"closeness" : 친밀도 (가까움, 어색함, 친해지고 싶음, 애매함 등으로 요약)
+"emotion" : 선물의 동기나 배경이 된 감정 상태
+"preferred_style" : 희망하는 선물의 스타일 (~한 느낌, ~한 스타일로 요약)
+"price_range" : 예산 범위 (예: 상관 없음, 7만원대, 3만원 이하 등등)
+
+[규칙]
+- 정보 추론은 응답이 명확할 때에만 진행해야 합니다.
+- 사용자 답변에 포함된 내용만 current_info에서 수정하여 출력합니다.
+- 코드블럭 없이 JSON 형식으로 정확히 출력하세요.
 """
 
 def robust_json_extract(text: str):
@@ -57,7 +68,8 @@ def extract_situation(state, llm=None, prompt_template=None) -> dict:
     try:
         print("\n==== extract_situation 진입 ====")
         chat_str = "\n".join(state["chat_history"][-10:])
-        prompt = prompt_template.format(chat_history=chat_str)
+        current_info = "\n".join(state["situation_info"])
+        prompt = prompt_template.format(chat_history=chat_str, current_info=current_info)
         llm_response = llm.invoke(prompt)
         print("\n--- [LLM 응답 원문] ---")
         print(llm_response)
