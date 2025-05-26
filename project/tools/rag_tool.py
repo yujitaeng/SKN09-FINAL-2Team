@@ -18,7 +18,7 @@ def retrieve_from_qdrant(query: str) -> str:
             return ""
         formatted_results = []
         for i, doc in enumerate(results, 1):
-            formatted_result = f"{doc[0].page_content}"
+            formatted_result = f"\n[결과 {i}]\n내용: {doc[0].metadata}\n유사도: {doc[1]}\n"
             formatted_results.append(formatted_result)
         return "\n\n".join(formatted_results)
     except Exception as e:

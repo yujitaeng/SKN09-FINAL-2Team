@@ -1,5 +1,25 @@
 import json, ast, re
 
+CONVERSATION_PROMPT = """
+<시스템 프롬프트>
+당신은 선물 추천 챗봇, '센픽'입니다.
+당신의 역할은 다음과 같습니다. [대화(정보 질문), 선물 추천 agent 호출, 선물 비교, 입력확인] 
+
+4가지 상황 정보("emotion", "preferred_style", "price_range", "closeness")를 채우기 위한 질문을 하세요.
+4가지 상황 정보가 모두 있어야 추천이 가능합니다.
+한 번에 한 정보만 질문하고, 한 정보는 최대 1회만 질문 가능합니다. 최대한 친근하고 자연스러운 말투로 질문하세요.
+
+- 실제 추천은 당신이 하지 않고, 외부 시스템(agent)이 수행합니다. 직접 상품 이름이나 추천 문구를 출력하지 마세요.
+다음은 사용자와 챗봇 간의 대화입니다:
+{chat_history}
+
+현재 채워진 수령인 정보는 다음과 같습니다.
+{recipient_info}
+
+채워야하는 상황 정보는 다음과 같습니다.
+{situation_info}
+"""
+
 SITUATION_EXTRACTION_PROMPT = """
 다음은 사용자와 챗봇 간의 대화입니다:
 
@@ -80,6 +100,7 @@ def ask_for_missing_info(state) -> dict:
         return {
             "chat_history": state.get("chat_history", []),
             "situation_info": state.get("situation_info", {}),
+            "recipient_info": state.get("recipient_info", {}),
             "output": output
         }
     except Exception as e:
@@ -87,6 +108,29 @@ def ask_for_missing_info(state) -> dict:
         return {
             "chat_history": state.get("chat_history", []),
             "situation_info": state.get("situation_info", {}),
+            "recipient_info": state.get("recipient_info", {}),
+            "output": "추가 질문 생성 중 에러가 발생했습니다."
+        }
+        
+def conversation(state, llm, prompt_template) -> dict:
+    try:
+        missing = [k for k, v in state["situation_info"].items() if not v.strip() or v in ["모름", "없다"]]
+        chat_str = "\n".join(state["chat_history"][-10:])
+        recipient_info = "\n".join(state.get("recipient_info", {}))
+        prompt = prompt_template.format(chat_history=chat_str, recipient_info=recipient_info, situation_info=missing)
+        llm_response = llm.invoke(prompt)
+        return {
+            "chat_history": state.get("chat_history", []),
+            "situation_info": state.get("situation_info", {}),
+            "recipient_info": state.get("recipient_info", {}),
+            "output": llm_response.content
+        }
+    except Exception as e:
+        print(f"[conversation 에러]: {e}")
+        return {
+            "chat_history": state.get("chat_history", []),
+            "situation_info": state.get("situation_info", {}),
+            "recipient_info": state.get("recipient_info", {}),
             "output": "추가 질문 생성 중 에러가 발생했습니다."
         }
 
@@ -121,6 +165,7 @@ def call_agent(state, agent_executor=None):
         return {
             "chat_history": state.get("chat_history", []),
             "situation_info": state.get("situation_info", {}),
+            "recipient_info": state.get("recipient_info", {}),
             "output": agent_response
         }
     except Exception as e:
@@ -128,6 +173,7 @@ def call_agent(state, agent_executor=None):
         return {
             "chat_history": state.get("chat_history", []),
             "situation_info": state.get("situation_info", {}),
+            "recipient_info": state.get("recipient_info", {}),
             "output": "추천 처리 중 에러가 발생했습니다."
         }
 
@@ -137,6 +183,7 @@ def final_response(state) -> dict:
         return {
             "chat_history": state.get("chat_history", []),
             "situation_info": state.get("situation_info", {}),
+            "recipient_info": state.get("recipient_info", {}),
             "output": state.get("output")
         }
     except Exception as e:
@@ -144,6 +191,7 @@ def final_response(state) -> dict:
         return {
             "chat_history": [],
             "situation_info": {},
+            "recipient_info": state.get("recipient_info", {}),
             "output": "최종 응답 생성 중 에러가 발생했습니다."
         }
     

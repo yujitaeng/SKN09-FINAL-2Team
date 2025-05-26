@@ -10,12 +10,14 @@ def print_chat_history(state):
         print(f"[print_chat_history 에러]: {e}")
 
 def run_chatbot():
-    print("🎁 선물 추천 챗봇 Senpick에 오신 걸 환영합니다!")
-    print("챗봇과 대화를 시작하세요. (종료하려면 '종료' 입력)")
-    print("-" * 40)
-
     state = {
         "chat_history": [],
+        "recipient_info" : {
+            'GENDER': "여성",
+            'AGE_GROUP': "20대",
+            'RELATION': "연인",
+            'ANNIVERSARY': "연애기념일",
+        },
         "situation_info": {
             "closeness": "",
             "emotion": "",
@@ -25,15 +27,19 @@ def run_chatbot():
         "output": None,
         "loop_count": 0
     }
-    first_turn = True
+    # first_turn = True
+    
+    state = gift_fsm.invoke(state)
+    print(f"\n🤖: {state['output']}\n")
 
     while True:
         try:
-            if first_turn:
-                greeting = "안녕하세요! 어떤 상황이나 감정에 맞는 선물을 찾고 계신가요? (예: 감사, 기념일, 취업 등)"
-                print(f"\n🤖: {greeting}\n")
-                state["chat_history"].append(f"bot: {greeting}")
-                first_turn = False
+            # if first_turn:
+            #     greeting = "안녕하세요! 어떤 상황이나 감정에 맞는 선물을 찾고 계신가요? (예: 감사, 기념일, 취업 등)"
+            #     print(f"\n🤖: {greeting}\n")
+                
+            #     state["chat_history"].append(f"bot: {greeting}")
+            #     first_turn = False
 
             user_input = input("user: ").strip()
             if user_input.lower() in ["종료", "exit", "quit"]:

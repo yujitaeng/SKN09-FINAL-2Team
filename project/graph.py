@@ -8,9 +8,11 @@ from states import (
     feedback_condition,
     extract_situation,
     ask_for_missing_info,
+    conversation,
     call_agent,
     final_response,
     is_situation_complete,
+    CONVERSATION_PROMPT,
     SITUATION_EXTRACTION_PROMPT
 )
 from agent import llm, create_agent
@@ -26,7 +28,10 @@ graph.add_node(
     "ExtractSituation",
     partial(extract_situation, llm=llm, prompt_template=SITUATION_EXTRACTION_PROMPT)
 )
-graph.add_node("AskQuestion", ask_for_missing_info)
+graph.add_node(
+    "AskQuestion", 
+    partial(conversation, llm=llm, prompt_template=CONVERSATION_PROMPT)
+)
 graph.add_node(
     "AgentCall",
     partial(call_agent, agent_executor=agent_executor)
@@ -60,7 +65,7 @@ graph.add_conditional_edges(
 )
 
 # 일반 상태 전이
-graph.add_edge("AskQuestion", "ExtractSituation")
+# graph.add_edge("AskQuestion", "ExtractSituation")
 graph.add_edge("AgentCall", "Respond")
 graph.add_edge("Respond", "HandleFeedback")
 
