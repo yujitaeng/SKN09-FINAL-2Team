@@ -66,8 +66,8 @@ graph.add_conditional_edges(
 
 # 일반 상태 전이
 # graph.add_edge("AskQuestion", "ExtractSituation")
-graph.add_edge("AgentCall", "Respond")
-graph.add_edge("Respond", "HandleFeedback")
+# graph.add_edge("AgentCall", "Respond")
+# graph.add_edge("Respond", "HandleFeedback")
 
 # FSM 빌드/컴파일
 gift_fsm = graph.compile()

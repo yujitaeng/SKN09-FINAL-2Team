@@ -27,10 +27,14 @@ def run_chatbot():
         "output": None,
         "loop_count": 0
     }
-    # first_turn = True
     
-    state = gift_fsm.invoke(state)
-    print(f"\n🤖: {state['output']}\n")
+    res = gift_fsm.invoke(state)
+    resText = ""
+    for chunk in res:
+        print(chunk, end="", flush=True)
+        resText += chunk
+    state["output"] = resText
+    # print(f"\n🤖: {state['output']}\n")
 
     while True:
         try:
@@ -49,27 +53,36 @@ def run_chatbot():
             state["chat_history"].append(f"user: {user_input}")
 
             try:
-                state = gift_fsm.invoke(state)
+                res = gift_fsm.invoke(state)
+                if isinstance(res, dict):
+                    state = res
+                    if state.get("output"):
+                        print(f"\n🤖: {state['output']}\n")
+                        state["chat_history"].append(f"bot: {state['output']}")
+                else:
+                    resText = ""
+                    for chunk in res:
+                        print(chunk, end="", flush=True)
+                        resText += chunk
+                    state["output"] = resText
+                    state["chat_history"].append(f"bot: {state['output']}")
             except Exception as e:
                 print("\n⚠️ [gift_fsm.invoke] 에러:", str(e))
                 traceback.print_exc()
                 continue
 
-            if state.get("output"):
-                print(f"\n🤖: {state['output']}\n")
-                state["chat_history"].append(f"bot: {state['output']}")
 
             state["loop_count"] = state.get("loop_count", 0) + 1
             if state["loop_count"] > 5:
                 print("\n🤖: 정보 추출에 반복적으로 실패했습니다. 더 구체적으로 입력해 주세요!")
                 break
 
-            if state.get("output") and (
-                "추천드리는 상품 목록" in state["output"] or
-                "아래 상품들을 추천드립니다" in state["output"]
-            ):
-                print("챗봇이 추천을 완료했습니다. 대화를 종료합니다.")
-                break
+            # if state.get("output") and (
+            #     "추천드리는 상품 목록" in state["output"] or
+            #     "아래 상품들을 추천드립니다" in state["output"]
+            # ):
+            #     print("챗봇이 추천을 완료했습니다. 대화를 종료합니다.")
+            #     break
         except Exception as e:
             print(f"[run_chatbot 전체 에러]: {e}")
 

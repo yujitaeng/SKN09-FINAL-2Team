@@ -20,7 +20,7 @@ from tools.naver_tool import naver_tool
 llm = ChatOpenAI(
     model="gpt-4o-mini",
     temperature=0,
-    openai_api_key=os.getenv("OPENAI_API_KEY")
+    streaming=True,
 )
 
 # 시스템 프롬프트
@@ -132,7 +132,7 @@ def create_agent():
         prompt=prompt
     )
     # AgentExecutor로 래핑
-    return AgentExecutor(agent=agent, tools=tools, verbose=True)
+    return AgentExecutor(agent=agent, tools=tools, verbose=True, streaming=True)
 
 # 외부에서 사용할 수 있도록 export
 __all__ = ["create_agent", "llm"]

@@ -1,5 +1,6 @@
 import json, ast, re
-
+from langchain_openai import ChatOpenAI
+from langchain.agents import AgentExecutor
 CONVERSATION_PROMPT = """
 <시스템 프롬프트>
 당신은 선물 추천 챗봇, '센픽'입니다.
@@ -124,29 +125,22 @@ def ask_for_missing_info(state) -> dict:
             "output": "추가 질문 생성 중 에러가 발생했습니다."
         }
         
-def conversation(state, llm, prompt_template) -> dict:
-    try:
-        missing = [k for k, v in state["situation_info"].items() if not v.strip() or v in ["모름", "없다"]]
-        chat_str = "\n".join(state["chat_history"][-10:])
-        recipient_info = "\n".join(state.get("recipient_info", {}))
-        prompt = prompt_template.format(chat_history=chat_str, recipient_info=recipient_info, situation_info=missing)
-        llm_response = llm.invoke(prompt)
-        return {
-            "chat_history": state.get("chat_history", []),
-            "situation_info": state.get("situation_info", {}),
-            "recipient_info": state.get("recipient_info", {}),
-            "output": llm_response.content
-        }
-    except Exception as e:
-        print(f"[conversation 에러]: {e}")
-        return {
-            "chat_history": state.get("chat_history", []),
-            "situation_info": state.get("situation_info", {}),
-            "recipient_info": state.get("recipient_info", {}),
-            "output": "추가 질문 생성 중 에러가 발생했습니다."
-        }
+def conversation(state, llm:ChatOpenAI, prompt_template):
+    # try:
+    situation_info = state.get("situation_info", {})
+    chat_str = "\n".join(state["chat_history"][-10:])
+    recipient_info = state.get("recipient_info", {})
+    prompt = prompt_template.format(
+        chat_history=chat_str, 
+        recipient_info=recipient_info, 
+        situation_info=situation_info
+    )
 
-def call_agent(state, agent_executor=None):
+    for chunk in llm.stream(prompt):
+        token = getattr(chunk, "content", "")
+        yield token  # 실시간으로 토큰 출력
+
+def call_agent(state, agent_executor:AgentExecutor=None) -> dict:
     history_str = "\n".join(state.get("chat_history", [])[-10:])
     try:
         user_intent = (
@@ -169,7 +163,7 @@ def call_agent(state, agent_executor=None):
                 else:
                     value = str(chunk)
                 print(value, end="", flush=True)   # 콘솔에서 실시간으로 출력
-                stream_result += value
+                stream_result = value
             agent_response = stream_result
         else:
             agent_response = "에이전트가 없습니다."
@@ -209,6 +203,7 @@ def final_response(state) -> dict:
     
 def handle_feedback(state):
     user_feedback = input("🤖: 추천 결과에 대해 어떻게 생각하시나요? (예: 더 저렴한, 다른 스타일, 다시 추천, 종료 등)\nuser: ").strip()
+    # TODO: 조건 초기화 로직 추가
     state["chat_history"].append(f"user: {user_feedback}")
     state["user_feedback"] = user_feedback
     return state
@@ -216,10 +211,10 @@ def handle_feedback(state):
 def feedback_condition(state):
     fb = state.get("user_feedback", "").lower()
     if any(x in fb for x in ["다시", "변경", "더", "싫어", "아니", "없어", "재추천"]):
-        return "modify"
+        return "modify" # 재추천 => 다시 추천 진행
     elif any(x in fb for x in ["마음에 들어", "좋아", "고마워", "종료", "끝"]):
-        return "end"
+        return "end" # 채팅 종료
     else:
-        return "ask_again"
+        return "ask_again" # 처음부터 다시 물어보기 => 조건 초기화
 
    # <-- 반드시 output key만 반환
