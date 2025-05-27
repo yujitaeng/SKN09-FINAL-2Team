@@ -1,26 +1,28 @@
+/* === SIDEBAR 기본 구조 === */
 .sidebar {
   width: 310px;
   height: 100vh;
-  border-radius: 20px;
-  background: #ffffff;
-  border: 2px solid #ededed;
-  box-shadow: 0 2px 10px 0 rgba(0,0,0,0.07);
+  /* position: fixed; */
+  /* top: 0; */
+  /* left: 0; */
+  z-index: 100;
   display: flex;
   flex-direction: column;
-  position: fixed;
-  left: 0; top: 0;
-  z-index: 100;
   overflow: hidden;
   padding: 0;
   box-sizing: border-box;
-  transition: width 0.22s cubic-bezier(.38,1.16,.64,1);
+  background: #ffffff;
+  border: 2px solid #ededed;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  transition: width 0.22s cubic-bezier(.38, 1.16, .64, 1);
 }
 
 .sidebar.mini {
   width: 76px !important;
 }
 
-/* --- 상단 브랜드+토글 --- */
+/* === 상단 HEADER === */
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -28,115 +30,111 @@
   height: 60px;
   width: 100%;
   padding: 0 14px;
+  margin-bottom: 16px;
   box-sizing: border-box;
-  margin: 0 0 16px 0;
-  flex-shrink: 0;
   background: #ffffff;
+  flex-shrink: 0;
   transition: width 0.22s;
 }
+
 .sidebar.mini .sidebar-header {
-  width: 100% !important;
-  margin: 0 0 12px 0 !important;
+  margin-bottom: 12px !important;
   padding: 0 8px !important;
+  display: flex;
+  justify-content: center;;
 }
 
-.logo-img, .brand-logo {
+/* === 로고/버튼 === */
+.logo-img,
+.brand-logo,
+.menu-btn,
+.brand-link {
   width: 44px;
   height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  object-fit: contain;
   background: none;
-  padding:4px;
-}
-.logo-img img, .brand-logo img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;
-}
-
-.menu-btn, .brand-link {
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: none;
-  cursor: pointer;
   padding: 0;
+  border: none;
+  cursor: pointer;
 }
-.menu-btn img, .brand-link img {
+
+.logo-img img,
+.brand-logo img,
+.menu-btn img,
+.brand-link img {
   width: 28px;
   height: 28px;
+  object-fit: contain;
   display: block;
   margin: 0 auto;
 }
 
-/* --- 메인 영역 --- */
+.sidebar.mini .logo-img,
+.sidebar.mini .menu-btn,
+.sidebar.mini .brand-logo {
+  width: 44px !important;
+  height: 44px !important;
+}
+
+/* === 메인 컨테이너 === */
 .sidebar-main {
   flex: 1 1 auto;
-  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+  min-height: 0;
   overflow-y: auto;
-  scrollbar-width: none;          /* Firefox */
+  scrollbar-width: none;
   -ms-overflow-style: none;
 }
 .sidebar-main::-webkit-scrollbar {
-  display: none;                  /* Chrome, Safari, Opera */
+  display: none;
 }
-/* 검색창만 연한 회색, 나머지는 완전 흰색 */
+
+/* === 검색창 === */
 .search-row {
   width: 278px;
   height: 48px;
-  background: #f8f8fa;    /* 검색창만 회색 */
+  background: #f8f8fa;
   border: 2px solid #ededed;
   border-radius: 10px;
-  display: flex; align-items: center;
-  margin: 0 0 13px 0;
+  display: flex;
+  align-items: center;
   padding: 0 14px;
+  margin-bottom: 13px;
   box-sizing: border-box;
   font-size: 17px;
   font-weight: 500;
   color: #222;
-  gap: 13px;
   flex-shrink: 0;
-  transition: width 0.22s, height 0.22s, padding 0.22s, border-radius 0.22s;
+  transition: all 0.22s;
 }
-.sidebar.mini .search-row {
-  width: 44px !important;
-  height: 44px !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  margin: 0 auto 10px auto !important;
-  padding: 0 !important;
-  border-radius: 12px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.sidebar.mini .search-row input {
-  display: none !important;
-}
-.sidebar.mini .search-row img {
-  margin: 0 auto;
-}
-
 .search-row img {
-  width: 22px; height: 22px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
 }
 .search-row input {
-  border: none; background: transparent; outline: none;
-  font-size: 1em; flex: 1; margin-left: 10px; color: #333;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1em;
+  color: #333;
+  flex: 1;
+  margin-left: 10px;
+}
+
+.sidebar.mini .search-row {
+  width: 44px !important;
+  height: 44px !important;
+  margin-bottom: 10px !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+  justify-content: center;
 }
 .sidebar.mini .search-row input {
   display: none !important;
@@ -145,31 +143,28 @@
   margin: 0 auto;
 }
 
-.sidebar.mini .mypage-row img {
-  width: 16px !important;
-  height: 16px !important;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 메뉴버튼(NEW CHAT 등) - 평소엔 흰색, hover 때만 강조 */
+/* === 메뉴 버튼 === */
 .menu-btn-row {
+  cursor: pointer;
   width: 278px;
   height: 48px;
   background: #ffffff;
   border-radius: 10px;
-  display: flex; align-items: center;
-  margin: 0 0 13px 0;
+  display: flex;
+  align-items: center;
+  gap: 13px;
   padding: 0 14px;
+  margin-bottom: 13px;
   box-sizing: border-box;
   font-size: 17px;
   font-weight: 500;
   color: #222;
-  gap: 13px;
   flex-shrink: 0;
-  transition: background 0.18s, border-color 0.18s, width 0.22s, height 0.22s, padding 0.22s, border-radius 0.22s;
+  transition: all 0.22s;
+}
+.menu-btn-row img {
+  width: 22px;
+  height: 22px;
 }
 .menu-btn-row .btn-label {
   flex: 1;
@@ -182,10 +177,10 @@
   background: #f6f6f8;
   border-color: #ffffff;
 }
+
 .sidebar.mini .menu-btn-row {
   width: 60px !important;
-  min-width: 0 !important;
-  margin: 0 auto 10px auto !important;
+  margin-bottom: 10px !important;
   padding: 0 !important;
   border-radius: 12px !important;
 }
@@ -195,12 +190,8 @@
 .sidebar.mini .menu-btn-row img {
   margin: 0 auto;
 }
-.menu-btn-row img {
-  width: 22px; height: 22px;
-  flex-shrink: 0;
-}
 
-/* 채팅 리스트 */
+/* === 채팅 리스트 === */
 .chat-list {
   width: 278px;
   margin: 0;
@@ -209,156 +200,146 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   transition: width 0.22s;
-  scrollbar-width: none;         /* Firefox */
-  -ms-overflow-style: none;      /* IE, Edge */
 }
 .chat-list::-webkit-scrollbar {
-  display: none;                 /* Chrome, Safari, Opera */
+  display: none;
 }
 .chat-list li {
+  /* width: 200px; */
+  height: 44px;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #666666;
+  border-radius: 10px;
   display: flex;
   align-items: center;
-  width: 278px;       /* 추가! */
-  height: 44px;       /* 추가! */
-  padding: 0 14px; 
-  padding: 12px 14px;
-  border-radius: 10px;
   cursor: pointer;
   transition: background 0.18s, color 0.18s;
+  position: relative;
 }
+
+.chat-list li.selected {
+  background: #f6f6f8;
+  color: hsl(0, 0%, 13%);
+}
+
+.chat-list li.selected::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFE900; /* 노란색 */
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .chat-list li:hover {
   background: #f6f6f8;
-  color: #222;
 }
+
+.chat-list li .chat-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .sidebar.mini .chat-list {
   width: 60px !important;
-  min-width: 0 !important;
   display: none !important;
 }
-.chat-list li {
-  padding: 8px 0 0 6px;
-  font-size: 15px;
-  color: #222;
-  font-weight: 400;
-}
 
-/* --- 하단 브랜드/로그아웃 --- */
-.sidebar-bottom {
-  flex-shrink: 0;
-  margin-top: auto;
-  padding: 0 0 12px 0;
-  width: 100%;
-  background: none;
+/* === 하단 마이페이지/로그아웃 === */
+
+/* .sidebar-main {
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+} */
+.sidebar-bottom {
+  /* flex: 1 1 auto; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.sidebar:not(.mini) .mypage-row {
-  margin-left: 7px;
-  padding-left: 14px;
-  padding-right: 14px;
-}
-.mypage-row {
-  display: flex; align-items: center; gap: 7px; font-size: 1em; color: #757575;
-  margin-bottom: 12px; cursor: pointer; font-weight: 500;
-  padding-left: 14px;
-  padding-right: 14px;
-}
-.mypage-row img { width: 22px; height: 22px; }
 
-/* mini 모드일 때 마이페이지(톱니바퀴)만 44x44 */
+.mypage-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 1em;
+  color: #757575;
+  margin-bottom: 12px;
+  padding: 0 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.mypage-row img {
+  width: 22px;
+  height: 22px;
+}
+
 .sidebar.mini .mypage-row img {
   width: 24px !important;
   height: 24px !important;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .sidebar.mini .mypage-row span {
   display: none !important;
 }
 
-/* --- 브랜드 바 --- */
+/* === 브랜드 바 === */
 .brand-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 60px;
   width: 100%;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 1px 8px 0 rgba(255,230,0,0.09);
   padding: 0 14px;
   margin-bottom: 10px;
-  min-height: 60px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 8px rgba(255, 230, 0, 0.09);
   box-sizing: border-box;
 }
-.brand-logo {
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  object-fit: contain;
-  background: none;
-  padding: 1px;
-}
-.brand-logo img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;
-}
+
 .brand-label {
   font-size: 18px;
   font-weight: 700;
+  color: #222;
   margin-left: 8px;
   margin-right: auto;
-  color: #222;
   display: flex;
   align-items: center;
-}
-.brand-link {
-  width: 44px;
-  height: 44px;
-  margin-left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.brand-link img {
-  width: 28px;
-  height: 28px;
-  display: block;
-  margin: 0 auto;
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-user-drag: none;
+  /* user-drag: none; */
 }
 
-/* mini 모드: 브랜드명, 로그아웃 안보이게 */
-.sidebar.mini .brand-label {
-  display: none !important;
-}
+.sidebar.mini .brand-label,
 .sidebar.mini .brand-link {
   display: none !important;
-}
-.sidebar.mini .brand-logo {
-  width: 44px !important;
-  height: 44px !important;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* mini 모드: 상단/하단 공통으로 네모 44x44 버튼 크기 유지 */
-.sidebar.mini .logo-img,
-.sidebar.mini .menu-btn {
-  width: 44px !important;
-  height: 44px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
