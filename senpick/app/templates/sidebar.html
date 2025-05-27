@@ -1,0 +1,110 @@
+{% load static %}
+<div class="sidebar" id="sidebar">
+  <!-- 상단 헤더 (브랜드/토글) -->
+  <div class="sidebar-header">
+    <img src="{% static 'images/top_logo.png' %}" alt="Senpick Logo" class="logo-img">
+    <button class="menu-btn" id="sidebar-toggle-btn" title="사이드바 접기">
+      <img src="{% static 'images/sidebar_toggle.png' %}" alt="사이드바 토글">
+    </button>
+  </div>
+  <!-- 메인: 검색, New Chat, Chat, 채팅리스트 -->
+  <div class="sidebar-main">
+    <label for="sidebarSearch">
+      <div class="search-row" id="sidebar-search-row">
+        <img src="{% static 'images/search.png' %}" alt="검색">
+        <input id="sidebarSearch" type="text" placeholder="검색어를 입력해주세요.">
+      </div>
+    </label>
+    <div class="menu-btn-row" id="newchat-btn">
+      <img src="{% static 'images/plus.svg' %}" alt="새 채팅">
+      <span class="btn-label">New Chat</span>
+    </div>
+    <div class="menu-btn-row selected" id="chat-btn">
+      <img src="{% static 'images/chat_logo.png' %}" alt="Chat">
+      <span class="btn-label">Chat</span>
+    </div>
+    <ul class="chat-list"></ul>
+    <div class="menu-btn-row" id="gift-btn">
+      <img src="{% static 'images/gift.svg' %}" alt="Gift">
+      <span class="btn-label">Happy Birthday</span>
+    </div>
+  </div>
+  <!-- 하단: 마이페이지/브랜드바 -->
+  <div class="sidebar-bottom">
+    <div class="menu-btn-row" id="my-btn">
+      <img src="{% static 'images/settings.svg' %}" alt="Settings">
+      <span class="btn-label">My Page</span>
+    </div>
+    {% comment %} <div class="mypage-row">
+      <img src="{% static 'images/Settings.png' %}" alt="설정">
+      <span>My Page</span>
+    </div> {% endcomment %}
+    <div class="brand-bar">
+      <img src="{% static 'images/bottom_logo.png' %}" alt="Brand" class="brand-logo">
+      <span class="brand-label">유지니어스</span>
+      <a href="#" class="brand-link">
+        <img src="{% static 'images/logout.svg' %}" alt="로그아웃">
+      </a>
+    </div>
+  </div>
+</div>
+<script>
+    const chatlist = [
+      "글자몇개를넣으면좋을까요",
+      "공백포함11글자가능하다",
+      "귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물"
+    ]      
+      
+  // 접힘/펼침 상태 관리
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebar-toggle-btn');
+  const searchRow = document.getElementById('sidebar-search-row');
+  const chathistory = document.querySelector('.chat-list');
+  chathistory.append(...chatlist.map(chat => {
+    const li = document.createElement('li');
+    const span = document.createElement('span');
+    span.className = 'chat-title';
+    span.textContent = chat;
+    li.appendChild(span);
+    li.addEventListener('click', () => {
+      document.querySelector('.chat-list li.selected')?.classList.remove('selected');
+      li.classList.add('selected');
+    });
+    return li;
+  }));
+
+  chathistory.firstElementChild?.classList.add('selected');
+
+  function showToggleIfOpen() {
+    if (sidebar.classList.contains('mini')) {
+      toggleBtn.style.display = 'none';
+    } else {
+      toggleBtn.style.display = '';
+    }
+  }
+  showToggleIfOpen();
+  document.querySelector('.logo-img').addEventListener('click', function() {
+    if (sidebar.classList.contains('mini')) {
+      sidebar.classList.remove('mini');
+      showToggleIfOpen();
+    }
+  });
+  searchRow.addEventListener('click', function() {
+    if (sidebar.classList.contains('mini')) {
+      sidebar.classList.remove('mini');
+      sidebarSearch.focus();
+      showToggleIfOpen();
+    }
+  });
+  toggleBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    sidebar.classList.add('mini');
+    showToggleIfOpen();
+  });
+  const observer = new MutationObserver(showToggleIfOpen);
+  observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+</script>
+
+
