@@ -16,6 +16,14 @@
   border-radius: 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
   transition: width 0.22s cubic-bezier(.38, 1.16, .64, 1);
+  justify-content: space-between;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-user-drag: none;
+  user-drag: none;
 }
 
 .sidebar.mini {
@@ -30,7 +38,8 @@
   height: 60px;
   width: 100%;
   padding: 0 14px;
-  margin-bottom: 16px;
+  margin-top: 24px;
+  /* margin-bottom: 16px; */
   box-sizing: border-box;
   background: #ffffff;
   flex-shrink: 0;
@@ -49,8 +58,8 @@
 .brand-logo,
 .menu-btn,
 .brand-link {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,6 +67,7 @@
   padding: 0;
   border: none;
   cursor: pointer;
+  border-radius: 10px;
 }
 
 .logo-img img,
@@ -71,20 +81,19 @@
   margin: 0 auto;
 }
 
-.sidebar.mini .logo-img,
+/* .sidebar.mini .logo-img,
 .sidebar.mini .menu-btn,
 .sidebar.mini .brand-logo {
   width: 44px !important;
   height: 44px !important;
-}
+} */
 
 /* === 메인 컨테이너 === */
 .sidebar-main {
-  flex: 1 1 auto;
+  /* flex: 1 1 auto; */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
   width: 100%;
   min-height: 0;
   overflow-y: auto;
@@ -97,14 +106,14 @@
 
 /* === 검색창 === */
 .search-row {
-  width: 278px;
+  width: 264px;
   height: 48px;
   background: #f8f8fa;
   border: 2px solid #ededed;
   border-radius: 10px;
   display: flex;
   align-items: center;
-  padding: 0 14px;
+  padding: 0 8px;
   margin-bottom: 13px;
   box-sizing: border-box;
   font-size: 17px;
@@ -115,7 +124,7 @@
 }
 .search-row img {
   width: 22px;
-  height: 22px;
+  /* height: 22px; */
   flex-shrink: 0;
 }
 .search-row input {
@@ -154,7 +163,7 @@
   align-items: center;
   gap: 13px;
   padding: 0 14px;
-  margin-bottom: 13px;
+  /* margin-bottom: 13px; */
   box-sizing: border-box;
   font-size: 17px;
   font-weight: 500;
@@ -180,7 +189,7 @@
 
 .sidebar.mini .menu-btn-row {
   width: 60px !important;
-  margin-bottom: 10px !important;
+  /* margin-bottom: 10px !important; */
   padding: 0 !important;
   border-radius: 12px !important;
 }
@@ -209,8 +218,8 @@
 }
 .chat-list li {
   /* width: 200px; */
-  height: 44px;
-  padding: 12px 14px;
+  height: 28px;
+  padding: 8px 48px;
   font-size: 15px;
   font-weight: 400;
   color: #666666;
@@ -229,12 +238,12 @@
 
 .chat-list li.selected::after {
   content: "";
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: #FFE900; /* 노란색 */
   position: absolute;
-  right: 24px;
+  right: 22px;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -313,12 +322,16 @@
   justify-content: space-between;
   height: 60px;
   width: 100%;
-  padding: 0 14px;
+  padding: 0 10px;
   margin-bottom: 10px;
   border-radius: 12px;
   background: #ffffff;
   box-shadow: 0 1px 8px rgba(255, 230, 0, 0.09);
   box-sizing: border-box;
+}
+
+.mini .brand-bar {
+  justify-content: center;
 }
 
 .brand-label {
@@ -342,4 +355,11 @@
 .sidebar.mini .brand-label,
 .sidebar.mini .brand-link {
   display: none !important;
+}
+
+.divider-line {
+  height: 1px;
+  background-color: #e0e0e0; /* 선 색상 */
+  margin: 10px 0;            /* 위아래 여백 */
+  width: 90%;               /* 전체 너비 */
 }
