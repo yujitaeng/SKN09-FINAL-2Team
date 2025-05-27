@@ -96,8 +96,10 @@ def extract_situation(state, llm=None, prompt_template=None) -> dict:
         print(f"[extract_situation 전체 예외]: {e}")
         return state
 
-def is_situation_complete(situation_info: dict) -> bool:
+def is_situation_complete(situation_info: dict, chat_history) -> bool:
     required = ["emotion", "preferred_style", "price_range"]
+    if len(chat_history) > 1 and any(x in chat_history[-1] for x in ["비교", "더 좋은", "더 좋아", "더 나아"]):
+        return False
     return all(isinstance(situation_info[k], str) and situation_info[k].strip() and situation_info[k] not in ["모름", "없다"] for k in required)
 
 def ask_for_missing_info(state) -> dict:
@@ -182,7 +184,6 @@ def call_agent(state, agent_executor:AgentExecutor=None) -> dict:
             "recipient_info": state.get("recipient_info", {}),
             "output": "추천 처리 중 에러가 발생했습니다."
         }
-
 
 def final_response(state) -> dict:
     try:
