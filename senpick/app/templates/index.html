@@ -4,11 +4,18 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
 </head>
 <body>
-    <h1>Welcome to Django Home!</h1>
-    <img src="{% static 'images/test.png' %}" width="200">
-    <h2>Github Actions test 5</h2>
-    <script src="{% static 'js/script.js' %}"></script>
+    <div>
+        <div style="display:flex;">
+        {% include "sidebar.html" %}
+        <div class="main-content">
+            <h1>Welcome to Django Home!</h1>
+            <img src="{% static 'images/test.png' %}" width="200">
+            <h2>Github Actions test 5</h2>
+            <script src="{% static 'js/script.js' %}"></script>
+        </div>
+    </div>
 </body>
 </html>
