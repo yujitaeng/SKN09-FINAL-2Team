@@ -109,10 +109,10 @@
   observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
 
   let loginState = true; // 로그인 상태를 나타내는 변수
-  brandLink = document.querySelector('.brand-link');
+  let brandLink = document.querySelector('.brand-link');
   brandLink.addEventListener('click', function(e) {
     e.preventDefault();
-    brandBar = document.querySelector('.brand-bar');
+    let brandBar = document.querySelector('.brand-bar');
     if (loginState) {
       // 로그아웃 처리
       loginState = false;
