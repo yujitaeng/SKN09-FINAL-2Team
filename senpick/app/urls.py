@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.urls import path
 from . import views
+from . import login_views
 
 urlpatterns = [
     path('', views.home, name='home'),  # 기본 URL
     # path('about/', views.about, name='about'),  # about 페이지
+    path('login/', login_views.home, name='login')
 ]
