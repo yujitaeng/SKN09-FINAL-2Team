@@ -20,7 +20,7 @@
   transition: width 0.22s cubic-bezier(.38, 1.16, .64, 1);
   transition: width 0.3s ease, opacity 0.3s ease;
   opacity: 1;
-  overflow: hidden;
+  
   
   -webkit-user-select: none;
   -moz-user-select: none;
