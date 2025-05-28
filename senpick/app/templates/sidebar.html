@@ -11,11 +11,9 @@
     <!-- 메인: 검색, New Chat, Chat, 채팅리스트 -->
     <div class="sidebar-main">
       <div class="divider-line"></div>
-      <label for="sidebarSearch">
-        <div class="search-row" id="sidebar-search-row">
-          <img src="{% static 'images/search.svg' %}" alt="검색">
-          <input id="sidebarSearch" type="text" placeholder="검색어를 입력해주세요.">
-        </div>
+      <label class="search-row" id="sidebar-search-row">
+        <img src="{% static 'images/search.svg' %}" alt="검색">
+        <input id="sidebarSearch" type="text" placeholder="검색어를 입력해주세요.">
       </label>
       <div class="menu-btn-row" id="newchat-btn">
         <img src="{% static 'images/plus.svg' %}" alt="새 채팅">
@@ -109,6 +107,24 @@
   });
   const observer = new MutationObserver(showToggleIfOpen);
   observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+
+  let loginState = true; // 로그인 상태를 나타내는 변수
+  let brandLink = document.querySelector('.brand-link');
+  brandLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    let brandBar = document.querySelector('.brand-bar');
+    if (loginState) {
+      // 로그아웃 처리
+      loginState = false;
+      brandBar.getElementsByClassName('brand-label')[0].textContent = '로그인';
+      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo_white.svg' %}";
+    } else {
+      // 로그인 처리
+      loginState = true;
+      brandBar.getElementsByClassName('brand-label')[0].textContent = '유지니어스';
+      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo.svg' %}";
+    }
+  });
 </script>
 
 
