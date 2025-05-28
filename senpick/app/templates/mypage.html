@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>My Page</title>
+    <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Spoqa+Han+Sans+Neo:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cafe24+Supermagic&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div style="display: flex;" class="layout">
+        {% include "sidebar.html" %}
+
+        <div class="mypage-container">
+            <h1 class="mypage-title">My Page</h1>
+            <div class="mypage-grid">
+                <!-- 프로필 영역 -->
+                <section class="profile-section">
+                    <h2 class="section-title">프로필</h2>
+                    <div class="profile-card">
+                        <img src="{% static 'images/member_defalut_image.png' %}" alt="profile" class="profile-image">
+                        <p class="profile-name">유지니어스</p>
+                        <p class="profile-email">yoojenius@senpick.com</p>
+                        <div class="tag-list">
+                            <span class="tag">유니크</span>
+                            <span class="tag">감성적</span>
+                            <span class="tag">클래식</span>
+                            <span class="tag">식품</span>
+                            <span class="tag">교환권</span>
+                            <span class="tag">리빙 · 인테리어</span>
+                        </div>
+                        <button class="edit-btn">프로필 수정</button>
+                    </div>
+                </section>
+    
+                <!-- 좋아요 히스토리 영역 -->
+                <section class="like-section">
+                  <h2 class="section-title">좋아요 히스토리</h2>
+                
+                  <!-- 좋아요 카드 1 -->
+                  <div class="like-block">
+                    <div class="like-header">
+                      <p class="like-title-text">엄마 생신 선물 고민</p>
+                      <div class="like-tags">
+                        <span>연인 · 배우자</span>
+                        <span>60대 이상</span>
+                        <span>선택 안함</span>
+                        <span>기타 · 기본전환</span>
+                      </div>
+                      <div class="like-meta">
+                        <span>4월 28일의 고민</span>
+                        <span>🤍 1</span>
+                      </div>
+                    </div>
+                
+                    <div class="product-scroll-wrapper">
+                      <div class="product-scroll">
+                        <!-- 더미 상품 카드 -->
+                        {% for i in "12345" %}
+                        <div class="product-card">
+                          <a href="#">
+                            <div class="image-wrapper">
+                              <img src="https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510" alt="상품 이미지">
+                            </div>
+                            <div class="product-info">
+                              <div class="brand">브랜드명</div>
+                              <div class="title">삼성스피커 JBL FLIP6 휴대용 캠핑...</div>
+                            </div>
+                          </a>
+                          <div class="heart">
+                            <img src="{% static 'images/heart_gray.svg' %}" class="heart-icon" alt="heart">
+                          </div>
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+              
+                  <!-- 좋아요 카드 2 -->
+                  <div class="like-block">
+                    <div class="like-header">
+                      <p class="like-title-text">스트레스 해소 선물 고민</p>
+                      <div class="like-tags">
+                        <span>연인 · 배우자</span>
+                        <span>60대 이상</span>
+                        <span>선택 안함</span>
+                        <span>기타 · 기본전환</span>
+                      </div>
+                      <div class="like-meta">
+                        <span>1월 10일의 고민</span>
+                        <span>🤍 5</span>
+                      </div>
+                    </div>
+                
+                    <div class="product-scroll-wrapper">
+                      <div class="product-scroll">
+                        {% for i in "12345" %}
+                        <div class="product-card">
+                          <a href="#">
+                            <div class="image-wrapper">
+                              <img src="https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510" alt="상품 이미지">
+                            </div>
+                            <div class="product-info">
+                              <div class="brand">브랜드명</div>
+                              <div class="title">삼성스피커 JBL FLIP6 휴대용 캠핑...</div>
+                            </div>
+                          </a>
+                          <div class="heart">
+                            <img src="{% static 'images/heart_gray.svg' %}" class="heart-icon" alt="heart">
+                          </div>
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script>
+        const hearts = document.querySelectorAll('.heart-icon');
+        hearts.forEach(icon => {
+            icon.addEventListener('click', (e) => {
+                e.stopPropagation();
+                icon.classList.toggle('active');
+                icon.src = icon.classList.contains('active') ? 
+                    '{% static "images/heart_red.svg" %}' : 
+                    '{% static "images/heart_gray.svg" %}';
+            });
+        });
+    </script>
+</body>
+</html>

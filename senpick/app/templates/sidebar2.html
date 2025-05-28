@@ -1,0 +1,124 @@
+{% load static %}
+<div class="sidebar-right" id="sidebar-right">
+    <!-- 상단 헤더 (브랜드/토글) -->
+    <div class="sidebar-header" style="display: block; margin-top: 24px;">
+        <button class="sidebar-history menu-btn">
+            <img
+                src="{% static 'images/gift.svg' %}"
+                alt="Sidebar Image"
+                class="sidebar-image"
+            />
+            History
+        </button>
+        <div class="divider-line"></div>
+    </div>
+    <div class="card-wrapper"></div>
+</div>
+<div class="floating-history">
+    <div>
+        <button class="sidebar-history menu-btn">
+            <img
+                src="{% static 'images/gift.svg' %}"
+                alt="Sidebar Image"
+                class="sidebar-image"
+            />
+            History
+        </button>
+    </div>
+</div>
+<script>
+    // 사이드바 토글 기능
+    const sidebarRight = document.getElementById("sidebar-right");
+    const sidebarHistory = document.querySelector(".sidebar-history");
+
+    sidebarHistory.addEventListener("click", () => {
+        sidebarRight.classList.add("collapsed");
+    });
+
+    const floatingHistory = document.querySelector(".floating-history");
+    floatingHistory.addEventListener("click", () => {
+        sidebarRight.classList.remove("collapsed");
+    });
+
+    function createProductCard(data) {
+        const wrapper = document.querySelector(".card-wrapper");
+
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        // 카드 전체를 감싸는 링크
+        const link = document.createElement("a");
+        link.href = "#";
+
+        // 이미지 영역
+        const imageWrapper = document.createElement("div");
+        imageWrapper.className = "image-wrapper";
+
+        const image = document.createElement("img");
+        image.src = data.imageUrl;
+        image.alt = "상품 이미지";
+
+        imageWrapper.appendChild(image);
+        link.appendChild(imageWrapper);
+
+        // 상품 정보
+        const info = document.createElement("div");
+        info.className = "product-info";
+
+        const brand = document.createElement("div");
+        brand.className = "brand";
+        brand.textContent = data.brand;
+
+        const title = document.createElement("div");
+        title.className = "title";
+        title.textContent = data.title;
+
+        info.appendChild(brand);
+        info.appendChild(title);
+        link.appendChild(info);
+
+        // 하트 아이콘
+        const heartDiv = document.createElement("div");
+        heartDiv.className = "heart";
+
+        const heartIcon = document.createElement("img");
+        heartIcon.src = "{% static 'images/heart_gray.svg' %}";
+        heartIcon.alt = "Heart Icon";
+        heartIcon.className = "heart-icon";
+
+        heartDiv.appendChild(heartIcon);
+
+        heartIcon.addEventListener("click", (event) => {
+            event.stopPropagation();
+            heartIcon.classList.toggle("active");
+            heartIcon.src = heartIcon.classList.contains("active") ?
+                "{% static 'images/heart_red.svg' %}" :
+                "{% static 'images/heart_gray.svg' %}";
+        });
+
+        heartIcon.addEventListener("mouseenter", () => {
+            if (!heartIcon.classList.contains("active")) {
+                heartIcon.src = "{% static 'images/heart_red.svg' %}";
+            }
+        });
+
+        heartIcon.addEventListener("mouseleave", () => {
+            if (!heartIcon.classList.contains("active")) {
+                heartIcon.src = "{% static 'images/heart_gray.svg' %}";
+            }
+        });
+
+        // 조립
+        card.appendChild(link);
+        card.appendChild(heartDiv);
+        wrapper.appendChild(card);
+    }
+
+    for (let i = 0; i < 20; i++) {
+        createProductCard({
+            imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
+            brand: '브랜드명',
+            title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...',
+        });
+    }
+</script>

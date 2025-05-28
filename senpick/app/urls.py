@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.urls import path
 from . import views
+from . import mypage_views # mypage 부분
 
 urlpatterns = [
     path('', views.home, name='home'),  # 기본 URL
+    path('mypage/', mypage_views.mypage_view, name='mypage'), # mypage 부분
     # path('about/', views.about, name='about'),  # about 페이지
 ]
