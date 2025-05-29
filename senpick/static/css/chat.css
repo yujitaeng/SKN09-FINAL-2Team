@@ -22,7 +22,7 @@ body {
 /* 상단 인삿말/부제 */
 .chatbot-header {
   width: 700px;
-  margin: 54px auto 28px auto;
+  margin: 54px 0 28px 0;
   text-align: left;
 }
 .chatbot-header h1 {
@@ -47,7 +47,6 @@ body {
 .chat-window {
   width: 100%;
   min-height: 320px;
-  max-height: 540px;
   background: #F5F5F8;
   border-radius: 22px;
   padding: 32px 36px 32px 36px;
