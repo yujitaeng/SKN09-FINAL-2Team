@@ -15,11 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from . import views, login_views, chat_views
+from . import views, birth_views, login_views, chat_views
 
 urlpatterns = [
     path('', views.home, name='home'),  # 기본 URL
     # path('about/', views.about, name='about'),  # about 페이지
     path('login/', login_views.home, name='login'),
-    path('chat/', chat_views.chat, name='chat')
+    path('chat/', chat_views.chat, name='chat'),
+    path('login/', login_views.home, name='login'),  # 로그인 페이지
+    path('birth/', birth_views.birth, name='birth'),  # 생일 페이지
 ]
