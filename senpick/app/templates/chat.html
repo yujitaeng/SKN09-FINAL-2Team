@@ -4,10 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Senpick 챗봇</title>
+  <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <link rel="stylesheet" href="{% static 'css/stepper.css' %}">
   <link rel="stylesheet" href="{% static 'css/chat.css' %}">
   <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
   <link rel="stylesheet" href="{% static 'css/sidebar2.css' %}">
+  <script src="{% static 'js/script.js' %}"></script>
 </head>
 <body>
   <div class="app-layout">
@@ -15,10 +18,13 @@
     <div class="main-content">
       <div class="chatbot-body">
         <div class="chat-window" id="chat-history">
-        <div class="chatbot-header">
-          <h1>안녕하세요! {{ username }}님</h1>
-          <p>오늘은 누구를 위한 선물을 고민하고 계신가요?</p>
-        </div>
+          <div class="chatbot-header">
+            <h1>안녕하세요! {{ username }}님</h1>
+            <p>오늘은 누구를 위한 선물을 고민하고 계신가요?</p>
+          </div>
+          <a href="{% url 'birth' %}">
+            <img src="{% static 'images/birth_card.png' %}" alt="Birth-Card" class="birth-card" width="500">
+          </a>
           <!-- 질문/옵션 카드가 번갈아 추가됨 -->
         </div>
         <!-- 질문 다 끝나면 등장하는 채팅 입력창 -->
@@ -84,32 +90,78 @@
 
       // 2. step-card(옵션/파일) 추가
       if (data.type === "file") {
-        let html = `
-          <div class="step-card step-card-file" id="step-card-${currentStep}">
-            <form class="file-upload-form" enctype="multipart/form-data" onsubmit="return false;">
-              <label class="file-dropzone">
-                <input type="file" accept=".txt,.json" style="display:none;">
-                <div class="file-drop-content">
-                  <svg width="34" height="34" style="opacity:.3;margin-bottom:7px;" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.51 12.488l-9.078 9.077a2.61 2.61 0 0 0 3.691 3.693l7.7-7.7a5.22 5.22 0 0 0-7.383-7.384l-7.701 7.701a7.83 7.83 0 0 0 11.078 11.077l9.077-9.078" stroke="#888" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  <div>대화내역 파일 첨부하기<br><span class="file-hint">(txt, json 파일, 1개만 첨부 가능)</span></div>
-                </div>
-              </label>
-              <div class="file-drop-error" style="color:#e53a3a; font-size:15px; margin:8px 0 0 0; min-height:22px;"></div>
-              <label class="step-option">
-                <input type="checkbox" id="skip-checkbox" style="margin-right:10px;">
-                건너뛰기
-              </label>
-              <button type="button" class="step-next-btn" id="start-btn">센픽과 대화 시작하기</button>
-            </form>
-          </div>
+        const stepCard = document.createElement("div");
+        stepCard.className = "step-card";
+        stepCard.id = `step-card-${currentStep}`;
+
+        // form
+        const form = document.createElement("form");
+        form.className = "file-upload-form";
+        form.enctype = "multipart/form-data";
+        form.onsubmit = () => false;
+
+        // label - file-dropzone
+        const labelDropzone = document.createElement("label");
+        labelDropzone.className = "file-dropzone";
+
+        // input[type=file]
+        const inputFile = document.createElement("input");
+        inputFile.type = "file";
+        inputFile.accept = ".txt,.json";
+        inputFile.style.display = "none";
+
+        // .file-drop-content
+        const dropContent = document.createElement("div");
+        dropContent.className = "file-drop-content";
+
+        // svg 아이콘
+        dropContent.innerHTML = `
+          <svg width="34" height="34" style="opacity:.3;margin-bottom:7px;" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.51 12.488l-9.078 9.077a2.61 2.61 0 0 0 3.691 3.693l7.7-7.7a5.22 5.22 0 0 0-7.383-7.384l-7.701 7.701a7.83 7.83 0 0 0 11.078 11.077l9.077-9.078" 
+                  stroke="#888" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div>대화내역 파일 첨부하기<br><span class="file-hint">(txt, json 파일, 1개만 첨부 가능)</span></div>
         `;
-        document.getElementById('chat-history').insertAdjacentHTML('beforeend', html);
+
+        labelDropzone.appendChild(inputFile);
+        labelDropzone.appendChild(dropContent);
+
+        // 오류 메시지 박스
+        const errorBox = document.createElement("div");
+        errorBox.className = "file-drop-error";
+        errorBox.style.cssText = "color:#e53a3a; font-size:15px; margin:8px 0 0 0; min-height:22px;";
+
+        // 건너뛰기 체크박스
+        const skipLabel = document.createElement("label");
+        skipLabel.className = "step-option";
+        skipLabel.innerHTML = `
+          <input type="checkbox" id="skip-checkbox" style="margin-right:10px;">
+          건너뛰기
+        `;
+
+        // 버튼
+        const startButton = document.createElement("button");
+        startButton.type = "button";
+        startButton.className = "step-next-btn";
+        startButton.id = "start-btn";
+        startButton.textContent = "센픽과 대화 시작하기";
+
+        // 조립
+        form.appendChild(labelDropzone);
+        form.appendChild(errorBox);
+        form.appendChild(skipLabel);
+        form.appendChild(startButton);
+        stepCard.appendChild(form);
+
+        // 삽입
+        document.getElementById("chat-history").appendChild(stepCard);
+
 
         // 파일 첨부/파일명 표시
         const fileInput = document.querySelector(`#step-card-${currentStep} input[type="file"]`);
         const fileDropContent = document.querySelector(`#step-card-${currentStep} .file-drop-content`);
         const fileDropzone = document.querySelector(`#step-card-${currentStep} .file-dropzone`);
-        const errorBox = document.querySelector(`#step-card-${currentStep} .file-drop-error`);
+        // const errorBox = document.querySelector(`#step-card-${currentStep} .file-drop-error`);
         const skipCheckbox = document.getElementById('skip-checkbox');
 
         // 지원 확장자 검사 함수
@@ -165,6 +217,7 @@
             `<div class="chat-msg user">${msg}</div>`);
           // ✅ 채팅 입력창 보이기
           document.getElementById('chat-form').style.display = 'block';
+          document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
           setTimeout(() => {
             document.getElementById('chat-form').scrollIntoView({behavior:'smooth'});
           }, 200);
@@ -178,26 +231,42 @@
       }
 
       // (기존 라디오/체크박스)
-      let html = `<div class="step-card" id="step-card-${currentStep}">
-        <div class="step-options">`;
+      const stepCard = document.createElement('div');
+      stepCard.className = 'step-card';
+      stepCard.id = `step-card-${currentStep}`;
+      const stepOptions = document.createElement('div');
+      stepOptions.className = 'step-options';
       data.options.forEach((opt, i) => {
-        html += `
-          <label class="step-option">
-            <input type="${data.type}" name="step-option-${currentStep}" value="${opt}">
-            ${opt}
-          </label>`;
+        const label = document.createElement('label')
+        label.className = 'step-option';
+        label.innerHTML = `
+          <input type="${data.type}" name="step-option-${currentStep}" value="${opt}">
+          ${opt}
+        `;
+        stepOptions.appendChild(label);
+        stepCard.appendChild(stepOptions);
       });
-      html += `</div>
-        <button class="step-next-btn" type="button" onclick="nextStep(${currentStep})">다음</button>
-      </div>`;
-      document.getElementById('chat-history').insertAdjacentHTML('beforeend', html);
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'step-next-btn';
+      nextBtn.type = 'button';
+      nextBtn.textContent = '다음';
+      nextBtn.onclick = function() {
+        nextStep(currentStep);
+      };
+      stepCard.appendChild(nextBtn);
+      // document.getElementById('chat-history').insertAdjacentHTML('beforeend', html);
+      document.getElementById('chat-history').appendChild(stepCard);
 
       // 선택 스타일
-      const stepCard = document.getElementById(`step-card-${currentStep}`);
       stepCard.querySelectorAll('.step-option input').forEach(input => {
         input.addEventListener('change', function() {
           if (input.type === 'checkbox') {
-            input.parentElement.classList.toggle('selected', input.checked);
+            stepCard.querySelectorAll('.step-option input').forEach(checkbox => checkbox.checked = false);
+            input.checked = true; // 첫번째 질문은 하나만 선택
+            if (input.checked) {
+              stepCard.querySelectorAll('.step-option').forEach(label => label.classList.remove('selected'));
+              input.parentElement.classList.add('selected');
+            }
           } else {
             stepCard.querySelectorAll('.step-option').forEach(label => label.classList.remove('selected'));
             if(this.checked) this.parentElement.classList.add('selected');
@@ -218,14 +287,7 @@
       stepCard.insertAdjacentHTML('afterend', `<div class="chat-msg user">${selected}</div>`);
       answers[stepIdx] = Array.from(inputs).map(i => i.value);
       currentStep++;
-      if(currentStep < stepData.length) {
-        renderStep();
-      } else {
-        document.getElementById('chat-form').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('chat-form').scrollIntoView({behavior:'smooth'});
-        }, 200);
-      }
+      renderStep();
     }
 
     function chatInit() {
@@ -242,12 +304,21 @@
           setTimeout(() => {
             chatHistory.insertAdjacentHTML(
               'beforeend',
-              `<div class="chat-msg">아직 백엔드 연결 전입니다 :)</div>`
+              `<div class="chat-msg">아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :)</div>
+               <div class="card-wrapper" style="margin-top: 12px"></div>`
             );
+            for (let i = 0; i < 4; i++){
+                // 예시 카드 생성
+              createProductCard({
+                imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
+                brand: '브랜드명',
+                title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...',
+                reason: '추천 이유: 이 제품은 휴대성이 뛰어나고, 캠핑이나 피크닉에 적합한 무선 스피커입니다. JBL의 품질을 믿을 수 있어요.',
+              });
+            }
             chatHistory.scrollTop = chatHistory.scrollHeight;
           }, 600);
           input.value = "";
-          chatHistory.scrollTop = chatHistory.scrollHeight;
         }
       }
     }
