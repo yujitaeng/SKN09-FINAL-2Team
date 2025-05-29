@@ -1,0 +1,152 @@
+{% load static %}
+<div class="sidebar" id="sidebar">
+  <!-- 메인: 검색, New Chat, Chat, 채팅리스트 -->
+    {% comment %} <div class="sidebar-header">
+      <img src="{% static 'images/top_logo.svg' %}" alt="Senpick Logo" class="logo-img">
+      <button class="menu-btn tooltip" id="sidebar-toggle-btn" title="사이드바 접기">
+        <span class="tooltip-text">사이드바 접기</span>
+        <img src="{% static 'images/sidebar_toggle.png' %}" alt="사이드바 토글">
+      </button>
+    </div> {% endcomment %}
+  <div class="sidebar-main">
+    <!-- 상단 헤더 (브랜드/토글) -->
+    <div class="sidebar-header">
+      <img src="{% static 'images/top_logo.svg' %}" alt="Senpick Logo" class="logo-img">
+      <button class="menu-btn tooltip" id="sidebar-toggle-btn" title="사이드바 접기">
+        <span class="tooltip-text">사이드바 접기</span>
+        <img src="{% static 'images/sidebar_toggle.png' %}" alt="사이드바 토글">
+      </button>
+    </div>
+    <div class="divider-line"></div>
+    <label class="search-row" id="sidebar-search-row">
+      <img src="{% static 'images/search.svg' %}" alt="검색">
+      <input id="sidebarSearch" type="text" placeholder="검색어를 입력해주세요.">
+    </label>
+    <div class="menu-btn-row" id="newchat-btn" onclick="location.href=`{% url 'chat' %}`">
+      <img src="{% static 'images/plus.svg' %}" alt="새 채팅">
+      <span class="btn-label">New Chat</span>
+    </div>
+    <div class="menu-btn-row selected" id="chat-btn" cursor="default;">
+      <img src="{% static 'images/chat_logo.png' %}" alt="Chat">
+      <span class="btn-label">Chat</span>
+    </div>
+    <ul class="chat-list"></ul>
+    <div class="menu-btn-row" id="gift-btn" onclick="location.href=`{% url 'birth' %}`">
+      <img src="{% static 'images/gift.svg' %}" alt="Gift">
+      <span class="btn-label">Happy Birthday</span>
+    </div>
+  </div>
+  <!-- 하단: 마이페이지/브랜드바 -->
+  <div class="sidebar-bottom">
+    <div class="menu-btn-row" id="my-btn">
+      <img src="{% static 'images/settings.svg' %}" alt="Settings">
+      <span class="btn-label">My Page</span>
+    </div>
+    {% comment %} <div class="mypage-row">
+      <img src="{% static 'images/Settings.png' %}" alt="설정">
+      <span>My Page</span>
+    </div> {% endcomment %}
+    <div class="divider-line"></div>
+    <div class="brand-bar">
+      <img src="{% static 'images/bottom_logo.svg' %}" alt="Brand" class="brand-logo">
+      <span class="brand-label">유지니어스</span>
+      <a href="#" class="brand-link tooltip" title="로그아웃">
+        <span class="tooltip-text">로그아웃</span>
+        <img src="{% static 'images/logout.svg' %}" alt="로그아웃">
+      </a>
+    </div>
+  </div>
+</div>
+<script>
+    const chatlist = [
+      "글자몇개를넣으면좋을까요",
+      "공백포함11글자가능하다",
+      "귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
+      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물"
+    ]      
+      
+  // 접힘/펼침 상태 관리
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebar-toggle-btn');
+  const searchRow = document.getElementById('sidebar-search-row');
+  const chathistory = document.querySelector('.chat-list');
+  chathistory.append(...chatlist.map(chat => {
+    const li = document.createElement('li');
+    const span = document.createElement('span');
+    span.className = 'chat-title';
+    span.textContent = chat;
+    li.appendChild(span);
+    li.addEventListener('click', () => {
+      document.querySelector('.chat-list li.selected')?.classList.remove('selected');
+      li.classList.add('selected');
+    });
+    return li;
+  }));
+
+  chathistory.firstElementChild?.classList.add('selected');
+
+  function showToggleIfOpen() {
+    if (sidebar.classList.contains('mini')) {
+      toggleBtn.style.display = 'none';
+    } else {
+      toggleBtn.style.display = '';
+    }
+  }
+  showToggleIfOpen();
+  document.querySelector('.logo-img').addEventListener('click', function() {
+    if (sidebar.classList.contains('mini')) {
+      sidebar.classList.remove('mini');
+      showToggleIfOpen();
+    }
+  });
+  searchRow.addEventListener('click', function() {
+    if (sidebar.classList.contains('mini')) {
+      sidebar.classList.remove('mini');
+      sidebarSearch.focus();
+      showToggleIfOpen();
+    }
+  });
+  toggleBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    sidebar.classList.add('mini');
+    showToggleIfOpen();
+  });
+  const observer = new MutationObserver(showToggleIfOpen);
+  observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+
+  let loginState = true; // 로그인 상태를 나타내는 변수
+  let brandLink = document.querySelector('.brand-link');
+  brandLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    let brandBar = document.querySelector('.brand-bar');
+    if (loginState) {
+      // 로그아웃 처리
+      loginState = false;
+      brandBar.getElementsByClassName('brand-label')[0].textContent = '로그인';
+      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo_white.svg' %}";
+    } else {
+      // 로그인 처리
+      loginState = true;
+      brandBar.getElementsByClassName('brand-label')[0].textContent = '유지니어스';
+      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo.svg' %}";
+    }
+  });
+</script>
