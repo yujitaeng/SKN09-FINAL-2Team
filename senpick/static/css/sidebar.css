@@ -380,7 +380,7 @@
 
 a.menu-btn-row {
   text-decoration: none;
-  color: inherit; /* 링크 색상도 기본 텍스트와 동일하게 */
+  color: inherit; 
   display: flex;
   align-items: center;
   gap: 8px;

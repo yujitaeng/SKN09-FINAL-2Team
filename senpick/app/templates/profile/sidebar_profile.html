@@ -1,0 +1,15 @@
+{% load static %}
+<div class="sub-sidebar">
+  <title>프로필 수정</title>
+  <ul class="sub-sidebar-menu">
+    <li class="{% if active_tab == 'info' %}active{% endif %}">
+      <a href="{% url 'profile_info' %}">계정 정보 수정</a>
+    </li>
+    <li class="{% if active_tab == 'password' %}active{% endif %}">
+      <a href="{% url 'profile_password' %}">비밀번호 재설정</a>
+    </li>
+    <li class="{% if active_tab == 'delete' %}active{% endif %}">
+      <a href="{% url 'profile_delete' %}">회원 탈퇴</a>
+    </li>
+  </ul>
+</div>
