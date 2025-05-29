@@ -75,6 +75,8 @@ body {
   font-size: 15px;
   line-height: 1.55;
   word-break: break-all;
+  min-width: 80px;        /* 최소 크기 지정 */
+  padding: 13px 16px;
 }
 
 .chat-msg.user {
