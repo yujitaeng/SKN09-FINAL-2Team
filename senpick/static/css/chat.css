@@ -30,6 +30,7 @@ body {
   font-size: 38px;
   font-weight: 700;
   color: #222;
+  margin-top: 0;
   margin-bottom: 10px;
 }
 .chatbot-header p {
@@ -150,4 +151,27 @@ body {
   display: block;
 }
 
+.recommend{
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.recommend button {
+  background-color: #E0E0E0;
+  color: #666;
+  border: none;
+  border-radius: 72px;
+  height: 30px;
+  width:fit-content;
+  display: inline-block;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.recommend button:hover {
+  background-color: #D0D0D0;
+  color: #333;
+}
 
