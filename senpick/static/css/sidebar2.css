@@ -10,7 +10,7 @@
   z-index: 100;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: visible;
   padding: 0;
   box-sizing: border-box;
   background: #ffffff;
@@ -72,77 +72,4 @@
 
 .sidebar-history:hover {
     background: #f6f6f8;
-}
-
-.card-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 2px 8px;
-  overflow-y: auto;
-  /* Adjust height based on header */
-  /* height: calc(100vh - 80px);  */
-}
-
-.product-card {
-  width: 156px;
-  border-radius: 12px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-  /* overflow: hidden; */
-  font-family: sans-serif;
-  background: #FFFFFF;
-  padding: 12px;
-}
-
-.product-card:hover {
-  background-color: #F5F5F8;
-}
-
-.image-wrapper {
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: #f6f6f6;
-}
-
-.image-wrapper img {
-  width: 100%;
-  display: block;
-}
-
-.product-info {
-  margin-top: 8px;
-}
-
-.brand {
-  font-size: 11px;
-  color: #999;
-  margin-bottom: 2px;
-}
-
-.title {
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.4;
-  color: #222;
-  /* overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;       /* 최대 2줄 */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.product-card a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.heart {
-  text-align: left;
-  margin-top: 8px;
-  font-size: 16px;
-  color: #ccc;
 }
