@@ -14,13 +14,11 @@
 <body>
     <div style="display: flex;" class="layout">
         {% include "sidebar.html" %}
-
         <div class="layout">
           <!-- 좌측 서브 사이드바 -->
           <div class="sidebar-wrapper">
             {% include "profile/sidebar_profile.html" with active_tab="info" %}
           </div>
-
           <!-- 우측 프로필 수정 메인 영역 -->
           <div class="profile-main-wrapper">
             <div class="profile-main">

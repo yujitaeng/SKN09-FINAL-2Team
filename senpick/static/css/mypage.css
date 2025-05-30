@@ -29,6 +29,12 @@ body {
   margin-bottom: 24px;
 }
 
+.mypage-subtitle {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 32px;
+}
+
 .mypage-grid {
   display: flex;
   flex-wrap: wrap;
