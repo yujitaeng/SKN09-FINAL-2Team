@@ -3,66 +3,91 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원 탈퇴 | Senpick</title>
-    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile_info.css' %}">
     <link rel="stylesheet" href="{% static 'css/profile_delete.css' %}">
     <link rel="stylesheet" href="{% static 'css/sidebar_profile.css' %}">
-    
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/stepper.css' %}">
+
     <link href="https://fonts.googleapis.com/css2?family=Spoqa+Han+Sans+Neo:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cafe24+Supermagic&display=swap" rel="stylesheet">
-  
-    
 </head>
 <body>
-  <div class="main-layout">
-    {% include "sidebar.html" %}
-    {% include "profile/sidebar_profile.html" %}
-   
-    <div class="center-card-container">
-      <div class="modal-card">
-        
-        <h2><b>Senpick의 어떤 점이 바뀌면 좋을까요?</b></h2>
-        <div class="withdraw-reason">
-          <label><input type="radio" name="reason"> 추천 결과가 마음에 들지 않음</label>
-          <label><input type="radio" name="reason"> 사용할 일이 없음</label>
-          <label><input type="radio" name="reason"> 서비스가 복잡하고 어렵게 느껴짐</label>
-          <label><input type="radio" name="reason"> 개인정보가 걱정됨</label>
-          <label>
-            <input type="radio" name="reason"> 기타 (직접 입력)
-            <input type="text" class="other-input" placeholder="내용을 입력해주세요" style="display:none;">
-          </label>
+    <div style="display: flex;" class="layout">
+        {% include "sidebar.html" %}
+        <div class="layout">
+          <!-- 좌측 서브 사이드바 -->
+          <div class="sidebar-wrapper">
+            {% include "profile/sidebar_profile.html" with active_tab="delete" %}
+          </div>
+          <!-- 우측 프로필 수정 메인 영역 -->
+          <div class="profile-main-wrapper">
+            <div class="center-card-container">
+                  <div class="modal-card">
+                    <h2><b>Senpick의 어떤 점이 바뀌면 좋을까요?</b></h2>
+                    <div class="withdraw-reason" style="color: #666;">
+                      <label class="step-option"><input type="checkbox" name="reason"> 추천 결과가 마음에 들지 않음</label>
+                      <label class="step-option"><input type="checkbox" name="reason"> 사용할 일이 없음</label>
+                      <label class="step-option"><input type="checkbox" name="reason"> 서비스가 복잡하고 어렵게 느껴짐</label>
+                      <label class="step-option"><input type="checkbox" name="reason"> 개인정보가 걱정됨</label>
+                      <label class="step-option" id="other-reason">
+                        <input type="checkbox" name="reason"> 기타 (직접 입력)
+                      </label>
+                      <div class="other-input-wrapper" style="display: none;">
+                        <input type="text" class="other-input" placeholder="내용을 입력해주세요" >
+                      </div>
+                    </div>
+                    <div class="warning">
+                      <b style="color:red;">탈퇴 후에는 데이터를 복구할 수 없어요.<br>정말 탈퇴하실건가요?</b>
+                    </div>
+                    <div class="modal-buttons">
+                      <button class="cancel-btn" onclick="history.back();">다시 생각할게</button>
+                    </div>
+                    <div class="modal-buttons delete-btn">
+                      <button class="confirm-btn" id="real-delete-btn">탈퇴 하기</button>
+                    </div>
+                  </div>
+                </div>
+          </div>
         </div>
-        <div class="warning">
-          <b style="color:red;">탈퇴 후에는 데이터를 복구할 수 없어요.<br>정말 탈퇴하실건가요?</b>
-        </div>
-        <div class="modal-buttons">
-          <button class="cancel-btn" onclick="history.back();">다시 생각할게</button>
-          <button class="confirm-btn" id="real-delete-btn">탈퇴 하기</button>
-        </div>
-      </div>
     </div>
-  </div>
-  <script>
-    // 기타 사유 선택시 입력창 노출
-    const reasonRadios = document.querySelectorAll('input[type="radio"][name="reason"]');
-    const otherInput = document.querySelector('.other-input');
-    reasonRadios.forEach(radio => {
-      radio.onchange = function() {
-        if (this.parentElement.textContent.includes('기타')) {
-          otherInput.style.display = 'inline-block';
-        } else {
-          otherInput.style.display = 'none';
-          otherInput.value = '';
+    <script>
+      // 기타 사유 선택시 입력창 노출
+      const reasonRadios = document.querySelectorAll('input[type="checkbox"][name="reason"]');
+      const otherInput = document.querySelector('.other-input');
+      reasonRadios.forEach(radio => {
+        radio.onchange = function() {
+          reasonRadios.forEach(r => {
+            if (r !== this) r.checked = false; // 다른 체크박스는 해제
+          });
+          if (this.parentElement.textContent.includes('기타') && this.checked) {
+            otherInput.parentElement.style.display = 'flex';
+          } else {
+            otherInput.parentElement.style.display = 'none';
+            otherInput.value = '';
+          }
         }
-      }
-    });
+      });
 
-    // 탈퇴 처리
-    document.getElementById('real-delete-btn').onclick = function() {
-      alert('탈퇴 처리가 완료되었습니다.');
-      location.href = "/"; // 탈퇴 후 메인으로 이동 등
-    };
-  </script>
+      // 탈퇴 처리
+      document.getElementById('real-delete-btn').onclick = function() {
+        alert('탈퇴 처리가 완료되었습니다.');
+        location.href = "/"; // 탈퇴 후 메인으로 이동 등
+      };
+
+      // 기타 입력창 토글
+      const otherLabel = document.querySelector('#other-reason');
+      const checkbox = otherLabel.querySelector('input[type="checkbox"]');
+
+      checkbox.addEventListener('change', function () {
+        if (this.checked) {
+          otherLabel.classList.add('active');
+        } else {
+          otherLabel.classList.remove('active');
+        }
+      });
+    </script>
 </body>
 </html>

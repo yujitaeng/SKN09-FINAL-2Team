@@ -6,8 +6,6 @@
   border-radius: 16px;
   box-shadow: 0 4px 32px rgba(0,0,0,0.1);
   padding: 32px 24px;
-  width: 1093px;
-  max-width: 90vw;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -32,12 +30,23 @@
 }
 
 .withdraw-reason input[type="text"] {
-  margin-left: 8px;
+  margin: 0 28px;
   flex: 1;
   padding: 5px;
   border: 1px solid #e2e2e2;
   border-radius: 6px;
   font-size: 14px;
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 15px;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  background-color: #FFFFFF;
+  transition: all 0.2s ease;
+}
+.withdraw-reason input[type="text"]:hover {
+  border-color: #999;
 }
 
 /* 경고문구 */
@@ -114,4 +123,46 @@ body {
   align-items: center;
   /* justify-content: center; // 필요시 추가 (이미 .main-layout에서 중앙됨) */
   height: 100%;
+}
+
+.delete-btn {
+  display: block;
+  text-align: center;
+}
+
+#real-delete-btn {
+  background-color: transparent;
+  color: #666;
+  width: fit-content;
+}
+
+.withdraw-reason .step-option {
+  border: 1px solid #E0E0E0; 
+  background-color: #ffffff;
+}
+
+/* label.step-option.step-option-other:has(input:checked) */
+label.step-option.step-option-other.active {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+
+#other-reason:has(input:checked),
+#other-reason.active {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+
+.other-input-wrapper {
+  border: 1px solid #E0E0E0; 
+  padding: 10px; 
+  margin-top: -10px; 
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.other-input:focus {
+  outline: none;
 }
