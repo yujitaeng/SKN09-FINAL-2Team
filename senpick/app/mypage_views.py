@@ -11,3 +11,6 @@ def profile_password(request):
 
 def profile_delete(request):
     return render(request, 'profile/profile_delete.html')
+
+def profile_delete_confirm(request):
+    return render(request, 'profile/profile_delete_confirm.html')

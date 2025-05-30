@@ -10,6 +10,8 @@
   flex-direction: column;
   align-items: stretch;
   margin: 0 auto;
+  max-width: 800px;
+  text-align: center;
 }
 
 /* 카드 제목 */
@@ -168,4 +170,8 @@ label.step-option.step-option-other.active {
 
 .other-input:focus {
   outline: none;
+}
+
+.img-wrapper {
+  padding: auto;
 }

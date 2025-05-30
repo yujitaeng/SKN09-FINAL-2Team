@@ -18,36 +18,17 @@
     <div style="display: flex;" class="layout">
         {% include "sidebar.html" %}
         <div class="layout">
-          <!-- 좌측 서브 사이드바 -->
-          <div class="sidebar-wrapper">
-            {% include "profile/sidebar_profile.html" with active_tab="delete" %}
-          </div>
           <!-- 우측 프로필 수정 메인 영역 -->
           <div class="profile-main-wrapper">
             <div class="center-card-container">
                   <div class="modal-card">
-                    <h2><span class="font-b">Senpick</span><b>의 어떤 점이 바뀌면 좋을까요?</b></h2>
-                    <h3>탈퇴 사유</h3>
-                    <div class="withdraw-reason" style="color: #666;">
-                      <label class="step-option"><input type="checkbox" name="reason"> 추천 결과가 마음에 들지 않음</label>
-                      <label class="step-option"><input type="checkbox" name="reason"> 사용할 일이 없음</label>
-                      <label class="step-option"><input type="checkbox" name="reason"> 서비스가 복잡하고 어렵게 느껴짐</label>
-                      <label class="step-option"><input type="checkbox" name="reason"> 개인정보가 걱정됨</label>
-                      <label class="step-option" id="other-reason">
-                        <input type="checkbox" name="reason"> 기타 (직접 입력)
-                      </label>
-                      <div class="other-input-wrapper" style="display: none;">
-                        <input type="text" class="other-input" placeholder="내용을 입력해주세요" >
-                      </div>
-                    </div>
-                    <div class="warning">
-                      <b style="color:red;">탈퇴 후에는 데이터를 복구할 수 없어요.<br>정말 탈퇴하실건가요?</b>
+                    <h1>그동안 <span class="font-b">Senpick</span>과 함께해주셔서 감사합니다 :)</h1>
+                    <p>언제든 다시 찾아주세요</p>
+                    <div class="img-wrapper">
+                      <img src="{% static 'images/delete_confirm.png' %}" alt="하트 아이콘" class="heart-icon" width="500">
                     </div>
                     <div class="modal-buttons">
-                      <button class="cancel-btn" onclick="history.back();">다시 생각할게</button>
-                    </div>
-                    <div class="modal-buttons delete-btn">
-                      <button class="confirm-btn" id="real-delete-btn">탈퇴 하기</button>
+                      <button class="cancel-btn" onclick="location.href=`{% url 'login' %}`">센픽 홈으로 가기</button>
                     </div>
                   </div>
                 </div>
@@ -73,12 +54,10 @@
       });
 
       // 탈퇴 처리
-      const realDeleteBtn = document.getElementById('real-delete-btn');
-      realDeleteBtn.addEventListener('click', function(event) {
-        event.preventDefault(); // 기본 동작 방지
+      document.getElementById('real-delete-btn').onclick = function() {
         alert('탈퇴 처리가 완료되었습니다.');
-        location.href = "{% url 'profile_delete_confirm' %}"; // 탈퇴 후 메인으로 이동 등
-      });
+        location.href = "/"; // 탈퇴 후 메인으로 이동 등
+      };
 
       // 기타 입력창 토글
       const otherLabel = document.querySelector('#other-reason');

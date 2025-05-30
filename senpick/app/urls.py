@@ -26,5 +26,6 @@ urlpatterns = [
     path('mypage/profile/', mypage_views.profile_info, name='profile_info'),
     path('mypage/profile/password/', mypage_views.profile_password, name='profile_password'),
     path('mypage/profile/delete/', mypage_views.profile_delete, name='profile_delete'),
+    path('mypage/profile/delete/confirm', mypage_views.profile_delete_confirm, name='profile_delete_confirm'),
 ]
 
