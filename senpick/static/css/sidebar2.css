@@ -1,8 +1,8 @@
 .sidebar-right{
   position: sticky;
   top: 0;
-  width: 600px;
-  min-width: 600px;
+  width: 400px;
+  min-width: 400px;
   height: 100vh;
   /* position: fixed; */
   /* top: 0; */
@@ -10,7 +10,7 @@
   z-index: 100;
   display: flex;
   flex-direction: column;
-  overflow: visible;
+  overflow: visible; 
   padding: 0;
   box-sizing: border-box;
   background: #ffffff;
@@ -72,4 +72,13 @@
 
 .sidebar-history:hover {
     background: #f6f6f8;
+}
+
+.sidebar-right .card-wrapper {
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex-shrink: 0;
+  /* Adjust height based on header */
+  height: calc(100vh - 100px);
 }

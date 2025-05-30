@@ -3,8 +3,13 @@ html, body {
     padding: 0;
     height: 100vh;
     overflow: hidden;
+    font-family: 'Spoqa Han Sans Neo', 'sans-serif';
     /* font-family: Arial, sans-serif;
     background-color: #f4f4f4; */
+}
+
+button {
+  font-family: 'Spoqa Han Sans Neo', 'sans-serif';
 }
 
 .main-content {

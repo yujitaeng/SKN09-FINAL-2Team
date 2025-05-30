@@ -274,9 +274,11 @@
         });
       });
 
-      setTimeout(() => {
-        document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
-      }, 50);
+      if (currentStep != 0) {
+        setTimeout(() => {
+          document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
+        }, 50);
+      }
     }
 
     function nextStep(stepIdx) {
