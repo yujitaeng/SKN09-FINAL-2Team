@@ -1,4 +1,9 @@
 /* ===== profile_info.css ===== */
+.profile-main-wrapper {
+    flex-grow: 1;
+    padding-top: 150px;
+    overflow-y: scroll;
+}
 .profile-main {
   flex-grow: 1;
   background: white;
@@ -6,8 +11,9 @@
   padding: 48px 70px;
   /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.03); */
   max-width: 760px;
-  margin-top: 150px;
-  margin-bottom: 50px;
+  /* margin-top: 150px; */
+  /* margin-bottom: 50px; */
+  /* height: fit-content; */
 }
 
 .profile-form {
@@ -119,6 +125,7 @@
   cursor: pointer;
   transition: 0.2s;
   font-family: 'Spoqa Han Sans Neo', sans-serif;
+  box-sizing: border-box
 }
 
 .preference-tags .tag:hover {
@@ -281,6 +288,7 @@
   z-index: 10;
   list-style: none;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: none; /* Initially hidden */
 }
 
 .job-dropdown li {

@@ -1,4 +1,8 @@
 /* ===== sidebar_profile.html 전용 스타일 ===== */
+.sidebar-wrapper {
+  position: sticky;
+}
+
 .sub-sidebar {
   width: 240px;
   background-color: #F5F5F8;
