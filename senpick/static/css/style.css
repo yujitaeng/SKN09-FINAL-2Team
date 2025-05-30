@@ -136,3 +136,9 @@ button {
   font-size: 16px;
   color: #ccc;
 }
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+.spin {
+  animation: spin 2s linear infinite;
+}
