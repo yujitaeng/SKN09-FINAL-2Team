@@ -301,6 +301,7 @@
             'beforeend',
             `<div class="chat-msg user">${input.value}</div>`
           );
+          chatHistory.scrollTop = chatHistory.scrollHeight;
           setTimeout(() => {
             chatHistory.insertAdjacentHTML(
               'beforeend',
@@ -330,6 +331,7 @@
                 const input = document.getElementById('user-input');
                 input.value = btn;  // 버튼 텍스트를 입력창에 넣기
                 chatForm.dispatchEvent(new Event('submit'));
+                chatHistory.scrollTop = chatHistory.scrollHeight;
               }
               recommendDiv.appendChild(button);
             });
