@@ -54,7 +54,7 @@ html, body {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 2px 8px;
+  
   overflow-y: auto;
   flex-shrink: 0;
   /* Adjust height based on header */

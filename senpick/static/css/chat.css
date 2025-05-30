@@ -162,10 +162,9 @@ body {
   color: #666;
   border: none;
   border-radius: 72px;
-  height: 30px;
   width:fit-content;
   display: inline-block;
-  padding: 8px 12px;
+  padding: 8px 20px;
   font-size: 14px;
   cursor: pointer;
 }
