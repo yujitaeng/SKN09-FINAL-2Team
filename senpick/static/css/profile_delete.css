@@ -10,7 +10,6 @@
   flex-direction: column;
   align-items: stretch;
   margin: 0 auto;
-  height: 970px;
 }
 
 /* 카드 제목 */
@@ -18,6 +17,10 @@
   font-size: 1.15rem;
   margin-bottom: 16px;
   text-align: center;
+}
+
+.modal-card h3 {
+  font-size: 1rem;
 }
 
 /* 사유(라디오+텍스트) */
@@ -78,7 +81,7 @@
   transition: background 0.15s;
 }
 .modal-buttons .cancel-btn:hover {
-  background: #ececec;
+  background: #FFE900;
 }
 
 /* 탈퇴하기 버튼 */
