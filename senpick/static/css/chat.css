@@ -40,7 +40,7 @@ body {
 }
 /* 채팅 카드 */
 .chatbot-body {
-  width: 800px;
+  width: 816px;
   height: 100vh;
   margin: 0 auto;
   display: flex;
@@ -48,12 +48,11 @@ body {
   align-items: stretch;
 }
 .chat-window {
-  width: 100%;
   min-height: 320px;
   height: 100vh;
   background: #F5F5F8;
   border-radius: 22px;
-  padding: 32px 36px 32px 36px;
+  padding: 32px;
   margin-bottom: 18px;
   overflow-y: auto;
   /* gap: 13px; */
@@ -95,20 +94,25 @@ body {
 
 /* 입력창+버튼 (바깥 띄우기) */
 .chat-input-form {
-  width: 100%;
+  width: 754px;              /* 전체 고정 너비 */
   margin: 0 auto 36px auto;
   position: relative;
+  display: none;
+  align-items: center;
+  gap: 13px;
 }
+
 .chat-input-wrap {
-  width: 100%;
+  flex: 1;
   background: #fff;
   border-radius: 30px;
   box-shadow: 0 4px 16px rgba(44, 44, 44, 0.08);
-  padding: 12px 28px 12px 24px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   position: relative;
 }
+
 .chat-input-wrap input {
   border: none;
   outline: none;
@@ -118,16 +122,15 @@ body {
   padding: 8px 0;
   color: #222;
 }
+
 .chat-input-wrap input::placeholder {
   color: #b5b5b5;
   font-size: 16px;
 }
-/* 전송 버튼 - 카드 바깥쪽으로 */
+
+/* 전송 버튼 */
 .chat-send-btn {
-  position: absolute;
-  top: 50%;
-  right: -48px;
-  transform: translateY(-50%);
+  position: static; /* 플로팅 제거 */
   background: #111;
   color: #fff;
   border: none;
@@ -144,6 +147,7 @@ body {
   transition: background 0.18s;
   padding: 0;
 }
+
 .chat-send-btn:hover {
   background: #444;
 }
@@ -170,7 +174,9 @@ body {
 }
 
 .recommend button:hover {
-  background-color: #D0D0D0;
+  background-color: #FFE900;
   color: #333;
 }
+
+
 
