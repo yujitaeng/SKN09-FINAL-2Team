@@ -1,43 +1,49 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const slider = document.getElementById("slider");
-  const slides = Array.from(slider.children);
+  const slider = document.getElementById('slider');
+  const slides = document.querySelectorAll('.slide-content');
+  const dots = document.querySelectorAll('.dot');
   const slideCount = slides.length;
-  const slideWidth = 1032;
+  const slideWidth = slides[0].offsetWidth;
 
-  // 슬라이더 전체 너비 계산
-  slider.style.width = `${slideWidth * slideCount * 2}px`;
-  slider.style.display = "flex";
+  let currentIndex = 0;
+  let isTransitioning = false;
 
-  // 복제 슬라이드 추가 (무한 루프)
-  slides.forEach(slide => {
-    const clone = slide.cloneNode(true);
-    slider.appendChild(clone);
-  });
+  // 🔁 슬라이드 복제
+  const cloneFirst = slides[0].cloneNode(true);
+  slider.appendChild(cloneFirst);
 
-  let current = 0;
-  const totalSlides = slideCount * 2;
-  const dots = document.querySelectorAll(".dot");
+  function goToSlide(index) {
+    if (isTransitioning) return;
+    isTransitioning = true;
 
-  function updateIndicator(currentIndex) {
-    dots.forEach((dot, idx) => {
-      dot.classList.toggle("active", idx === currentIndex);
-    });
+    slider.style.transition = 'transform 1s ease';
+    slider.style.transform = `translateX(-${slideWidth * index}px)`;
+
+    // dot 처리
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[index % slideCount].classList.add('active');
+
+    // 🔄 5 → 1 복제 슬라이드 도달 후 트릭
+    if (index === slideCount) {
+      setTimeout(() => {
+        slider.style.transition = 'none'; // 트랜지션 없이 순간이동
+        slider.style.transform = 'translateX(0px)';
+        currentIndex = 0;
+        isTransitioning = false;
+      }, 1000); // 트랜지션 시간과 맞춰야 함
+    } else {
+      setTimeout(() => {
+        isTransitioning = false;
+      }, 1000);
+    }
   }
 
-  setInterval(() => {
-    current++;
-    slider.style.transition = "transform 0.5s ease-in-out";
-    slider.style.transform = `translateX(-${slideWidth * current}px)`;
+  function autoSlide() {
+    currentIndex++;
+    goToSlide(currentIndex);
+  }
 
-    updateIndicator(current % slideCount); // 도트 업데이트
-
-    if (current === slideCount) {
-      setTimeout(() => {
-        slider.style.transition = "none";
-        slider.style.transform = "translateX(0px)";
-        current = 0;
-        updateIndicator(0);
-      }, 500);
-    }
-  }, 5000);
+  // 초기 세팅
+  goToSlide(currentIndex);
+  setInterval(autoSlide, 5000);
 });

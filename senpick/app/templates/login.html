@@ -1,93 +1,74 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>login</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/slide.css' %}">
-    <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+  <meta charset="UTF-8">
+  <title>Login</title>
+
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'css/slide.css' %}">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
 
 
-    <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css">
-    <link href="https://fonts.googleapis.com/css2?family=Spoqa+Han+Sans+Neo:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cafe24+Supermagic&display=swap" rel="stylesheet">
-    <script src="{% static 'js/slide.js' %}" defer></script>
-</head>
-
+  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css">
+  <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css' rel='stylesheet' type='text/css'>
+  <script src="{% static 'js/slide.js' %}" defer></script>
+  <script src="{% static 'js/login.js' %}" defer></script>
 </head>
 <body>
-    <div class="zoom-wrapper">
-        <div class='background'>
-            <div class='left-card'>
-                <div class='card-inner'>
+  <div class="zoom-wrapper">
+    <div class="background">
 
-                </div>
-            </div>
-            <div class='right-slide'>
-                <div class='slider-wrapper' id='slider'>
-                  <div class='slide-content slide-1'>
-                    <h2>
-                        <span class='font-a'>“무슨 선물을 해야 할까?” <br>그 고민,</span><span class='font-b'>Senpick</span><span class='font-a'>이 줄여줄게요.</span>
-                    </h2>
-                    <p>
-                        <span class='font-a'>기쁜 날, 위로가 필요한 날, 마음을 전하고 싶은 날. 어떤 선물이 어울릴지 고민되셨죠? <br></span>
-                        <span class='font-b'>Senpick</span><span class='font-a'>은 당신의 감정과 상황까지 이해하고, 어울리는 선물을 추천해요.</span>
-                    </p>
-                    <img src="{% static 'images/slide_1.png' %}" alt="Slide 1">
-                  </div>
-              
-                  <div class='slide-content slide-2'>
-                    <h2>
-                        <span class='font-a'>“말 속에 진심이 담겨 있잖아요”</span>
-                    </h2>
-                    <p>
-                        <span class='font-a'>카카오톡·인스타그램 대화 내역을 분석해, <br></span>
-                        <span class='font-b'>Senpick</span><span class='font-a'>은 당신의 마음을 더 깊이 이해하고 선물에 담아요.</span>
-                    </p>
-                    <img src="{% static 'images/slide_2.png' %}" alt="Slide 2">
-                  </div>
-              
-                  <div class='slide-content slide-3'>
-                    <h2>
-                        <span class='font-a'>“그 선물, 이유까지 함께 전해드려요.”</span>
-                    </h2>
-                    <p>
-                        <span class='font-a'>단순히 인기 있는 선물이 아닌,<br>받는 사람의 상황과 성격, 당신의 마음까지 고려한 선물이에요.<br></span>
-                        <span class='font-b'>Senpick</span><span class='font-a'>은 왜 이 선물이 어울리는지, 공감 가는 설명과 함께 추천드려요.</span>
-                    </p>
-                    <img src="{% static 'images/slide_3.png' %}" alt="Slide 3">
-                  </div>
-              
-                  <div class='slide-content slide-4'>
-                    <h2>
-                        <span class='font-a'>“</span><span class='font-b'>Senpick</span><span class='font-a'>은 당신과 함께 기억하고, 준비해요.”</span>
-                    </h2>
-                    <p>
-                        <span class='font-a'>좋았던 선물은 다시 꺼내보고,<br>특별한 날은 잊지 않고 </span><span class='font-b'>Senpick</span><span class='font-a'>이 축하해드릴게요.</span>
-                    </p>
-                    <img src="{% static 'images/slide_4.png' %}" alt="Slide 4">
-                  </div>
-              
-                  <div class='slide-content slide-5'>
-                    <h2>
-                        <span class='font-a'>지금 바로 </span><span class='font-b'>Senpick</span><span class='font-a'>과 함께<br>선물 추천을 시작해보세요!</span>
-                    </h2>
-                    <img src="{% static 'images/slide_5.png' %}" alt="Slide 5">
-                  </div>
-                </div>
-                <div class="slide-indicator">
-                  <span class="dot active"></span>
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                  <span class="dot"></span>
-                </div>
+      <!-- 왼쪽 카드 (배경 역할만) -->
+      <div class="left-card"></div>
 
-            </div>
+      <!-- 절대 위치 요소들 -->
+      <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
+      
+      <h2 class="main-title">어떤 선물을 해야할 지 고민이신가요?</h2>
+      <p class="sub-title">센스의 정답 센픽, 모든 순간엔 센픽하세요.</p>
+
+      <!-- 기존 위치 -->
+      <div class="login-wrapper">
+        <form method="post" action="{% url 'login' %}" class="login-form">
+          {% csrf_token %}
+          <div class="input-group"  id="email-group">
+            <input type="email" name="username" id="email" placeholder="이메일 입력" required>
+            <div class="error-message" id="email-error">이메일을 입력해주세요.</div>
+          </div>
+        
+          <div class="input-group" id="password-group">
+            <input type="password" name="password" id="password" placeholder="비밀번호 입력" required>
+            <div class="error-message" id="password-error">비밀번호를 입력해주세요.</div>
+          </div>
+        
+          <button type="submit" class="login-btn">로그인</button>
+        </form>
+      
+        <div class="or-group">
+          <div class="line-left"></div>
+          <div class="or-text">Or</div>
+          <div class="line-right"></div>
         </div>
+      
+        <button class="guest-btn">비회원으로 시작하기</button>
+      
+        <div class="social-login">
+          <img src="{% static 'images/kakao_login.svg' %}" alt="카카오 로그인">
+          <img src="{% static 'images/google_login.svg' %}" alt="구글 로그인">
+          <img src="{% static 'images/naver_login.svg' %}" alt="네이버 로그인">
+        </div>
+      
+        <div class="link-row">
+          <a href="#" class="find-password">비밀번호 찾기</a>
+          <a href="#" class="signup">회원가입</a>
+        </div>
+</div>
+
+
+      <!-- 슬라이드 포함 -->
+      {% include "slide.html" %}
     </div>
+  </div>
 </body>
 </html>
