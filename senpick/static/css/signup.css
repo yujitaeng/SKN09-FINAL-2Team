@@ -1,0 +1,391 @@
+:root {
+  --card-bg: #FFF4D6;
+  --white: #FFFFFF;
+  --gray-light: #F4F4F4;
+  --gray-medium: #CCCCCC;
+  --gray-dark: #666666;
+  --text: #2E2E2E;
+  --primary: #FFE900;
+  --info: #005BAC;
+  --error: #EB1C24;
+
+  --form-offset-x: 26px;
+  --form-offset-y: 27px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--card-bg);
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text);
+}
+
+.signup-container {
+  display: flex;
+  align-items: flex-start;
+  padding: var(--form-offset-y) 0 0 var(--form-offset-x);
+  position: relative;
+}
+
+.signup-form-area {
+  position: relative;
+  width: 904px;
+  height: 1025px;
+  background: var(--white);
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  border-radius: 32px;
+}
+
+.signup-visual {
+  position: absolute;
+  top: var(--form-offset-y);
+  left: calc(var(--form-offset-x) + 904px);
+  width: 964px;
+  height: 1025px;
+  z-index: 0;
+}
+
+.signup-logo {
+  position: absolute;
+  left: calc(51px - var(--form-offset-x));
+  top:  calc(53px - var(--form-offset-y));
+  width: 148px;
+  height: 42px;
+}
+
+.step-indicator {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top:  calc(137px - var(--form-offset-y));
+  width: 114px;
+  height: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.step-indicator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gray-light);
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.step-indicator .dot {
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--gray-medium);
+  border-radius: 50%;
+  background: var(--white);
+  z-index: 2;
+}
+.step-indicator .dot.active {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.signup-title {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top:  calc(192px - var(--form-offset-y));
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* 입력 라벨 */
+.label-email, .label-password, .label-nickname {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.label-email { top: calc(276px - var(--form-offset-y)); }
+.label-password { top: calc(405px - var(--form-offset-y)); }
+.label-nickname { top: calc(534px - var(--form-offset-y)); }
+
+/* 입력창 위치 */
+.input-email, .input-password, .input-nickname {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  width: 526px;
+  height: 64px;
+}
+
+.input-email { top: calc(316px - var(--form-offset-y)); }
+.input-password { top: calc(445px - var(--form-offset-y)); }
+.input-nickname { top: calc(574px - var(--form-offset-y)); }
+
+/* 📌 공통 input 스타일 */
+input[type="email"], input[type="password"], input[type="text"] {
+  padding: 0 12px;
+  font-size: 14px;
+  border: 1px solid var(--gray-medium);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="email"].error,
+input[type="password"].error,
+input[type="text"].error,
+input[type="terms"].error {
+  border-color: var(--error) !important;
+  box-shadow: none !important;
+}
+
+/* 에러 메시지 */
+.error-message {
+  display: none;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--error);
+}
+
+#email-error {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top: calc(316px - var(--form-offset-y) + 64px + 4px);
+  width: 526px;
+  z-index: 10;
+}
+
+#password-error {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top: calc(445px - var(--form-offset-y) + 64px + 4px);
+  width: 526px;
+  z-index: 10;
+}
+
+#nickname-error {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top: calc(574px - var(--form-offset-y) + 64px + 4px);
+  width: 526px;
+  z-index: 10;
+}
+
+/* 약관 */
+.label-terms {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top: calc(663px - var(--form-offset-y));
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.terms-box {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top: calc(707px - var(--form-offset-y));
+  width: 526px;
+  height: 165px;
+  background: var(--white);
+  border: 2px solid var(--gray-medium);
+  border-radius: 15px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.checkbox-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.checkbox-all input, .checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.terms-box hr {
+  margin: 0 0 12px;
+  border-top: 1px solid var(--gray-medium);
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.required {
+  margin-left: auto;
+  color: var(--error);
+  font-weight: bold;
+}
+
+.checkbox-label a {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+.checkbox-label a:visited,
+.checkbox-label a:hover,
+.checkbox-label a:active {
+  color: var(--text);
+}
+
+/* 약관 에러 */
+#terms-error {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top: calc(707px - var(--form-offset-y) + 165px + 4px);
+  width: 526px;
+  z-index: 10;
+}
+
+/* 다음 단계 버튼 */
+.next-btn {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top:  calc(912px - var(--form-offset-y));
+  width: 526px;
+  height: 65px;
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--gray-medium);
+  color: var(--gray-dark);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* 항상 hover시 노란색으로 */
+.next-btn:hover {
+  background: var(--primary);
+  color: var(--text);
+}
+
+.signup-form-area .modal-overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.2);
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+}
+
+.signup-form-area .modal-overlay.open {
+  display: flex;
+}
+
+.signup-form-area .modal-content {
+  background: var(--white);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 80%;
+  overflow-y: auto;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  padding: 24px;
+}
+
+
+/* 2 페이지 */
+
+/* 이메일 인증 설명 텍스트 */
+.verify-description {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top: calc(276px - var(--form-offset-y));
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--text);
+}
+
+/* 인증번호 입력 그룹 (가운데 정렬) */
+.verification-input-group {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top: calc(360px - var(--form-offset-y));
+  width: 526px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* 인증번호 개별 박스 */
+.verify-input {
+  width: 90px;
+  height: 90px;
+  border: 1px solid var(--gray-medium);
+  border-radius: 12px;
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  background: var(--white);
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.verify-input:focus {
+  outline: none;
+  border-color: var(--info);
+  box-shadow: 0 0 0 3px rgba(0,91,172,0.2);
+}
+
+.verify-input.error {
+  border-color: var(--error) !important;
+  box-shadow: none !important;
+}
+
+/* 타이머 텍스트 */
+.timer-text {
+  position: absolute;
+  right: calc(215px - var(--form-offset-x));
+  top: calc(470px - var(--form-offset-y));
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-dark);
+}
+
+/* 이메일 인증 완료 버튼 */
+.verify-btn {
+  position: absolute;
+  left: calc(215px - var(--form-offset-x));
+  top: calc(580px - var(--form-offset-y));
+  width: 526px;
+  height: 65px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: var(--gray-medium);
+  color: var(--gray-dark);
+  cursor: not-allowed;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* 활성화 및 hover 상태 */
+.verify-btn.active {
+  background: var(--primary);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.verify-btn.active:hover {
+  background: var(--primary);
+  color: var(--text);
+}

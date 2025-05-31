@@ -1,0 +1,112 @@
+@font-face {
+  font-family: 'Cafe24Supermagic';
+  src: url("../fonts/Cafe24Supermagic-Bold-v1.0.woff") format('woff');
+}
+
+.right-slide {
+  position: absolute;
+  /* left: 912px;
+  top: 27px;
+  width: 964px;
+  height: 1025px; */
+  top: 0;
+  left: 0;       /* 912px → 0 */
+  width: 100%;   /* 964px → 100% */
+  height: 100%;  /* 1025px → 100% */
+  overflow: hidden;
+  z-index: 1;
+}
+
+.slider-wrapper {
+  display: flex;
+  flex-direction: row;
+  width: max-content;
+  height: 100%;
+
+  transition: transform 1s ease-in-out; 
+}
+
+.slide-content {
+  width: 964px;
+  height: 1025px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  box-sizing: border-box;
+}
+
+.slide-content h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2E2E2E;
+}
+
+.font-a {
+  font-family: 'Spoqa Han Sans Neo';
+}
+
+.font-b {
+  font-family: 'Cafe24Supermagic';
+}
+
+.slide-content p {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 28px;
+  color: #666666;
+}
+
+.slide-content img {
+  width: 610px;
+  height: 610px;
+  object-fit: contain;
+}
+
+/* Slide-specific spacing */
+.slide-1 h2 { margin-top: 153px; }
+.slide-1 p  { margin-top: 29px; }
+.slide-1 img { margin-top: 44px; }
+
+.slide-2 h2 { margin-top: 186px; }
+.slide-2 p  { margin-top: 29px; }
+.slide-2 img { margin-top: 24px; }
+
+.slide-3 h2 { margin-top: 186px; }
+.slide-3 p  { margin-top: 29px; }
+.slide-3 img { margin-top: 21px; }
+
+.slide-4 h2 { margin-top: 186px; }
+.slide-4 p  { margin-top: 29px; }
+.slide-4 img { margin-top: 23px; }
+
+.slide-5 h2 { margin-top: 196px; }
+.slide-5 img { margin-top: 54px; }
+
+.slide-indicator {
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  width: auto;
+  height: 15px;
+}
+
+.slide-indicator .dot {
+  width: 15px;
+  height: 15px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.slide-indicator .dot.active {
+  width: 35px;
+  height: 15px;
+  border-radius: 60px;
+}
