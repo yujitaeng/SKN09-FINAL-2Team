@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("📣 signup.js가 로드되었습니다. 현재 path =", window.location.pathname);
 
   const path = window.location.pathname;
 
@@ -122,10 +123,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!hasError) {
         console.log("모든 검증 통과 — 다음 단계로 이동");
-        window.location.href = "/signup/step2/";
+        // window.location.href = "/signup/step2/";
+        document.querySelector("form.signup-form-area").submit();
       }
     });
   }
+
   // ✅ step2: 이메일 인증 (5자리 입력)
 else if (path.includes("signup/step2")) {
 
@@ -139,7 +142,6 @@ else if (path.includes("signup/step2")) {
     // 2) 타이머 초기화 및 카운트다운 시작 (5분 = 300초)
     let timeLeft = 300;  // 300초 (5*60)
     timerEl.textContent = formatTime(timeLeft);  // 초기값 "05:00"
-
     const countdown = setInterval(() => {
       timeLeft--;
       if (timeLeft < 0) {
@@ -191,24 +193,51 @@ else if (path.includes("signup/step2")) {
     verifyBtn.addEventListener('click', () => {
       const code = Array.from(inputs).map(i => i.value).join('');
       // 예시: 서버 검증 대신 “12345”와 비교
-      if (code === '12345') {
-        window.location.href = '/signup/step3/';
-      } else {
-        // 틀린 경우: 입력박스 전체 빨간 테두리 + 에러 메시지 출력
-        inputs.forEach(i => i.classList.add('error'));
-        errorMsg.textContent = '인증번호가 일치하지 않습니다.';
+      // if (code === '12345') {
+      //   window.location.href = '/signup/step3/';
+      // } else {
+      //   // 틀린 경우: 입력박스 전체 빨간 테두리 + 에러 메시지 출력
+      //   inputs.forEach(i => i.classList.add('error'));
+      //   errorMsg.textContent = '인증번호가 일치하지 않습니다.';
+      //   errorMsg.style.display = 'block';
+      //   // 2초 뒤 초기화
+      //   setTimeout(() => {
+      //     inputs.forEach(i => i.classList.remove('error'));
+      //     errorMsg.style.display = 'none';
+      //   }, 2000);
+      // }
+      // ❗ AJAX로 서버 verify_code 뷰 호출
+      fetch("/signup/verify-code/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: new URLSearchParams({ code: code })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.valid) {
+          // 인증 성공: Step 3으로 이동
+          window.location.href = "/signup/step3/";
+        } else {
+          // 인증 실패: 에러 처리
+          inputs.forEach(i => i.classList.add('error'));
+          errorMsg.textContent = data.error || '인증번호가 일치하지 않습니다.';
+          errorMsg.style.display = 'block';
+          setTimeout(() => {
+            inputs.forEach(i => i.classList.remove('error'));
+            errorMsg.style.display = 'none';
+          }, 2000);
+        }
+      })
+      .catch(() => {
+        errorMsg.textContent = '서버 오류가 발생했습니다.';
         errorMsg.style.display = 'block';
-        // 2초 뒤 초기화
-        setTimeout(() => {
-          inputs.forEach(i => i.classList.remove('error'));
-          errorMsg.style.display = 'none';
-        }, 2000);
-      }
+      });
     });
 
     // 5) “인증코드 재전송” 클릭 이벤트
-    //    • 항상 활성화 상태이므로 단순히 alert 예시만 보여줍니다.
-    //    • 원하시면 이곳에 AJAX나 fetch를 이용해 서버에 재전송 요청을 날려주세요.
     resendEl.addEventListener('click', () => {
       // 재전송 시 기존 에러 메시지/빨간 테두리 모두 초기화
       inputs.forEach(i => i.classList.remove('error'));
@@ -231,10 +260,43 @@ else if (path.includes("signup/step2")) {
         }
         timerEl.textContent = formatTime(timeLeft);
       }, 1000);
-
+      // ❗ AJAX로 서버 send_verification_code 뷰 호출
+      fetch("/signup/send-code/", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+      })
+      .then(res => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(data => {
+        if (data.success) {
+          alert('새로운 인증코드를 이메일로 발송했습니다.');
+        } else {
+          alert(data.error || '인증코드 재전송에 실패했습니다.');
+        }
+      })
+      .catch(() => {
+        alert('네트워크 오류로 인증코드 재전송에 실패했습니다.');
+      });
       // 예시: 실제 서비스에서는 서버에 재전송 API 호출합니다.
-      alert('새로운 인증코드를 이메일로 발송했습니다.');
+      // alert('새로운 인증코드를 이메일로 발송했습니다.');
     });
+    // **CSRF 토큰을 가져오는 헬퍼 함수**
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+          const c = cookie.trim();
+          if (c.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(c.substring(name.length + 1));
+          }
+        });
+      }
+      return cookieValue;
+    }
   }
 
 

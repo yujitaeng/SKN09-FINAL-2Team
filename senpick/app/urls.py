@@ -26,4 +26,6 @@ urlpatterns = [
     path('signup/step3/', views.signup_step3, name='signup_step3'),
     path('signup/step4/', views.signup_step4, name='signup_step4'),
     path('signup/step5/', views.signup_step5, name='signup_step5'),
+    path('signup/send-code/', views.send_verification_code, name='send_verification_code'),
+    path('signup/verify-code/', views.verify_code, name='verify_code'),
 ]
