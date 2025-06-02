@@ -17,8 +17,8 @@
 
       <!-- 스텝 인디케이터 -->
       <div class="step-indicator">
-        <span class="dot done"></span>
-        <span class="dot done"></span>
+        <span class="dot active"></span>
+        <span class="dot active"></span>
         <span class="dot active"></span>
         <span class="dot"></span>
       </div>
@@ -43,14 +43,17 @@
       <label for="job" class="label-job">직업</label>
       <select id="job" class="input-job">
         <option value="">직업 선택</option>
-        <option value="student">학생</option>
-        <option value="office">회사원</option>
-        <option value="self">자영업</option>
-        <option value="freelancer">프리랜서</option>
-        <option value="etc">기타</option>
+          <option value="student">학생/취준생</option>
+          <option value="office">직장인</option>
+          <option value="professional">전문직</option>
+          <option value="creator">창작/문화 종사자</option>
+          <option value="public">공공/공무 종사자</option>
+          <option value="self">자영업자</option>
+          <option value="housewife">주부</option>
+          <option value="unemployed">비직업군</option>
+          <option value="etc">기타</option>
       </select>
       <div id="job-error" class="error-message"></div>
-
       <!-- 다음단계 버튼 -->
       <button id="nextBtn" class="next-btn">다음 단계</button>
     </div>
