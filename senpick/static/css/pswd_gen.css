@@ -1,0 +1,262 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: #FFFDE7;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  position: relative;
+}
+
+.zoom-wrapper {
+  height: 1080px;
+  transform: scale(0.8);
+  transform-origin: top left;
+}
+
+.background {
+  width: 100vw;
+  height: 100vh;
+  background-color: #FFFDE7;
+  position: relative;
+  /* overflow: hidden; */
+}
+
+/* 왼쪽 카드 배경 */
+.left-card {
+  position: absolute;
+  width: 844px;
+  height: 1025px;
+  left: 26px;
+  top: 27px;
+  background: #fff;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+  z-index: 1;
+}
+
+/* 로고 */
+.logo {
+  position: absolute;
+  width: 148px;
+  height: 42px;
+  left: 51px;
+  top: 53px;
+  z-index: 2;
+}
+
+
+/* 인디케이터 그룹 컨테이너 */
+.static-indicator-group {
+  position: absolute;
+  width: 81px;
+  height: 15px;
+  left: 185px;
+  top: 137px;
+  z-index: 2;
+}
+
+/* 공통 점 스타일 */
+.static-dot {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #F5F5F8; /* 기본 점 색상 */
+}
+
+/* 노란색 점 (첫 번째만 active 처리) */
+.static-dot.active {
+  background: #FFE900;
+}
+
+/* 각 점의 위치 */
+.static-dot-1 { left: 0px; top: 0px; }
+.static-dot-2 { left: 33px; top: 0px; }
+.static-dot-3 { left: 66px; top: 0px; }
+
+/* 선 스타일 */
+.static-line {
+  position: absolute;
+  width: 18px;
+  height: 0px;
+  border: 1px solid #E0E0E0;
+  top: 8px; /* 세로 중앙 맞춤 */
+}
+
+/* 각 선의 위치 */
+.static-line-1 { left: 18px; }
+.static-line-2 { left: 51px; }
+
+/* 텍스트 블록: 상대 위치 */
+.text-block {
+  position: absolute;
+  left: 185px;
+  top: calc(137px + 15px + 40px);  /* = 인디케이터 top + 높이 + 간격 */
+  z-index: 2;
+}
+
+/* 제목 */
+/* .main-title {
+  position: absolute;
+  width: 181px;
+  height: 44px;
+  left: 185px;
+  top: 192px;
+  font-family: 'Spoqa Han Sans Neo';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 44px;
+  letter-spacing: -0.5px;
+
+  color: #2E2E2E;
+  z-index: 2;
+} */
+.main-title {
+  font-family: 'Spoqa Han Sans Neo';
+  font-style: normal;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 44px;
+  color: #2E2E2E;
+  margin: 0;
+  letter-spacing: -0.5px;
+  z-index: 2;
+}
+/* 설명 */
+/* .sub-title {
+  position: absolute;
+  width: 302px;
+  height: 28px;
+  left: 185px;
+  top: 246px;
+
+  font-family: 'Spoqa Han Sans Neo';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+
+  color: #666666;
+  z-index: 2;
+}
+ */
+/* 설명 */
+.sub-title {
+  font-family: 'Spoqa Han Sans Neo';
+  font-style: normal;
+  font-size: 18px;
+  line-height: 28px;
+  color: #666;
+  margin-top: 10px; /* 원하는 설명 간격 */
+  z-index: 2;
+}
+
+.form-block {
+  position: absolute;
+  left: 185px;
+  top: 314px; /* 인디케이터 + 제목 + 설명 + 여유간격 */
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 526px; 
+  z-index: 2;
+}
+
+.text {
+  font-family: 'Spoqa Han Sans Neo';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  /* identical to box height, or 150% */
+  letter-spacing: -0.3px;
+
+  color: #2E2E2E;
+}
+
+input[name="new_password"],
+input[name="confirm_password"] {
+  font-family: 'Spoqa Han Sans Neo', sans-serif; 
+  width: 100%;
+  height: 64px;
+  padding: 0 20px;
+  font-size: 16px;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  box-sizing: border-box;
+}
+
+input.error {
+border: 1.5px solid #EB1C24;
+}
+
+/* .error-message {
+  font-size: 14px;
+  color: red;
+  display: none;
+  margin-top: 6px;
+} */
+.password-message {
+  font-size: 14px;
+  color: #EB1C24;
+
+  font-family: 'Spoqa Han Sans Neo';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+
+  height: 10px; 
+  margin-top: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+}
+
+
+/* .password-message {
+  font-size: 14px;
+  color: #EB1C24;
+  height: 10px; 
+  margin-top: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+} */
+.password-message.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 다음단계 버튼 */
+.pswd-next {
+  font-family: 'Spoqa Han Sans Neo', sans-serif; 
+  width: 100%;
+  height: 64px;
+  font-style: normal;
+  /* top: 418px; */
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  line-height: 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pswd-next {
+  background: #eee;
+  border: 2px solid transparent;;
+  color: #2E2E2E;
+  outline: none; /* 포커스 시 검정 테두리 방지 */
+  transition: all 0.2s ease;
+  margin-top: 24px;
+}
+
+.pswd-next:hover,
+.pswd-next:active {
+  background-color: #FFE900;
+  border-color: 2px solid #FFE900;
+}
