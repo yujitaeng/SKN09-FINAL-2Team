@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Page</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Spoqa+Han+Sans+Neo:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cafe24+Supermagic&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <div style="display: flex;" class="layout">
+        {% include "sidebar.html" %}
+
+        <div class="mypage-container">
+            <h1 class="mypage-title">My Page</h1>
+            <div class="mypage-grid">
+                <!-- 프로필 영역 -->
+                <section class="profile-section">
+                    <h2 class="section-title">프로필</h2>
+                    <div class="profile-card">
+                      <div class="profile-row">
+                        <img src="{% static 'images/member_default_image.png' %}" alt="profile" class="profile-image-horizontal">
+                        <div class="profile-info-text">
+                          <p class="profile-name">유지니어스</p>
+                          <p class="profile-email">yoojenius@senpick.com</p>
+                        </div>
+                      </div>
+                      <div class="tag-list">
+                        <span class="tag">유니크</span>
+                        <span class="tag">감성적</span>
+                        <span class="tag">클래식</span>
+                        <span class="tag">식품</span>
+                        <span class="tag">교환권</span>
+                        <span class="tag">리빙 · 인테리어</span>
+                      </div>
+                      <a href="{% url 'profile_info' %}">
+                        <button class="edit-btn">프로필 수정</button>
+                      </a>
+                    </div>
+                </section>
+
+                <!-- 좋아요 히스토리 영역 -->
+                <section class="like-section">
+                  <h2 class="section-title">좋아요 히스토리</h2>
+
+                  <!-- 좋아요 카드 1 -->
+                  <div class="like-block">
+                    <div class="like-card" onclick="toggleLikeBlock(this)">
+                      <div class="like-row">
+                        <div class="left">
+                          <p class="like-title-text">엄마 생신 선물 고민</p>
+                          <div class="like-tags">
+                            <span>연인 · 배우자</span>
+                            <span>60대 이상</span>
+                            <span>선택 안함</span>
+                            <span>기타 · 기본전환</span>
+                          </div>
+                        </div>
+                        <div class="right">
+                          <div class="like-count">💛 1</div>
+                          <div class="like-meta">4월 28일의 고민</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="product-scroll-wrapper hidden">
+                      <div class="card-wrapper"></div>
+                    </div>
+                  </div>
+
+                  <!-- 좋아요 카드 2 -->
+                  <div class="like-block">
+                    <div class="like-card" onclick="toggleLikeBlock(this)">
+                      <div class="like-row">
+                        <div class="left">
+                          <p class="like-title-text">스트레스 해소 선물 고민</p>
+                          <div class="like-tags">
+                            <span>연인 · 배우자</span>
+                            <span>60대 이상</span>
+                            <span>선택 안함</span>
+                            <span>기타 · 기본전환</span>
+                          </div>
+                        </div>
+                        <div class="right">
+                          <div class="like-count">💛 1</div>
+                          <div class="like-meta">1월 28일의 고민</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="product-scroll-wrapper hidden">
+                      <div class="card-wrapper"></div>
+                    </div>
+                  </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

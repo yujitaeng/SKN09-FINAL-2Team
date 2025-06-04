@@ -1,0 +1,53 @@
+{% load static %}
+<div class="sidebar-right collapsed" id="sidebar-right">
+    <!-- 상단 헤더 (브랜드/토글) -->
+    <div class="sidebar-header" style="display: block; margin-top: 24px; padding-left: 10px; padding-bottom: 0;">
+        <button class="sidebar-history menu-btn tooltip" title="선물 추천 히스토리 닫기">
+            <span class="tooltip-text">선물 추천 히스토리 닫기</span>
+            <img
+                src="{% static 'images/gift.svg' %}"
+                alt="Sidebar Image"
+                class="sidebar-image"
+            />
+            History
+        </button>
+        <div class="divider-line"></div>
+    </div>
+    <div class="card-wrapper"></div>
+</div>
+<div class="floating-history">
+    <div>
+        <button class="sidebar-history menu-btn tooltip" title="선물 추천 히스토리 열기">
+            <span class="tooltip-text">선물 추천 히스토리 열기</span>
+            <img
+                src="{% static 'images/gift.svg' %}"
+                alt="Sidebar Image"
+                class="sidebar-image"
+            />
+            History
+        </button>
+    </div>
+</div>
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+    // 사이드바 토글 기능
+    const sidebarRight = document.getElementById("sidebar-right");
+    const sidebarHistory = document.querySelector(".sidebar-history");
+
+    sidebarHistory.addEventListener("click", () => {
+        sidebarRight.classList.add("collapsed");
+    });
+
+    const floatingHistory = document.querySelector(".floating-history");
+    floatingHistory.addEventListener("click", () => {
+        sidebarRight.classList.remove("collapsed");
+    });
+    const cardWrapper = document.querySelector('.card-wrapper');
+    for (let i = 0; i < 20; i++) {
+        createProductCard(cardWrapper, {
+            imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
+            brand: '브랜드명',
+            title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...',
+        });
+    }
+</script>

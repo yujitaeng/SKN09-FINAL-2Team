@@ -1,0 +1,24 @@
+{% load static %}
+<div class="sub-sidebar">
+  <h2 class="sub-sidebar-title">프로필 수정</h2>
+  <ul class="sub-sidebar-menu">
+    <li class="{% if active_tab == 'info' %}active{% endif %}">
+      <a href="{% url 'profile_info' %}">
+        <img src="{% static 'images/profile_info.svg' %}" alt="계정 정보 수정 아이콘">
+        계정 정보 수정
+      </a>
+    </li>
+    <li class="{% if active_tab == 'password' %}active{% endif %}">
+      <a href="{% url 'profile_password' %}">
+        <img src="{% static 'images/profile_password.svg' %}" alt="비밀번호 재설정 아이콘">
+        비밀번호 재설정
+      </a>
+    </li>
+  </ul>
+  <div class="withdraw-link-wrapper">
+    <a href="{% url 'profile_delete' %}" class="withdraw-link">
+      회원 탈퇴
+      <img src="{% static 'images/profile_right_arrow.svg' %}" alt="회원 탈퇴 화살표">
+    </a>
+  </div>
+</div>

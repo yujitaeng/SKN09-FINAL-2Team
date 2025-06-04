@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>비밀번호 찾기</title>
+
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'css/slide.css' %}">
+  {% comment %} <link rel="stylesheet" href="{% static 'css/login.css' %}"> {% endcomment %}
+  {% comment %} <link rel="stylesheet" href="{% static 'css/pswd.css' %}"> {% endcomment %}
+  {% comment %} <link rel="stylesheet" href="{% static 'css/pswd_verif.css' %}"> {% endcomment %}
+  <link rel="stylesheet" href="{% static 'css/pswd_gen.css' %}">
+
+  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css">
+  <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css' rel='stylesheet' type='text/css'>
+  <script src="{% static 'js/slide.js' %}" defer></script>
+  {% comment %} <script src="{% static 'js/pswd.js' %}" defer></script> {% endcomment %}
+  <script src="{% static 'js/pswd_gen.js' %}" defer></script>
+</head>
+<body>
+  <div class="zoom-wrapper">
+    <div class="background">
+
+      <!-- 왼쪽 카드 (배경 역할만) -->
+      <div class="left-card"></div>
+
+
+      <!-- 절대 위치 요소들 -->
+      <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
+      
+      <div class="static-indicator-group">
+        <div class="static-dot static-dot-1 active"></div>
+        <div class="static-line static-line-1"></div>
+        <div class="static-dot static-dot-2 active"></div>
+        <div class="static-line static-line-2"></div>
+        <div class="static-dot static-dot-3 active"></div>
+      </div>
+      <div class="text-block">
+        <h2 class="main-title">새 비밀번호 설정</h2>
+        <p class="sub-title">새롭게 사용할 비밀번호를 설정해주세요.</p>
+      </div>
+
+
+
+      <div class="form-block">
+        <form method="post" action="{% url 'pswd_gen' %}" class="password-reset-form">
+          {% csrf_token %}
+
+          <p class="text">새 비밀번호 설정</p>
+          <input type="password" name="new_password" id="new-password" placeholder="비밀번호 입력" required>
+          <div class="password-message" id="new-password-message"></div>
+          <p class="text">새 비밀번호 확인</p>
+          <input type="password" name="confirm_password" id="confirm-password" placeholder="비밀번호 입력" required>
+          <div class="password-message" id="confirm-password-message"></div>
+          <button type="submit" class="pswd-next">비밀번호 설정 완료</button>
+        </form>
+      </div>
+
+    </div>
+
+
+    
+
+
+      <!-- 슬라이드 포함 -->
+      {% include "slide.html" %}
+  </div>
+</body>
+</html>

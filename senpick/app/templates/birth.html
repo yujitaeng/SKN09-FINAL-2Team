@@ -1,0 +1,102 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}Senpick{% endblock %}
+{% block extra_head %}    
+    <link rel="stylesheet" href="{% static 'css/birth.css' %}">
+{% endblock %}
+
+{# 사이드바를 비우고 싶다면 해당 블록을 비워버리면 됩니다 #}
+{% block sidebar %}
+    {% include "layout/sidebar.html" %}
+{% endblock %}
+{% block content %}
+    <div class="birth-container">
+        <div class="birth-inner-container snap-container font-a">
+            <section class="snap-section animate-on-scroll">
+                <h1>생일 축하해요, 유지니어스님!<img src="{% static 'images/pops.svg' %}" width="90" height="60"></h1> 
+                <p>오늘 하루, 당신만을 위한 선물을 준비했어요 :)</p>
+                <p><span class="font-b">Senpick</span>이 마음을 담아, 당신만을 위한 선물을 준비했는데, 한번 보실래요?</p>
+                <div class="img-wrapper">
+                    <img src="{% static 'images/birth.png' %}">
+                </div>
+            </section>
+            <section class="snap-section animate-on-scroll">
+                <h2>유지니어스님의 생일, &nbsp;<span class="font-b">Senpick</span>이 함께 축하드려요.</h2>
+                <p><span class="font-b">Senpick</span>이 마음을 담아, 당신만을 위한 선물을 준비했어요.</p>
+                <div class="card-wrapper" style="margin: 60px auto;"></div>
+            </section>
+            <section class="snap-section animate-on-scroll" style="text-align: center;">
+                <h2>당신의 오늘이 더 특별하길 <span class="font-b">Senpick</span>이 응원해요!</h2>
+                <button class="yellow-btn" onclick="location.href=`{% url 'chat' %}`" style="margin-bottom:200px; margin-top:16px;"><span class="font-b">Happy Birthday!</span></button>
+            </section>
+        </div>
+        <div id="scroll-indicator" class="scroll-arrow">
+            <img src="{% static 'images/down_arrow.svg' %}" alt="Scroll Down">
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const cardWrapper = document.querySelector(".card-wrapper");
+                for (let i = 0; i < 4; i++) {
+                    createProductCard(cardWrapper, {
+                        imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
+                        brand: '브랜드명',
+                        title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...',
+                        reason: '추천 이유: 이 제품은 휴대성이 뛰어나고, 캠핑이나 피크닉에 적합한 무선 스피커입니다. JBL의 품질을 믿을 수 있어요.',
+                    });
+                }
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                    });
+                }, {
+                    threshold: 0.3 // 보이기 시작할 비율
+                });
+
+                document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+                const arrow = document.getElementById("scroll-indicator");
+                const lastSection = document.querySelector(".snap-section:last-child");
+
+                const observer2 = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // 마지막 섹션이 보이면 화살표 숨김
+                        arrow.style.opacity = "0";
+                    } else {
+                        arrow.style.opacity = "1";
+                    }
+                    });
+                }, { threshold: 0.7 }); // 70% 이상 보이면 "보인다" 판단
+
+                if (lastSection) observer2.observe(lastSection);
+
+                const container = document.querySelector(".snap-container");
+
+                const updateArrowPosition = () => {
+                    const rect = container.getBoundingClientRect();
+
+                    if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
+                        arrow.style.opacity = '0'; // snap-container 안 보이면 숨김
+                    } else {
+                        // snap-container 보이면 위치 조정
+                        const containerBottom = Math.min(rect.bottom, window.innerHeight);
+                        arrow.style.opacity = '1';
+                        arrow.style.bottom = `${window.innerHeight - containerBottom + 40}px`; // 40px 위 여유
+
+                        // ✅ 좌우 가운데 위치 계산
+                        const containerCenterX = rect.left + rect.width / 2;
+                        arrow.style.left = `${containerCenterX}px`;
+                    }
+                };
+
+                window.addEventListener("scroll", updateArrowPosition);
+                window.addEventListener("resize", updateArrowPosition);
+                updateArrowPosition(); // 초기 실행
+            });
+        </script>
+    </div>
+{% endblock %}
+{% block sidebar2 %}{% endblock %}

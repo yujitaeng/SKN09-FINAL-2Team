@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>이메일 인증</title>
+
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'css/slide.css' %}">
+  {% comment %} <link rel="stylesheet" href="{% static 'css/login.css' %}"> {% endcomment %}
+  {% comment %} <link rel="stylesheet" href="{% static 'css/pswd.css' %}"> {% endcomment %}
+  <link rel="stylesheet" href="{% static 'css/pswd_verif.css' %}">
+
+  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css">
+  <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css' rel='stylesheet' type='text/css'>
+  <script src="{% static 'js/slide.js' %}" defer></script>
+  <script src="{% static 'js/pswd_verif.js' %}" defer></script>
+</head>
+<body>
+  <div class="zoom-wrapper">
+    <input id="hidden-input" type="text" maxlength="5" inputmode="numeric" pattern="\d*" autocomplete="one-time-code" tabindex="-1"/>
+    <div class="background">
+
+      <!-- 왼쪽 카드 (배경 역할만) -->
+      <div class="left-card"></div>
+
+
+      <!-- 절대 위치 요소들 -->
+      <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
+      
+      <div class="static-indicator-group">
+        <div class="static-dot static-dot-1 active"></div>
+        <div class="static-line static-line-1"></div>
+        <div class="static-dot static-dot-2 active"></div>
+        <div class="static-line static-line-2"></div>
+        <div class="static-dot static-dot-3"></div>
+      </div>
+      <div class="text-block">
+        <h2 class="main-title">이메일 인증</h2>
+        <p class="sub-title">이메일로 받은 인증번호 5자리를 입력해주세요.</p>
+      </div>
+
+      <div class="verification-container">
+
+        {% comment %} <input id="hidden-input" type="text" maxlength="5" inputmode="numeric" pattern="\d*" autocomplete="one-time-code" tabindex="-1"/> {% endcomment %}
+        <div class="digit-boxes">
+          <div class="digit-box" id="digit-0"></div>
+          <div class="digit-box" id="digit-1"></div>
+          <div class="digit-box" id="digit-2"></div>
+          <div class="digit-box" id="digit-3"></div>
+          <div class="digit-box" id="digit-4"></div>
+        </div>
+      </div>
+
+      <div class="verif-timer-group">
+        <div id="timer-text">00:00</div>
+        <div id="resend-text" style="display: none;">인증코드 재전송</div>
+      </div>
+
+      <div id="verif-error-msg">인증번호가 올바르지 않습니다.</div>
+
+
+      <button class="verif-comp-btn">이메일 인증 완료</button>
+
+      {% comment %} <div class="form-block">
+        <form method="post" action="{% url 'login' %}" class="login-form">
+          {% csrf_token %}
+          <input type="email" name="username" id="email" placeholder="이메일 입력 (예:senpick@senpick.com)" required>
+          <div class="error-message" id="email-error">이메일을 필수 입력해주세요.</div>
+          <button type="submit" class="pswd-next">다음 단계</button>
+        </form>
+      </div> {% endcomment %}
+      {% comment %} <button class="pswd-verif-test">테스트용 버튼<br>(새비번설정pg)</button> {% endcomment %}
+    </div>
+
+      <!-- 슬라이드 포함 -->
+      {% include "slide.html" %}
+  </div>
+</body>
+</html>

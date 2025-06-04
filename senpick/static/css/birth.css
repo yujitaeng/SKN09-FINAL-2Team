@@ -1,0 +1,165 @@
+@font-face {
+    font-family: "Cafe24 Supermagic";
+    src: url("/static/fonts/Cafe24Supermagic-Bold-v1.0.woff2") format("woff2"),
+        url("/static/fonts/Cafe24Supermagic-Bold-v1.0.woff") format("woff");
+    font-weight: bold;
+    font-style: bold;
+}
+
+.font-a {
+    font-family: "Spoqa Han Sans Neo", sans-serif;
+}
+
+.font-b {
+    font-family: "Cafe24 Supermagic", sans-serif;
+}
+
+.main-content {
+    background-color: #fffde7;
+}
+
+.yellow-btn {
+    width: 600px;
+    height: 65px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    background-color: #ffe900;
+    border: none;
+    cursor: pointer;
+
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.yellow-btn:active {
+    transform: scale(0.98); /* 살짝 눌리는 느낌 */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* 그림자 줄이기 */
+}
+
+.main-container {
+    overflow-y: hidden;
+}
+
+.birth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* height: 100vh; */
+    /* overflow-y: hidden; */
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+.birth-container p {
+    color: #666666;
+    font-size: 24px;
+    margin: 0;
+}
+
+.birth-container h1 {
+    display: flex;
+    align-items: center;
+    font-size: 38px;
+    margin: 10px 0;
+}
+
+.birth-container h2 {
+    font-size: 32px;
+}
+
+.birth-inner-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 800px;
+    padding: 40px 20px;
+}
+
+.birth-inner-container .img-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 80px 0;
+    height: 60vh; /* 원하는 높이로 조절 */
+    overflow: hidden;
+}
+
+.birth-inner-container .img-wrapper img {
+    height: 100%;       /* 부모 높이에 맞춤 */
+    width: auto;        /* 비율 유지 */
+    display: block;
+    object-fit: contain; /* 비율 유지하면서 전체 보이게 */
+}
+
+.snap-container {
+    position: relative; /* 중요! */
+    /* scroll-snap-type: y mandatory; */
+    /* overflow-y: scroll; */
+    /* height: 100vh; */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none; /* IE 10+ */
+      /* ✅ 정중앙 정렬 핵심 */
+    height: 100vh;
+    overflow: scroll;
+    scroll-snap-type: y mandatory;
+}
+
+.snap-section {
+    scroll-snap-align: start;
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+    /* padding: 40px 0; */
+    box-sizing: border-box;
+    margin: auto;
+    display: flex;
+    justify-content: center;   /* 가로 중앙 */
+    flex-direction: column;    /* 콘텐츠들을 세로로 나열 */
+}
+
+/* fade-up 초기 상태 */
+.animate-on-scroll {
+  will-change: opacity, transform;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out;
+}
+
+/* fade-up 나타날 때 */
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 👇 화살표를 snap-container 기준 아래 가운데에 배치 */
+.scroll-arrow {
+    position: fixed; /* 👈 포인트! */
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 32px;
+    color: #666;
+    opacity: 0.8;
+    animation: bounce 1.5s infinite;
+    z-index: 999;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(10px);
+    }
+}

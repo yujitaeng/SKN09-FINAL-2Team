@@ -1,0 +1,412 @@
+/* === SIDEBAR 기본 구조 === */
+.sidebar {
+  position: sticky;
+  top: 0;
+  width: 310px;
+  min-width: 310px;
+  max-width: 310px;
+  flex-shrink: 0;  /* ← 추가! */
+  /* position: fixed; */
+  /* top: 0; */
+  /* left: 0; */
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 2px solid #ededed;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  transition: width 0.22s cubic-bezier(.38, 1.16, .64, 1);
+  justify-content: space-between;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-user-drag: none;
+  -user-drag: none;
+
+  /* display: flex;
+  flex-direction: column; */
+  justify-content: flex-start;  /* 아래 고정 제거 */
+  height: 100vh;                /* ← 높이 고정 필요 */
+  overflow: visible;             /* 내부 스크롤로 제한 */
+}
+
+.sidebar.mini {
+  width: 76px;
+  min-width: 76px;
+}
+
+/* === 상단 HEADER === */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 24px;
+  padding-left: 4px;
+  /* margin-bottom: 16px; */
+  box-sizing: border-box;
+  background: #ffffff;
+  flex-shrink: 0;
+  transition: width 0.22s;
+}
+
+.sidebar.mini .sidebar-header {
+  /* margin-bottom: 12px !important; */
+  padding: 0 8px !important;
+  display: flex;
+  justify-content: center;;
+}
+
+/* === 로고/버튼 === */
+.logo-img,
+.brand-logo,
+.brand-link,
+.menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.logo-img,
+.brand-logo{
+  width: 40px;
+  height: 40px;
+}
+
+.logo-img img,
+.brand-logo img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.brand-link img, 
+.menu-btn img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+/* .sidebar.mini .logo-img,
+.sidebar.mini .menu-btn,
+.sidebar.mini .brand-logo {
+  width: 44px !important;
+  height: 44px !important;
+} */
+
+/* === 메인 컨테이너 === */
+.sidebar-main {
+  /* flex: 1 1 auto; */
+  display: flex;
+  flex: 1; /* 남은 영역을 차지하게 설정 */
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+  /* width: 100%; */
+  min-height: 0;
+  padding: 0 14px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow: visible;
+}
+.sidebar-main::-webkit-scrollbar {
+  display: none;
+}
+
+/* === 검색창 === */
+.search-row {
+  width: 100%;
+  height: 48px;
+  background: #f8f8fa;
+  border: 2px solid #ededed;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  margin-bottom: 13px;
+  box-sizing: border-box;
+  font-size: 17px;
+  font-weight: 500;
+  color: #222;
+  flex-shrink: 0;
+  transition: all 0.22s;
+}
+.search-row img {
+  width: 22px;
+  /* height: 22px; */
+  flex-shrink: 0;
+}
+.search-row input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1em;
+  color: #333;
+  flex: 1;
+  margin-left: 10px;
+}
+
+.sidebar.mini .search-row {
+  width: 44px !important;
+  height: 44px !important;
+  /* margin-bottom: 10px !important; */
+  padding: 0 !important;
+  border-radius: 12px !important;
+  justify-content: center;
+}
+.sidebar.mini .search-row input {
+  display: none !important;
+}
+.sidebar.mini .search-row img {
+  margin: 0 auto;
+}
+
+.search-label {
+  width: 100%;
+  margin: 0 14px;
+}
+
+/* === 메뉴 버튼 === */
+.menu-btn-row {
+  cursor: pointer;
+  width: 100%;
+  height: 48px;
+  background: #ffffff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 0 14px;
+  /* margin-bottom: 13px; */
+  box-sizing: border-box;
+  font-size: 17px;
+  font-weight: 500;
+  color: #222;
+  flex-shrink: 0;
+  transition: all 0.22s;
+}
+.menu-btn-row img {
+  width: 22px;
+  height: 22px;
+}
+.menu-btn-row .btn-label {
+  flex: 1;
+}
+.menu-btn-row.selected {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+.menu-btn-row:not(.selected):hover {
+  background: #f6f6f8;
+  border-color: #ffffff;
+}
+
+.sidebar.mini .menu-btn-row {
+  width: 60px !important;
+  /* margin-bottom: 10px !important; */
+  padding: 0 !important;
+  border-radius: 12px !important;
+}
+.sidebar.mini .menu-btn-row .btn-label {
+  display: none !important;
+}
+.sidebar.mini .menu-btn-row img {
+  margin: 0 auto;
+}
+
+/* === 채팅 리스트 === */
+.chat-list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* flex: 1 1 auto; */
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transition: width 0.22s;
+}
+.chat-list::-webkit-scrollbar {
+  display: none;
+}
+.chat-list li {
+  /* width: 200px; */
+  height: 28px;
+  padding: 8px 48px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #666666;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  position: relative;
+}
+
+.chat-list li.selected {
+  background: #f6f6f8;
+  color: hsl(0, 0%, 13%);
+}
+
+.chat-list li.selected::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #FFE900; /* 노란색 */
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.chat-list li:hover {
+  background: #f6f6f8;
+}
+
+.chat-list li .chat-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sidebar.mini .chat-list {
+  width: 60px !important;
+  display: none !important;
+}
+
+/* === 하단 마이페이지/로그아웃 === */
+
+.sidebar-bottom {
+  /* flex: 1 1 auto; */
+  flex-shrink: 0;
+  padding: 0 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 0;
+  overflow: visible;
+  /* overflow-y: auto; */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.mypage-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 1em;
+  color: #757575;
+  margin-bottom: 12px;
+  padding: 0 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.mypage-row img {
+  width: 22px;
+  height: 22px;
+}
+
+.sidebar.mini .mypage-row img {
+  width: 24px !important;
+  height: 24px !important;
+  margin: 0 auto;
+}
+.sidebar.mini .mypage-row span {
+  display: none !important;
+}
+
+/* === 브랜드 바 === */
+.brand-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  width: 100%;
+  padding-left: 5px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 8px rgba(255, 230, 0, 0.09);
+  box-sizing: border-box;
+}
+
+.mini .sidebar-header, .mini .sidebar-main, .mini .sidebar-bottom {
+  padding: 0;
+}
+
+.mini .brand-bar {
+  justify-content: center;
+  padding: 0;
+}
+
+.brand-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #222;
+  margin-left: 8px;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-user-drag: none;
+  /* user-drag: none; */
+}
+
+.sidebar.mini .brand-label,
+.sidebar.mini .brand-link {
+  display: none !important;
+}
+
+.divider-line {
+  height: 1px;
+  background-color: #e0e0e0; /* 선 색상 */
+  margin: 10px auto;            /* 위아래 여백 */
+  width: 100%;               /* 전체 너비 */
+}
+
+.mini .divider-line {
+  width: 60%;
+}
+
+a.menu-btn-row {
+  text-decoration: none;
+  color: inherit; 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.main-content {
+    flex: 1 1 0%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f5f5f8;
+    min-height: 100vh;
+    padding: 0;
+}
+

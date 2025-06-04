@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile_info.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile_delete.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar_profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/stepper.css' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Spoqa+Han+Sans+Neo:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div style="display: flex;" class="layout">
+        {% include "sidebar.html" %}
+        <div class="layout">
+          <!-- 우측 프로필 수정 메인 영역 -->
+          <div class="profile-main-wrapper" style="padding-top: 0; align-self: center;">
+            <div class="center-card-container">
+                  <div class="modal-card">
+                    <h1>그동안 <span class="font-b">Senpick</span>과 함께해주셔서 감사합니다 :)</h1>
+                    <p>언제든 다시 찾아주세요</p>
+                    <div class="img-wrapper">
+                      <img src="{% static 'images/delete_confirm.png' %}" alt="하트 아이콘" class="heart-icon" width="500">
+                    </div>
+                    <div class="modal-buttons">
+                      <button class="cancel-btn" onclick="location.href=`{% url 'login' %}`">센픽 홈으로 가기</button>
+                    </div>
+                  </div>
+                </div>
+          </div>
+        </div>
+    </div>
+    <script>
+      // 기타 사유 선택시 입력창 노출
+      const reasonRadios = document.querySelectorAll('input[type="checkbox"][name="reason"]');
+      const otherInput = document.querySelector('.other-input');
+      reasonRadios.forEach(radio => {
+        radio.onchange = function() {
+          reasonRadios.forEach(r => {
+            if (r !== this) r.checked = false; // 다른 체크박스는 해제
+          });
+          if (this.parentElement.textContent.includes('기타') && this.checked) {
+            otherInput.parentElement.style.display = 'flex';
+          } else {
+            otherInput.parentElement.style.display = 'none';
+            otherInput.value = '';
+          }
+        }
+      });
+
+      // 탈퇴 처리
+      document.getElementById('real-delete-btn').onclick = function() {
+        alert('탈퇴 처리가 완료되었습니다.');
+        location.href = "/"; // 탈퇴 후 메인으로 이동 등
+      };
+
+      // 기타 입력창 토글
+      const otherLabel = document.querySelector('#other-reason');
+      const checkbox = otherLabel.querySelector('input[type="checkbox"]');
+
+      checkbox.addEventListener('change', function () {
+        if (this.checked) {
+          otherLabel.classList.add('active');
+        } else {
+          otherLabel.classList.remove('active');
+        }
+      });
+    </script>
+</body>
+</html>

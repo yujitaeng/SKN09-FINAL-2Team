@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    container_name: senpick
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    expose:
+      - "8000"
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    ports:
+      - "8080:80" # {host_port}:{port} host_port 를 수정해야 배포시 반영됨 
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./static:/code/static
+    depends_on:
+      - web
