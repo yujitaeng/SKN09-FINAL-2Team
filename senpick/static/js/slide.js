@@ -32,11 +32,11 @@ document.addEventListener("DOMContentLoaded", function () {
         slider.style.transform = 'translateX(0px)';
         currentIndex = 0;
         isTransitioning = false;
-      }, 1000); // 트랜지션 시간과 맞춰야 함
+      }, TRANSITION_DURATION_MS); // 트랜지션 시간과 맞춰야 함
     } else {
       setTimeout(() => {
         isTransitioning = false;
-      }, 1000);
+      }, TRANSITION_DURATION_MS);
     }
   }
 
