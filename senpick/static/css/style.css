@@ -256,7 +256,7 @@ button {
 }
 .spin {
   animation: spin 2s linear infinite;
-
+}
 .font-b {
     font-family: 'Cafe24Supermagic', sans-serif;
 }

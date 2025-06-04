@@ -340,9 +340,10 @@
               `<div class="chat-msg">아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :)</div>
                <div class="card-wrapper" style="margin-top: 12px"></div>`
             );
+            const cardWrapper = document.querySelector(".card-wrapper:last-child");
             for (let i = 0; i < 4; i++){
                 // 예시 카드 생성
-              createProductCard({
+              createProductCard(cardWrapper, {
                 imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
                 brand: '브랜드명',
                 title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...',
