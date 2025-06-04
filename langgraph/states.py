@@ -146,10 +146,12 @@ def call_agent(state, agent_executor:AgentExecutor=None) -> dict:
     history_str = "\n".join(state.get("chat_history", [])[-10:])
     try:
         user_intent = (
-            f"[대화 맥락]\n{history_str}\n"
-            f"[추출된 조건]\n감정: {state['situation_info'].get('emotion')}, "
-            f"스타일: {state['situation_info'].get('preferred_style')}, "
-            f"예산: {state['situation_info'].get('price_range')}원"
+            f"[추출된 조건]\n감정: {state['situation_info'].get('emotion')}, \n"
+            f"스타일: {state['situation_info'].get('preferred_style')}, \n"
+            f"예산: {state['situation_info'].get('price_range')}원\n"
+            f"친밀도: {state['situation_info'].get('closeness')}\n"
+            f"[수령인 정보]\n{state.get('recipient_info', {})}\n"
+            f"[대화 맥락]\n{history_str}"
         )
 
         # 실시간 스트리밍 출력 받기

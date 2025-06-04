@@ -1,0 +1,280 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background: #FFFDE7;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  position: relative;
+}
+
+.zoom-wrapper {
+  height: 1080px;
+  transform: scale(0.8);
+  transform-origin: top left;
+}
+
+.background {
+  width: 100vw;
+  height: 100vh;
+  background-color: #FFFDE7;
+  position: relative;
+  /* overflow: hidden; */
+}
+
+/* 왼쪽 카드 배경 */
+.left-card {
+  position: absolute;
+  width: 844px;
+  height: 1025px;
+  left: 26px;
+  top: 27px;
+  background: #fff;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+  z-index: 1;
+}
+
+/* 로고 */
+.logo {
+  position: absolute;
+  width: 148px;
+  height: 42px;
+  left: 51px;
+  top: 53px;
+  z-index: 2;
+}
+
+/* 제목 */
+.main-title {
+  position: absolute;
+  /* width: 478px; */
+  height: 44px;
+  left: 207px;
+  top: 234px;
+/*   top: 199px; */
+  font-size: 32px;
+  font-weight: 700;
+  color: #222;
+  z-index: 2;
+}
+
+/* 설명 */
+.sub-title {
+  position: absolute;
+  /* width: 338px; */
+  height: 30px;
+  left: 279px;
+  top: 290px;
+/*   top: 255px; */
+  font-size: 20px;
+  color: #666;
+  z-index: 2;
+}
+.login-wrapper {
+  position: absolute;
+  top: 368px;
+  left: 185px;
+  width: 526px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px; /* 요소 간 기본 간격 */
+  z-index: 2;
+}
+
+/* .form-block {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+} */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  /* gap: 12px;  */
+  /* margin-bottom: 24px;  */
+  /* 기본 간격 (에러 여부 상관없이 적용) */
+}
+
+input[name="username"],
+input[name="password"] {
+  width: 100%;
+  height: 64px;
+  padding: 0 20px;
+  font-size: 16px;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  box-sizing: border-box;
+}
+
+/* input.error {
+border: 1.5px solid #EB1C24;
+} */
+
+/* 기본 마진 설정 */
+#email-group {
+  margin-bottom: 15px; /* 이메일 ↔ 비밀번호 기본 간격 */
+}
+#password-group {
+  margin-bottom: 25px; /* 비밀번호 ↔ 로그인 버튼 기본 간격 */
+}
+
+/* 에러가 보일 경우: 마진 확대 */
+input.error#email + .error-message {
+  display: block;
+}
+input.error#email + .error-message ~ #password-group {
+  margin-top: 12px;  /* 27px = 15 + 12 */
+}
+
+input.error#password + .error-message {
+  display: block;
+}
+input.error#password + .error-message ~ .login-btn {
+  margin-top: 3px; /* 28px = 25 + 3 */
+}
+.error-message {
+  font-size: 14px;
+  color: red;
+  display: none;
+  margin-top: 2px;
+/*   margin-top: 6px; */
+}
+
+/* 로그인 버튼 */
+.login-btn,
+.guest-btn {
+  width: 100%;
+  height: 64px;
+  font-size: 20px;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.login-btn {
+  background: #eee;
+  border: none;
+  color: #2E2E2E;
+/*   border: 2px solid transparent;;
+  color: #2E2E2E;
+  outline: none; 
+  transition: all 0.2s ease; */
+  /* 포커스 시 검정 테두리 방지 */
+}
+
+.login-btn:hover,
+.login-btn:active {
+  background-color: #FFE900;
+  border: 2px solid #FFE900;
+}
+
+.guest-btn {
+  background: #fff;
+  border: 1px solid #ccc;
+  color: #2E2E2E;
+/*   margin-top: 0;  */
+}
+
+.guest-btn:hover,
+.guest-btn:active {
+  background-color: #FFE900;
+  border: 2px solid #FFE900;
+}
+
+.or-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.line-left,
+.line-right {
+  flex-grow: 1;
+  height: 1px;
+  background: #CCCCCC;
+}
+
+.or-text {
+  font-size: 18px;
+  color: #E0E0E0;
+}
+
+/* .social-login {
+  display: flex;
+  justify-content: center;
+  gap: 65px;
+}
+
+.social-login img {
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+}
+
+.link-row {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+} */
+
+/* .social-login {
+  display: flex;
+  justify-content: center;
+  gap: 65px;
+
+  margin-top: 45px;
+} */
+
+.social-login {
+  position: absolute;
+  top: 466px; /* 위치 고정 */
+  /* left: 185px; */
+  display: flex;
+  justify-content: center;
+  gap: 65px;
+  width: 526px;
+}
+
+.social-login img {
+  width: 55px;
+  height: 55px;
+  cursor: pointer;
+}
+
+/* .link-row {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+
+  margin-top: 73px;
+} */
+.link-row {
+  position: absolute;
+  top: 594px; /* 위치 고정 */
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  width: 526px;
+}
+
+.find-password,
+.signup {
+  font-size: 16px;
+  text-decoration: underline;
+  color: #666666;
+}
+
+.find-password:hover,
+.signup:hover {
+  font-weight: 700;
+  color: #2E2E2E;
+}

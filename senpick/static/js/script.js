@@ -1,3 +1,4 @@
+
 console.log("자바스크립트 테스트")
 
 function createProductCard(data) {
@@ -36,9 +37,9 @@ function createProductCard(data) {
     info.appendChild(brand);
     info.appendChild(title);
     
+    // 하트 아이콘
     link.appendChild(info);
 
-    // 하트 아이콘
     const heartDiv = document.createElement("div");
     heartDiv.className = "heart";
 
@@ -52,9 +53,9 @@ function createProductCard(data) {
     heartIcon.addEventListener("click", (event) => {
         event.stopPropagation();
         heartIcon.classList.toggle("active");
-        heartIcon.src = heartIcon.classList.contains("active") ?
-            "/static/images/heart_red.svg" :
-            "/static/images/heart_gray.svg";
+        heartIcon.src = heartIcon.classList.contains("active")
+            ? "/static/images/heart_red.svg"
+            : "/static/images/heart_gray.svg";
     });
 
     heartIcon.addEventListener("mouseenter", () => {
@@ -79,4 +80,32 @@ function createProductCard(data) {
         card.appendChild(reason);
     }
     wrapper.appendChild(card);
+}
+
+function toggleLikeBlock(cardEl) {
+    const likeBlock = cardEl.closest('.like-block');
+    const scrollWrapper = likeBlock.querySelector('.product-scroll-wrapper');
+    const cardWrapper = likeBlock.querySelector('.card-wrapper');
+    const likeCount = likeBlock.querySelector('.like-count');
+
+    const isOpen = likeBlock.classList.contains('active');
+
+    if (isOpen) {
+        scrollWrapper.classList.add('hidden');
+        likeBlock.classList.remove('active');
+    } else {
+        scrollWrapper.classList.remove('hidden');
+        likeBlock.classList.add('active');
+
+        if (cardWrapper.children.length === 0) {
+            for (let i = 0; i < 7; i++) {
+                createProductCard(cardWrapper, {
+                    imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
+                    brand: '브랜드명',
+                    title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...'
+                });
+            }
+            likeCount.innerText = `💛 ${cardWrapper.children.length}`;
+        }
+    }
 }
