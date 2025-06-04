@@ -1,3 +1,9 @@
+
+@font-face {
+  font-family: 'Cafe24Supermagic';
+  src: url("../fonts/Cafe24Supermagic-Bold-v1.0.woff") format('woff');
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -117,4 +123,8 @@ html, body {
 .main-content {
     padding: 20px;
     width: 100%
+}
+
+.font-b {
+    font-family: 'Cafe24Supermagic', sans-serif;
 }
