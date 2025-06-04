@@ -21,7 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
   jobList.forEach((job) => {
     const li = document.createElement("li");
     li.textContent = job;
-    li.addEventListener("click", () => {
+    li.addEventListener("click", (e) => {
+      e.stopPropagation();
       jobInput.value = job;
       jobDropdown.style.display = "none";
     });
@@ -29,6 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.querySelector(".job-input").appendChild(jobDropdown);
+
+  jobInput.parentNode.addEventListener("click", (e) => {
+    e.stopPropagation(); // Prevent click from closing the dropdown
+    jobDropdown.style.display = "block";
+  });
 
   jobInput.addEventListener("focus", () => {
     jobDropdown.style.display = "block";
@@ -67,14 +73,15 @@ document.addEventListener("DOMContentLoaded", function () {
   // ------------------------ 유효성 검사 ------------------------
   const form = document.querySelector("form");
   form.addEventListener("submit", function (e) {
+    e.preventDefault(); // 폼 제출 방지 백엔드 연결 시에는 제거 
     let isValid = true;
 
     const password = form.querySelector("input[type='password']");
     const nickname = form.querySelector("input[type='text'][value='유지니어스']");
     const birth = form.querySelector("input[type='text'][value='19990101']");
     const genderSelected = document.querySelector(".gender-toggle .active");
-    const selectedStyleTags = document.querySelectorAll(".preference-tags:nth-of-type(1) .tag.active");
-    const selectedCategoryTags = document.querySelectorAll(".preference-tags:nth-of-type(2) .tag.active");
+    const selectedStyleTags = document.querySelectorAll(".style-tags .tag.active");
+    const selectedCategoryTags = document.querySelectorAll(".category-tags .tag.active");
 
     clearError(password);
     clearError(nickname);
@@ -84,8 +91,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!password.value) {
       setError(password, "비밀번호를 입력해주세요. *영문 소문자, 숫자를 이용하여 최소 6~15자리");
       isValid = false;
-    } else if (password.value.length < 6 || password.value.length > 15) {
-      setError(password, "비밀번호는 6~15자 이내여야 합니다.");
+    } else if (password.value.length < 8 || password.value.length > 15) {
+      setError(password, "비밀번호는 8~15자 이내여야 합니다.");
       isValid = false;
     }
 
@@ -124,6 +131,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!isValid) {
       e.preventDefault();
+    }
+    else {
+      // 모든 유효성 검사 통과 시 폼 제출
+      alert("프로필 정보가 성공적으로 업데이트되었습니다.");
+      // console.log("프로필 정보가 성공적으로 업데이트되었습니다.");
+      window.location.href = "/mypage"; // 프로필 페이지로 리다이렉트
     }
   });
 

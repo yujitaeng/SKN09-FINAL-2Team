@@ -34,6 +34,7 @@ urlpatterns = [
     path('mypage/', mypage_views.home, name='mypage'),
     path('mypage/profile/', mypage_views.profile_info, name='profile_info'),
     path('mypage/profile/password/', mypage_views.profile_password, name='profile_password'),
+    path('mypage/profile/password/confirm', mypage_views.profile_password_confirm, name='profile_password_confirm'),
     path('mypage/profile/delete/', mypage_views.profile_delete, name='profile_delete'),
     path('mypage/profile/delete/confirm', mypage_views.profile_delete_confirm, name='profile_delete_confirm'),
     path('signup/step1/', views.signup_step1, name='signup_step1'),

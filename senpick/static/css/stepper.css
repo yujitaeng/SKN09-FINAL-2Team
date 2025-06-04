@@ -92,6 +92,11 @@ body {
   border: 1.5px solid #ffe900;
 }
 
+/* .withdraw-reason .step-option:hover {
+  background: #F7F8FA;
+  border: 1.5px solid #ffe900;
+} */
+
 /* 네모 노란 체크박스 */
 .step-option input[type="checkbox"] {
   appearance: none;

@@ -9,6 +9,9 @@ def profile_info(request):
 def profile_password(request):
     return render(request, 'profile/profile_password.html')
 
+def profile_password_confirm(request):
+    return render(request, 'profile/profile_password_confirm.html')
+
 def profile_delete(request):
     return render(request, 'profile/profile_delete.html')
 
