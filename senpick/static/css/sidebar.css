@@ -4,14 +4,14 @@
   top: 0;
   width: 310px;
   min-width: 310px;
-  height: 100vh;
+  max-width: 310px;
+  flex-shrink: 0;  /* ← 추가! */
   /* position: fixed; */
   /* top: 0; */
   /* left: 0; */
   z-index: 100;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   padding: 0;
   box-sizing: border-box;
   background: #ffffff;
@@ -28,6 +28,12 @@
 
   -webkit-user-drag: none;
   -user-drag: none;
+
+  /* display: flex;
+  flex-direction: column; */
+  justify-content: flex-start;  /* 아래 고정 제거 */
+  height: 100vh;                /* ← 높이 고정 필요 */
+  overflow: visible;             /* 내부 스크롤로 제한 */
 }
 
 .sidebar.mini {
@@ -40,9 +46,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* width: 100%; */
-  padding: 0 8px 0 18px;
+  width: 100%;
   margin-top: 24px;
+  padding-left: 4px;
   /* margin-bottom: 16px; */
   box-sizing: border-box;
   background: #ffffff;
@@ -60,10 +66,8 @@
 /* === 로고/버튼 === */
 .logo-img,
 .brand-logo,
-.menu-btn,
-.brand-link {
-  width: 40px !important;
-  height: 40px !important;
+.brand-link,
+.menu-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,6 +76,12 @@
   border: none;
   cursor: pointer;
   border-radius: 10px;
+}
+
+.logo-img,
+.brand-logo{
+  width: 40px;
+  height: 40px;
 }
 
 .logo-img img,
@@ -103,6 +113,8 @@
 .sidebar-main {
   /* flex: 1 1 auto; */
   display: flex;
+  flex: 1; /* 남은 영역을 차지하게 설정 */
+  justify-content: flex-start;
   flex-direction: column;
   align-items: center;
   /* width: 100%; */
@@ -111,6 +123,7 @@
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  overflow: visible;
 }
 .sidebar-main::-webkit-scrollbar {
   display: none;
@@ -223,7 +236,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  flex: 1 1 auto;
+  /* flex: 1 1 auto; */
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: none;
@@ -284,13 +297,15 @@
 
 .sidebar-bottom {
   /* flex: 1 1 auto; */
+  flex-shrink: 0;
   padding: 0 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   min-height: 0;
-  overflow-y: auto;
+  overflow: visible;
+  /* overflow-y: auto; */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

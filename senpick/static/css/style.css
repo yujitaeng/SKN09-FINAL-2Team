@@ -116,14 +116,146 @@ input[type="text"], input[type="password"] {
 html, body {
     margin: 0;
     padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Spoqa Han Sans Neo', 'sans-serif';
     /* font-family: Arial, sans-serif;
     background-color: #f4f4f4; */
 }
 
-.main-content {
-    padding: 20px;
-    width: 100%
+button {
+  font-family: 'Spoqa Han Sans Neo', 'sans-serif';
 }
+
+.main-content {
+    /* padding: 20px; */
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  overflow: visible;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: max-content;
+  background-color: #fff;
+
+  color: #333;
+  text-align: center;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+
+  position: absolute;
+  z-index: 10;
+  top: 100%; /* 아래쪽에 툴팁이 표시되도록 변경 */
+  bottom: auto; /* 기존 bottom 값 무효화 */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+
+  /* ✅ 그림자 추가 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+.card-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  
+  overflow-y: auto;
+  flex-shrink: 0;
+  /* Adjust height based on header */
+  /* height: calc(100vh - 80px);  */
+}
+
+.product-card {
+  width: 156px;
+  border-radius: 12px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  text-align: left;;
+  /* overflow: hidden; */
+  font-family: sans-serif;
+  background: #FFFFFF;
+  padding: 12px;
+}
+
+.product-card:hover {
+  background-color: #F5F5F8;
+}
+
+.image-wrapper {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f6f6f6;
+}
+
+.image-wrapper img {
+  width: 100%;
+  display: block;
+}
+
+.product-card .product-info {
+  margin-top: 8px;
+}
+
+.product-card .brand {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 2px;
+}
+
+.product-card .title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #222;
+  /* overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;       /* 최대 2줄 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-card .reason {
+  font-size: 14px;
+  color: #999;
+  margin-top: 15px;
+  margin-bottom: 2px;
+}
+
+.product-card a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-card .heart {
+  text-align: left;
+  margin-top: 8px;
+  font-size: 16px;
+  color: #ccc;
+}
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+.spin {
+  animation: spin 2s linear infinite;
 
 .font-b {
     font-family: 'Cafe24Supermagic', sans-serif;

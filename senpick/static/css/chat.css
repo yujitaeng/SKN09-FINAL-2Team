@@ -30,6 +30,7 @@ body {
   font-size: 38px;
   font-weight: 700;
   color: #222;
+  margin-top: 0;
   margin-bottom: 10px;
 }
 .chatbot-header p {
@@ -39,7 +40,7 @@ body {
 }
 /* 채팅 카드 */
 .chatbot-body {
-  width: 700px;
+  width: 816px;
   height: 100vh;
   margin: 0 auto;
   display: flex;
@@ -47,74 +48,71 @@ body {
   align-items: stretch;
 }
 .chat-window {
-  width: 100%;
   min-height: 320px;
   height: 100vh;
   background: #F5F5F8;
   border-radius: 22px;
-  padding: 32px 36px 32px 36px;
+  padding: 32px;
   margin-bottom: 18px;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
+  /* gap: 13px; */
   scrollbar-width: none;
   -ms-overflow-style: none;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
-/* 챗 메시지(봇/유저) */
+/* 공통 챗 메시지 스타일 */
 .chat-msg {
+  display: inline-block;
   max-width: 68%;
-  margin-top: 12px;
-  margin-bottom: 0;
-  margin-right: auto;   /* 왼쪽 정렬 */
-  margin-left: 0;
-  background: #f3f5fa;
+  margin: 12px auto 0 0;  /* 위, 오른쪽 auto(왼쪽 정렬), 아래, 왼쪽 0 */
+  padding: 13px 16px;
+
+  background: #ffffff;
   color: #252525;
-  border-radius: 15px 15px 15px 5px;
-  box-shadow: 0 2px 10px rgba(44,44,44,0.05);
+
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(44, 44, 44, 0.05);
+
   font-size: 15px;
   line-height: 1.55;
-  word-break: break-all;
-  min-width: 80px;        /* 최소 크기 지정 */
-  padding: 13px 16px;
+  word-break: break-word;
 }
 
+/* 유저 메시지 (오른쪽 정렬) */
 .chat-msg.user {
-  background: rgba(255, 233, 0, 0.18); /* 연한 #ffe900 */
-  color: #252525;
-  border-radius: 15px 15px 5px 15px;
-  margin-left: auto !important;
-  margin-right: 0 !important;
+  background: rgba(255, 233, 0, 0.18); /* 연노랑 배경 */
+  border-radius: 15px;
+
+  margin-left: auto;
+  margin-right: 0;
   text-align: right;
-  max-width: 68%;         /* (AI와 동일하게, 필요시 80% 등으로 더 넓게 가능) */
-  min-width: 80px;        /* 최소 크기 지정 */
-  padding: 13px 16px;     /* 패딩 충분히 */
-  font-size: 15px;        /* 폰트 크기 명시 */
-  word-break: break-all;
-  box-shadow: 0 2px 10px rgba(44,44,44,0.05);
-    /* 중앙 정렬 추가 */
-  display: flex;
-  align-items: center;     /* 세로 중앙 */
-  justify-content: center; /* 가로 중앙 */
-  text-align: center;  
+
+  align-self: flex-end; /* Flex 컨테이너 내에서 오른쪽 정렬 */
 }
 
 /* 입력창+버튼 (바깥 띄우기) */
 .chat-input-form {
-  width: 100%;
+  width: 754px;              /* 전체 고정 너비 */
   margin: 0 auto 36px auto;
   position: relative;
+  display: none;
+  align-items: center;
+  gap: 13px;
 }
+
 .chat-input-wrap {
-  width: 100%;
+  flex: 1;
   background: #fff;
   border-radius: 30px;
   box-shadow: 0 4px 16px rgba(44, 44, 44, 0.08);
-  padding: 12px 28px 12px 24px;
+  padding: 12px 24px;
   display: flex;
   align-items: center;
   position: relative;
 }
+
 .chat-input-wrap input {
   border: none;
   outline: none;
@@ -124,16 +122,15 @@ body {
   padding: 8px 0;
   color: #222;
 }
+
 .chat-input-wrap input::placeholder {
   color: #b5b5b5;
   font-size: 16px;
 }
-/* 전송 버튼 - 카드 바깥쪽으로 */
+
+/* 전송 버튼 */
 .chat-send-btn {
-  position: absolute;
-  top: 50%;
-  right: -48px;
-  transform: translateY(-50%);
+  position: static; /* 플로팅 제거 */
   background: #111;
   color: #fff;
   border: none;
@@ -150,11 +147,36 @@ body {
   transition: background 0.18s;
   padding: 0;
 }
+
 .chat-send-btn:hover {
   background: #444;
 }
 .chat-send-btn svg {
   display: block;
 }
+
+.recommend{
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.recommend button {
+  background-color: #E0E0E0;
+  color: #666;
+  border: none;
+  border-radius: 72px;
+  width:fit-content;
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.recommend button:hover {
+  background-color: #FFE900;
+  color: #333;
+}
+
 
 

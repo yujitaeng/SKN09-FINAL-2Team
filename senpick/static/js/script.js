@@ -1,12 +1,17 @@
-console.log("자바스크립트 테스트");
 
-function createProductCard(wrapper, data) {
+console.log("자바스크립트 테스트")
+
+function createProductCard(data) {
+    const wrapper = document.querySelector(".card-wrapper:last-child");
+
     const card = document.createElement("div");
     card.className = "product-card";
 
+    // 카드 전체를 감싸는 링크
     const link = document.createElement("a");
     link.href = "#";
 
+    // 이미지 영역
     const imageWrapper = document.createElement("div");
     imageWrapper.className = "image-wrapper";
 
@@ -17,6 +22,7 @@ function createProductCard(wrapper, data) {
     imageWrapper.appendChild(image);
     link.appendChild(imageWrapper);
 
+    // 상품 정보
     const info = document.createElement("div");
     info.className = "product-info";
 
@@ -30,6 +36,8 @@ function createProductCard(wrapper, data) {
 
     info.appendChild(brand);
     info.appendChild(title);
+    
+    // 하트 아이콘
     link.appendChild(info);
 
     const heartDiv = document.createElement("div");
@@ -62,8 +70,15 @@ function createProductCard(wrapper, data) {
         }
     });
 
+    // 조립
     card.appendChild(link);
     card.appendChild(heartDiv);
+    if (data.reason){
+        const reason = document.createElement("div");
+        reason.className = "reason";
+        reason.textContent = data.reason;
+        card.appendChild(reason);
+    }
     wrapper.appendChild(card);
 }
 
