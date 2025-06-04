@@ -30,7 +30,7 @@
 
 .slide-content {
   width: 964px;
-  height: 1025px;
+  /* height: 1025px; */
   flex-shrink: 0;
   display: flex;
   flex-direction: column;

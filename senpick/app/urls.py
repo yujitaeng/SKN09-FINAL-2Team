@@ -23,14 +23,12 @@ from . import views, birth_views, login_views, chat_views, mypage_views
 # from app.views import user_views, chat_views, recommend_views
 
 urlpatterns = [
-    path('', views.home, name='home'),  # 기본 URL
-    # path('about/', views.about, name='about'),  # about 페이지
+    path('', chat_views.chat, name='chat'),
     path('birth/', birth_views.birth, name='birth'),  # 생일 페이지
     path('login/', login_views.home, name='login'),                  # 로그인
     path('pswd/', pswd_views.home, name='pswd'),                     # 비밀번호 찾기
     path('pswd_verif/', pswd_verif_views.home, name='pswd_verif'),   # 이메일 인증
     path("pswd_gen/", pswd_gen_views.home, name="pswd_gen"),          # 비밀번호 생성 
-    path('chat/', chat_views.chat, name='chat'),
     path('mypage/', mypage_views.home, name='mypage'),
     path('mypage/profile/', mypage_views.profile_info, name='profile_info'),
     path('mypage/profile/password/', mypage_views.profile_password, name='profile_password'),

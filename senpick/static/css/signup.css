@@ -45,7 +45,7 @@ body {
   top: var(--form-offset-y);
   left: calc(var(--form-offset-x) + 904px);
   width: 964px;
-  height: 1025px;
+  height: 118vh;
   z-index: 0;
 }
 
