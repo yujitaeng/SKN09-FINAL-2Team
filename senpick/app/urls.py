@@ -20,6 +20,7 @@ from . import login_views
 from . import pswd_views
 from . import pswd_verif_views
 from . import pswd_gen_views
+from . import chat_views
 
 urlpatterns = [
     path('', views.home, name='home'),  # 기본 URL
@@ -28,4 +29,5 @@ urlpatterns = [
     path('pswd/', pswd_views.home, name='pswd'),                     # 비밀번호 찾기
     path('pswd_verif/', pswd_verif_views.home, name='pswd_verif'),   # 이메일 인증
     path("pswd_gen/", pswd_gen_views.home, name="pswd_gen")          # 비밀번호 생성 
+    path('chat/', chat_views.chat, name='chat')
 ]
