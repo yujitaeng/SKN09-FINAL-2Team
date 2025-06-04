@@ -13,9 +13,9 @@
 </head>
 <body>
   <div class="signup-container">
-    <form method="POST" action="{% url 'signup_step1' %}" class="signup-form-area step1">
+    <form method="POST" action="{% url 'signup_step1' %}" class="signup-form-area step1" style="z-index: 999;">
+      <!-- CSRF 토큰 -->
     {% csrf_token %}
-
       <!-- 1) 로고 -->
       <img src="{% static 'images/senpick_logo.svg' %}"
            alt="Senpick 로고"
