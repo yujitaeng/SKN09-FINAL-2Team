@@ -34,7 +34,7 @@ body {
 .signup-form-area {
   position: relative;
   width: 904px;
-  height: 1025px;
+  height: 100vh;
   background: var(--white);
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
   border-radius: 32px;
