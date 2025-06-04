@@ -131,3 +131,33 @@ STATICFILES_DIRS = [BASE_DIR / "static"] # 로컬 세팅
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# 이메일 인증 관련
+# 1. 이메일 백엔드 설정
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # 테스트 용
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# 2. SMTP 서버 호스트 (예: Gmail SMTP, Naver SMTP 등)
+EMAIL_HOST = 'smtp.gmail.com'       # Gmail을 쓰는 경우
+# EMAIL_HOST = 'smtp.naver.com'     # 네이버 SMTP를 쓰는 경우
+
+# 3. SMTP 서버 포트
+#    └– 대부분 TLS(STARTTLS) 사용 시 587, SSL(SSL/TLS)을 직접 사용할 때는 465
+EMAIL_PORT = 587
+
+# 4. TLS/SSL 설정
+EMAIL_USE_TLS = True   # STARTTLS(업그레이드 보안)를 쓰는 경우
+# EMAIL_USE_SSL = False   # SSL 연결을 바로 여는 경우 (이 둘을 동시에 True로 두지는 않습니다)
+
+# 5. SMTP 서버 로그인 계정(아이디)
+#    └– 실제 메일을 발송할 계정(이메일주소)을 적어야 합니다.
+EMAIL_HOST_USER = os.getenv('YOUR_EMAIL')
+
+# 6. SMTP 서버 로그인 비밀번호
+#    └– 위 계정의 비밀번호 또는 “앱 비밀번호”(2차 인증을 켠 경우) 등을 입력
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
+
+# 7. 기본 발신자 주소
+#    └– send_mail() 호출 시, “From” 에 기본으로 들어갈 이메일/문자열
+DEFAULT_FROM_EMAIL = 'Senpick <no-reply@senpick.com>'
