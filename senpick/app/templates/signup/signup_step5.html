@@ -5,38 +5,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>회원가입 완료 | Senpick</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
   <link rel="stylesheet" href="{% static 'css/signup.css' %}">
   <link rel="stylesheet" href="{% static 'css/slide.css' %}">
+  <script src="{% static 'js/slide.js' %}" defer></script>
 </head>
 <body>
-  <div class="signup-container">
-    <!-- 왼쪽 폼 영역 -->
-    <div class="signup-form-area step5">
-      <!-- 1) 로고 -->
-      <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="signup-logo">
+  <div style="display: flex;">
+    <div class="signup-container">
+      <!-- 왼쪽 폼 영역 -->
+      <div class="signup-form-area step5">
+        <!-- 1) 로고 -->
+        <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
+        <div class="signup-form">
+          <!-- 2) 스텝 인디케이터 (모두 완료 상태) -->
+          <div class="step-indicator">
+            <span class="dot active"></span>
+            <span class="dot active"></span>
+            <span class="dot active"></span>
+            <span class="dot active"></span>
+          </div>
 
-      <!-- 2) 스텝 인디케이터 (모두 완료 상태) -->
-      <div class="step-indicator">
-        <span class="dot active"></span>
-        <span class="dot active"></span>
-        <span class="dot active"></span>
-        <span class="dot active"></span>
+          <!-- 3) 타이틀 -->
+          <h2 class="signup-title">이제 센픽할 준비가 끝났어요.</h2>
+          <p class="signup-subtitle">로그인하고 첫 번째 추천을 받아보세요.</p>
+
+          <!-- 4) “지금 바로 시작해보세요!” 버튼 -->
+          <button id="startBtn" class="verify-btn" style="margin-top: 32px;">
+            지금 바로 시작해보세요!
+          </button>
+        </div>
       </div>
-
-      <!-- 3) 타이틀 -->
-      <h2 class="signup-title">이제 센픽할 준비가 끝났어요.</h2>
-      <p class="signup-subtitle">로그인하고 첫 번째 추천을 받아보세요.</p>
-
-      <!-- 4) “지금 바로 시작해보세요!” 버튼 -->
-      <button id="startBtn" class="verify-btn" style="margin-top: 32px;">
-        지금 바로 시작해보세요!
-      </button>
     </div>
-
     <!-- 오른쪽 슬라이드 영역 -->
-    <div class="signup-visual">
-      {% include "slide.html" %}
-    </div>
+    {% include "slide.html" %}
   </div>
 
   <!-- JS 로드 (필요 시) -->
