@@ -52,7 +52,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 }
 
 /* 수평 정렬을 위한 래퍼 */
