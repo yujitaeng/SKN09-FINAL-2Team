@@ -310,7 +310,7 @@
   font-size: 16px;
   font-weight: bold;
   color: black;
-  background-color: #FFE900;
+  background-color: #f0f0f0;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -318,18 +318,18 @@
   font-family: 'Spoqa Han Sans Neo', sans-serif;
 }
 
-.submit-button:hover {
-  background-color: #FFDE00;
-}
-
 .submit-button button {
   width: 100%;
-  background-color: #FFE900;
+  background-color: #f0f0f0;
   border: none;
   border-radius: 12px;
   font-weight: bold;
   font-size: 15px;
-  font-family: 'Spoqa Han Sans Neo', sans-serif;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
 }
 
+.submit-button:hover, .submit-button:hover button {
+  background-color: #FFDE00;
+}
