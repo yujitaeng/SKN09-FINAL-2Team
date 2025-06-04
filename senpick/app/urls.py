@@ -25,6 +25,13 @@ from . import chat_views
 urlpatterns = [
     path('', views.home, name='home'),  # 기본 URL
     # path('about/', views.about, name='about'),  # about 페이지
+    path('signup/step1/', views.signup_step1, name='signup_step1'),
+    path('signup/step2/', views.signup_step2, name='signup_step2'),
+    path('signup/step3/', views.signup_step3, name='signup_step3'),
+    path('signup/step4/', views.signup_step4, name='signup_step4'),
+    path('signup/step5/', views.signup_step5, name='signup_step5'),
+    path('signup/send-code/', views.send_verification_code, name='send_verification_code'),
+    path('signup/verify-code/', views.verify_code, name='verify_code'),
     path('login/', login_views.home, name='login'),                  # 로그인
     path('pswd/', pswd_views.home, name='pswd'),                     # 비밀번호 찾기
     path('pswd_verif/', pswd_verif_views.home, name='pswd_verif'),   # 이메일 인증

@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
   const slider = document.getElementById('slider');
-  const slides = document.querySelectorAll('.slide-content');
-  const dots = document.querySelectorAll('.dot');
+  // const slides = document.querySelectorAll('.slide-content');
+  const slides = document.querySelectorAll('.slider-wrapper .slide-content');
+  // const dots = document.querySelectorAll('.dot');
+  const dots   = document.querySelectorAll('.slide-indicator .dot');
   const slideCount = slides.length;
   const slideWidth = slides[0].offsetWidth;
 
