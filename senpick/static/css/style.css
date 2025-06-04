@@ -106,3 +106,15 @@ input[type="text"], input[type="password"] {
   background-color: #222;
   cursor: pointer;
 }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    /* font-family: Arial, sans-serif;
+    background-color: #f4f4f4; */
+}
+
+.main-content {
+    padding: 20px;
+    width: 100%
+}

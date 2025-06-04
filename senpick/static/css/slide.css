@@ -105,6 +105,7 @@
   transition: all 0.3s ease;
 }
 
+
 .slide-indicator .dot.active {
   width: 35px;
   height: 15px;

@@ -53,6 +53,32 @@
       
         <button class="guest-btn">비회원으로 시작하기</button>
       
+<!--         <div class="form-block">
+          <form method="post" action="{% url 'login' %}" class="login-form">
+            {% csrf_token %}
+            <div class="input-group"  id="email-group">
+              <input type="email" name="username" id="email" placeholder="이메일 입력" required>
+              <div class="error-message" id="email-error">이메일을 입력해주세요.</div>
+            </div>
+          
+            <div class="input-group" id="password-group">
+              <input type="password" name="password" id="password" placeholder="비밀번호 입력" required>
+              <div class="error-message" id="password-error">비밀번호를 입력해주세요.</div>
+            </div>
+          
+            <button type="submit" class="login-btn">로그인</button>
+          </form>
+
+      
+          <div class="or-group">
+            <div class="line-left"></div>
+            <div class="or-text">Or</div>
+            <div class="line-right"></div>
+          </div>
+        
+          <button class="guest-btn">비회원으로 시작하기</button>
+        </div> -->
+        
         <div class="social-login">
           <img src="{% static 'images/kakao_login.svg' %}" alt="카카오 로그인">
           <img src="{% static 'images/google_login.svg' %}" alt="구글 로그인">
@@ -60,11 +86,10 @@
         </div>
       
         <div class="link-row">
-          <a href="#" class="find-password">비밀번호 찾기</a>
-          <a href="{% url 'signup_step1' %}" class="signup">회원가입</a>
+          <a href="{% url 'pswd' %}" class="find-password">비밀번호 찾기</a>
+          <a href="#" class="signup">회원가입</a>
         </div>
-</div>
-
+      </div>
 
       <!-- 슬라이드 포함 -->
       {% include "slide.html" %}
