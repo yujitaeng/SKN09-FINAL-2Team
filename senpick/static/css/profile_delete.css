@@ -1,41 +1,29 @@
-/* withdraw.css */
+/* profile_delete.css */
 
 /* 카드 본체 */
 .modal-card {
   background: #fff;
   border-radius: 16px;
   /* box-shadow: 0 4px 32px rgba(0,0,0,0.1); */
-  padding: 32px 24px;
+  padding: 50px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   margin: 0 auto;
-  max-width: 800px;
+  max-width: 950px;
   text-align: center;
-}
-
-/* 카드 제목 */
-.modal-card h2 {
-  font-size: 1.15rem;
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-.modal-card h3 {
-  font-size: 1rem;
 }
 
 /* 사유(라디오+텍스트) */
 .withdraw-reason label {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
   cursor: pointer;
   font-size: 15px;
 }
 
 .withdraw-reason input[type="text"] {
-  margin: 0 28px;
+  margin: 0 15px;
   flex: 1;
   padding: 5px;
   border: 1px solid #e2e2e2;
@@ -64,11 +52,12 @@
 }
 
 /* 버튼 영역 */
-.modal-buttons {
+/* .modal-buttons {
   display: flex;
   gap: 10px;
   margin-top: 12px;
-}
+  justify-content: center;
+} */
 
 /* 취소 버튼 */
 .modal-buttons .cancel-btn {
@@ -82,9 +71,12 @@
   cursor: pointer;
   transition: background 0.15s;
   height: 45px;
+  max-width: 500px;
 }
-.modal-buttons .cancel-btn:hover {
-  background: #FFE900;
+
+.modal-buttons:hover .cancel-btn {
+  /* background: #FFE900; */
+  font-weight: bold;
 }
 
 /* 탈퇴하기 버튼 */
@@ -99,8 +91,9 @@
   cursor: pointer;
   transition: background 0.15s;
 }
+
 .modal-buttons .confirm-btn:hover {
-  background: #111;
+  background: #2e2e2e;
 }
 body {
   width: 100vw;
@@ -162,11 +155,11 @@ label.step-option.step-option-other.active {
 }
 
 .other-input-wrapper {
-  border: 1px solid #E0E0E0; 
+  /* border: 1px solid #E0E0E0;  */
   padding: 10px; 
-  margin-top: -10px; 
+  /* margin-top: -10px; 
   border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-right-radius: 8px; */
 }
 
 .other-input:focus {
@@ -175,4 +168,185 @@ label.step-option.step-option-other.active {
 
 .img-wrapper {
   padding: auto;
+}
+
+/* ---------------profile_delete.html---------------- */
+.step {
+  display: none;
+}
+
+.step.active {
+  display: block;
+}
+
+.modal-card h2 {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.modal-card h2 .font-cafe24 {
+  font-size: 25px;  
+}
+
+.font-cafe24 {
+  font-family: 'Cafe24Supermagic', cursive;
+}
+
+.withdraw-card {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.withdraw-card img {
+  max-width: 450px;
+}
+
+.withdraw-card p {
+  font-size: 17px;
+  margin-top: 16px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 32px;
+  width: 500px;
+  height: 45px;
+  background-color: #F5F5F8;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+  align-self: center;;
+}
+
+.modal-buttons button.cancel-btn {
+  background-color: transparent;
+}
+
+.modal-buttons:hover{
+  background-color: #FFE900;
+}
+
+.think-again-btn {
+  background-color: #F5F5F8;
+  color: #2E2E2E;
+  font-size: 15px;
+  padding: 14px 0;
+  height: 45px;
+  width: 500px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  transition: background-color 0.2s ease;
+}
+
+.think-again-btn:hover,
+.think-again-btn:active,
+.think-again-btn:focus {
+  background-color: #FFE900;
+  font-weight: 600;
+}
+
+.text-withdraw-btn {
+  background: none;
+  border: none;
+  color: #919191;
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.text-withdraw-btn:active,
+.text-withdraw-btn:focus {
+  color:#2E2E2E;
+  font-weight: 500;
+}
+
+.text-withdraw-btn:hover {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+.warning {
+  color: #EB1C24;
+  font-weight: bold;
+  margin-top: 70px;
+  font-size: 20px;
+}
+
+/* 탈퇴 사유 기본 카드 */
+.modal-card h3 {
+  text-align: left;
+  font-size: 17px;
+  /* font-weight: 600; */
+  margin: 50px auto 12px;
+  color: #2E2E2E;
+  width: 500px; 
+}
+
+.step-option {
+  width: 500px; 
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border: 1px solid #E0E0E0;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.step-option input[type="checkbox"] {
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
+  accent-color: #FFE900;
+  transform: scale(1.2);
+  /* vertical-align: middle; */
+}
+
+.withdraw-reason {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* 가운데 정렬 */
+}
+
+.withdraw-reason .step-option {
+  margin-top: 7px !important;
+}
+
+
+/* 기타 입력 영역 */
+#other-input-wrapper {
+  width: 478px;
+  margin-top: 0px;
+  border: 1px solid #E0E0E0;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  background-color: #fff;
+}
+
+#other-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  font-size: 14px;
+}
+
+.char-limit {
+  font-size: 13px;
+  color: #CCCCCC;
+  text-align: right;
+  width: 45px;
+}
+
+.center-card-container {
+  align-self: center;;
 }

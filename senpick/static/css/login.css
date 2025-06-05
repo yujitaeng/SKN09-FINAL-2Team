@@ -100,10 +100,6 @@ input[name="password"] {
   box-sizing: border-box;
 }
 
-/* input.error {
-  border: 1.5px solid #EB1C24;
-} */
-
 /* 기본 마진 설정 */
 #email-group {
   margin-bottom: 15px; /* 이메일 ↔ 비밀번호 기본 간격 */
@@ -132,7 +128,6 @@ input.error#password + .error-message ~ .login-btn {
   display: none;
   /* visibility: hidden; */
   margin-top: 2px;
-/*   margin-top: 6px; */
 }
 
 /* 로그인 버튼 */
