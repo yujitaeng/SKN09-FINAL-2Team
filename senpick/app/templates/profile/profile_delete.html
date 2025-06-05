@@ -107,8 +107,21 @@
     function goToStep(stepNumber) {
       const steps = document.querySelectorAll('.step');
       steps.forEach(step => step.classList.remove('active'));
-      document.getElementById(`step${stepNumber}`).classList.add('active');
+    
+      const targetStep = document.getElementById(`step${stepNumber}`);
+      targetStep.classList.add('active');
+    
+      // 내부 스크롤 컨테이너로 이동 (예: .profile-main-wrapper)
+      const scrollContainer = document.querySelector('.profile-main-wrapper');
+      if (scrollContainer) {
+        scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // fallback
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
+
+
   
     document.addEventListener("DOMContentLoaded", function () {
       const stepOptions = document.querySelectorAll('.step-option');
