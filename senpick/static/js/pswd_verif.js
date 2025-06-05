@@ -1,9 +1,52 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const logoBtn = document.querySelector(".logo");
-  const testButton = document.querySelector(".pswd-verif-test");
+  // 슬라이드 기능 초기화
+  // 3) 인증번호 입력박스(5칸) 제어: 숫자만 허용 + 다음칸 자동 포커스
+  const inputs = document.querySelectorAll('.verify-input');
+  inputs.forEach((input, idx) => {
+    input.addEventListener('input', (e) => {
+      // 숫자 이외 문자는 제거
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+      if (e.target.value.length > 1) {
+        e.target.value = e.target.value.slice(0, 1);
+      }
+      // 한 칸 입력하면 다음 칸으로 포커스 이동
+      if (e.target.value && idx < inputs.length - 1) {
+        inputs[idx + 1].focus();
+      }
+    });
 
-  const hiddenInput = document.getElementById("hidden-input");
-  const boxes = Array.from(document.querySelectorAll(".digit-box"));
+    // 백스페이스 시 이전 칸으로 포커스 이동
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+        inputs[idx - 1].focus();
+      }
+    });
+  });
+  
+  const verifyConfirmBtn = document.querySelector('.verif-comp-btn'); // 인증 완료 버튼
+  verifyConfirmBtn.addEventListener('click', function() {
+    const inputs = document.querySelectorAll('.verify-input');   // 5칸 입력박스
+    const code = Array.from(inputs).map(input => input.value).join('');
+    console.log(code); // 입력된 값 확인용
+    
+    const testCode = "12345";
+    const errorMsg = document.getElementById("verif-error-msg");
+
+    if (remainingTime <= 0) {
+      errorMsg.textContent = "인증 시간이 만료되었습니다. 인증번호 재전송 요청 후 재입력 부탁드립니다.";
+      errorMsg.style.display = "block";
+      return;
+    }
+
+    if (code !== testCode) {
+      errorMsg.textContent = "인증번호가 올바르지 않습니다.";
+      errorMsg.style.display = "block";
+      return;
+    }
+
+    // 인증 성공
+    window.location.href = "/pswd/gen";
+  });
 
   const timerText = document.getElementById("timer-text");
   const resendText = document.getElementById("resend-text");
@@ -12,32 +55,9 @@ document.addEventListener("DOMContentLoaded", function () {
   let timerInterval;
   let remainingTime = 5*60; // 5분 (현재는 테스트용 3초)
 
-  // function startTimer() {
-  //   document.getElementById("verif-error-msg").style.display = "none";
-  //   clearInterval(timerInterval);
-  //   remainingTime = 3;
-  //   updateTimer();
-  //   timerText.style.display = "block";
-  //   resendText.style.display = "none";
-
-  //   timerInterval = setInterval(() => {
-  //     remainingTime--;
-  //     if (remainingTime >= 0) {
-  //       updateTimer();
-  //     }
-  //     if (remainingTime === 0) {
-  //       clearInterval(timerInterval);
-  //       resendText.style.display = "block";
-  //     }
-  //   }, 1000);
-  // }
   function startTimer() {
     // 🔹 오류 메시지 숨기기
     document.getElementById("verif-error-msg").style.display = "none";
-
-    // 🔹 입력 초기화
-    hiddenInput.value = ""; // 실제 입력 값 초기화
-    boxes.forEach(box => box.textContent = ""); // 각 digit-box 시각적 숫자 초기화
 
     // 🔹 타이머 초기화
     clearInterval(timerInterval);
@@ -72,57 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
   resendText.addEventListener("click", startTimer);
 
   // 로고 클릭
+  const logoBtn = document.querySelector(".logo");
   logoBtn.addEventListener("click", () => window.location.href = "/login");
-
-  // // 테스트용 버튼 → 강제 이동
-  // testButton.addEventListener("click", function () {
-  //   window.location.href = "/pswd_gen";
-  // });
-
-  // 클릭 시 입력 포커스
-  document.querySelector(".digit-boxes").addEventListener("click", () => {
-    hiddenInput.focus();
-  });
-
-  boxes.forEach(box => {
-    box.addEventListener("click", () => hiddenInput.focus());
-  });
-
-  hiddenInput.addEventListener("input", (e) => {
-    const value = e.target.value.slice(0, 5).replace(/\D/g, "");
-    console.log("입력된 값:", value);  // ✅ 확인용 로그
-    for (let i = 0; i < 5; i++) {
-      boxes[i].textContent = value[i] || "";
-    }
-  });
-
-  hiddenInput.addEventListener("blur", () => {
-    setTimeout(() => hiddenInput.focus(), 100);
-  });
-
-  hiddenInput.focus();
-
-  // 이메일 인증 완료 버튼 → 입력값 체크 후 이동
-  verifBtn.addEventListener("click", () => {
-    const entered = boxes.map(box => box.textContent).join('');
-    const testCode = "12345";
-    const errorMsg = document.getElementById("verif-error-msg");
-
-    if (remainingTime <= 0) {
-      errorMsg.textContent = "인증 시간이 만료되었습니다. 인증번호 재전송 요청 후 재입력 부탁드립니다.";
-      errorMsg.style.display = "block";
-      return;
-    }
-
-    if (entered !== testCode) {
-      errorMsg.textContent = "인증번호가 올바르지 않습니다.";
-      errorMsg.style.display = "block";
-      return;
-    }
-
-    // 인증 성공
-    window.location.href = "/pswd_gen";
-  });
-
-
 });

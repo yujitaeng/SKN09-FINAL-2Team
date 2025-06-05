@@ -20,7 +20,7 @@
         <!-- CSRF 토큰 -->
       {% csrf_token %}
         <!-- 1) 로고 -->
-        <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
+        <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo" onclick="location.href=`{% url 'login' %}`">
         <div class="signup-form-wrapper">
           <div class="signup-form">
             <!-- 2) 스텝 인디케이터 -->

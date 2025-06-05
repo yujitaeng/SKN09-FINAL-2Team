@@ -16,7 +16,7 @@
       <!-- 왼쪽 폼 영역 -->
       <div class="signup-form-area step4">
         <!-- 1) 로고 -->
-        <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
+        <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo" onclick="location.href=`{% url 'login' %}`">
         <div class="signup-form-wrapper">
           <div class="signup-form">
             <!-- 2) 스텝 인디케이터 -->
@@ -24,7 +24,7 @@
               <span class="dot active"></span>
               <span class="dot active"></span>
               <span class="dot active"></span>
-              <span class="dot active"></span>
+              <span class="dot"></span>
             </div>
 
             <!-- 3) 타이틀 -->

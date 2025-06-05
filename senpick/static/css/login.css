@@ -43,7 +43,6 @@ html, body {
 .outer-wrapper {
   display: flex;
   justify-content: center;    /* 가로 정렬 */
-  align-items: center;        /* 세로 정렬 */
   height: calc(100% - 152px)            /* 화면 전체 높이 */
 }
 
@@ -54,6 +53,7 @@ html, body {
   gap: 25px; /* 요소 간 기본 간격 */
   z-index: 2;
   margin: 0 auto; /* 중앙 정렬 */
+  width: 100%;
 }
 
 /* 제목 */
