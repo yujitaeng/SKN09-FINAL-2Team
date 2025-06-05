@@ -9,12 +9,11 @@ html, body {
 
 .background {
   padding: 26px;
-  height: 100vh;
   background-color: #FFFDE7;
   position: relative;
   display: flex;
   overflow: hidden;
-  
+
   -webkit-user-drag: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -24,7 +23,7 @@ html, body {
 
 /* 왼쪽 카드 배경 */
 .left-card {
-  min-width: 600px;
+  min-width: 800px;
   height: calc(100vh - 52px);
   background: #fff;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);

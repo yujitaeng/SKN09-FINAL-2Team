@@ -9,6 +9,12 @@
   overflow: hidden;
   z-index: 1;
   flex: 1;
+
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .slider-wrapper {

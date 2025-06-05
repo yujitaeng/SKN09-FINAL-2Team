@@ -26,19 +26,24 @@ body {
 }
 
 .signup-container {
-  padding: var(--form-offset-y) 0 0 var(--form-offset-x);
   z-index: 1;
   flex: 1;
+
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+  user-select: none;
 }
 
 .signup-form-area {
   width: 100%;
-  min-width: 600px;
+  min-width: 700px;
   height: calc(100vh - 52px);
   background: var(--white);
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
   border-radius: 32px;
-  overflow-y: scroll;
   z-index: 1;
 }
 
@@ -70,19 +75,15 @@ body {
 }
 
 .signup-title {
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
 }
 
 /* 입력 라벨 */
 .label-email, .label-password, .label-nickname {
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
 }
-
-.label-email { top: calc(276px - var(--form-offset-y)); }
-.label-password { top: calc(405px - var(--form-offset-y)); }
-.label-nickname { top: calc(534px - var(--form-offset-y)); }
 
 /* 입력창 위치 */
 .input-email, .input-password, .input-nickname {
@@ -93,7 +94,7 @@ body {
 /* 📌 공통 input 스타일 */
 input[type="email"], input[type="password"], input[type="text"] {
   padding: 0 12px;
-  font-size: 14px;
+  /* font-size: 14px; */
   border: 1px solid var(--soft-gray);
   border-radius: 8px;
   background: var(--white);
@@ -216,7 +217,7 @@ input[type="terms"].error {
   width: 100%;
   height: 100vh;
   background: rgba(0, 0, 0, 0.2);
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   z-index: 200;
 }
@@ -225,13 +226,17 @@ input[type="terms"].error {
 }
 .signup-form-area .modal-content {
   background: var(--white);
-  border-radius: 16px;
-  width: 90%;
+  /* border-radius: 16px; */
+  width: 45%;
   max-width: 480px;
+  min-width: 400px;
   max-height: 80%;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   padding: 24px;
+
+  margin-left: 25%;
+  transform: translateX(-50%);
 }
 
 /* =======================
@@ -412,14 +417,87 @@ input[type="terms"].error {
   line-height: 1.6;
 }
 
+.signup-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(100vh - 152px); /* 헤더/푸터 제외하고 전체 높이 */
+  overflow-y: auto;
+  margin: 0 150px 25px 150px;
+  scrollbar-width: none;
+}
+
 .signup-form {
   display: flex;
   flex-direction: column;
-  align-items: start;
-  margin: 0 auto;
-  padding: 0 150px;
+  align-items: flex-start;
   gap: 16px;
+
+  justify-content: center;  /* center → start */
+  flex-grow: 1;
   margin-bottom: 25px;
-  justify-content: center;
-  min-height: calc(100% - 152px);
+  /* overflow 제거 */
+}
+
+/* 네모 노란 체크박스 */
+.step-option input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  border: 2px solid #F5F5F8;
+  background: #fff;
+  border-radius: 5px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  transition: border-color 0.13s, background 0.13s;
+  display: inline-block;
+}
+.step-option input[type="checkbox"]:checked {
+  background: #ffe900;
+  border: 2px solid #ffe900;
+}
+.step-option input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: -1px;
+  width: 6px;
+  height: 12px;
+  border: solid #ffffff;
+  border-width: 0 2.2px 2.2px 0;
+  transform: rotate(45deg);
+  display: block;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: var(--text);
+}
+
+.modal-header span {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.modal-body {
+  overflow-y: scroll;
+  max-height: 60vh; /* 최대 높이 설정 */
+  border-radius: 20px;
+  background-color: #F5F5F8;
+  padding: 20px;
 }

@@ -77,10 +77,18 @@ WSGI_APPLICATION = 'senpick.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# 데이터베이스 설정 (기본은 SQLite)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'mydatabase',  # 데이터베이스 이름
+#         'NAME': 'senpick_db',  # 데이터베이스 이름
 #         'USER': 'root',        # MySQL 사용자
 #         'PASSWORD': 'root', # MySQL 비밀번호
 #         'HOST': '127.0.0.1',   # 로컬 호스트

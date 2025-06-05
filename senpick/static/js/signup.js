@@ -366,7 +366,7 @@ else if (path.includes("signup/step2")) {
 
       // 3-3) 직업 검증: 값이 빈 문자열이 아닌지
       const jobValue = jobSelect.value;
-      if (jobValue === "") {
+      if (jobValue === "직업 선택") {
         jobErrEl.textContent = "직업을 선택해주세요.";
         jobErrEl.style.display = "block";
         jobSelect.classList.add("error");

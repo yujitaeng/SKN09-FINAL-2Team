@@ -64,7 +64,6 @@
 
 .profile-form input.error {
   border: 2px solid #EB1C24;
-  background-color: #FFF5F5;
 }
 
 .profile-form input:hover:not([readonly]) {
