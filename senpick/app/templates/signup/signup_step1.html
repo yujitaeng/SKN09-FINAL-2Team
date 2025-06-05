@@ -39,19 +39,19 @@
             <input type="email" id="email" name="email" class="input-email"
                   placeholder="이메일 입력 (예: senpick@senpick.com)">
             <!-- 이메일 에러 메시지 -->
-            <div id="email-error" class="error-message"></div>
+            <div id="email-error" class="error-message">{{ errors.email }}</div>
 
             <!-- 5) 비밀번호 -->
             <label for="password" class="label-password">비밀번호</label>
             <input type="password" id="password" name="password" class="input-password"
                   placeholder="비밀번호 입력" style="height: 50px;">
-            <div id="password-error" class="error-message"></div>
+            <div id="password-error" class="error-message">{{ errors.password }}</div>
 
             <!-- 6) 닉네임 -->
             <label for="nickname" class="label-nickname">닉네임</label>
             <input type="text" id="nickname" name="nickname" class="input-nickname"
                   placeholder="한글만 최대 8자">
-            <div id="nickname-error" class="error-message"></div>
+            <div id="nickname-error" class="error-message">{{ errors.nickname }}</div>
 
             <!-- 7) 약관동의 텍스트 -->
             <label class="label-terms">약관동의</label>
@@ -78,6 +78,8 @@
                 <span class="required">(필수)</span>
               </label>
             </div>
+            <!-- 이메일 송신 오류 메시지 -->
+            <div id="email-send-error" class="error-message">{{ errors.email_send }}</div>
             <!-- 약관 오류 메시지 -->
             <div id="terms-error" class="error-message"></div>
             <!-- 9) 다음 단계 버튼 -->

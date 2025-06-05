@@ -18,7 +18,8 @@
         <!-- 로고 -->
         <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo" onclick="location.href=`{% url 'login' %}`">
         <div class="signup-form-wrapper">
-          <div class="signup-form profile-form">
+          <form method="post" class="signup-form profile-form signup-form-area step3">
+            {% csrf_token %}
             <!-- 스텝 인디케이터 -->
             <div class="step-indicator">
               <span class="dot active"></span>
@@ -32,7 +33,7 @@
 
             <!-- 생년월일 입력 -->
             <label for="birth" class="label-birth">생년월일</label>
-            <input type="text" id="birth" class="input-birth" placeholder="예: 19990101">
+            <input type="text" id="birth" name="birth" class="input-birth" placeholder="예: 19990101">
             <div id="birth-error" class="error-message"></div>
 
             <!-- 성별 -->
@@ -42,17 +43,18 @@
               <button type="button" class="gender-btn" id="femaleBtn">여자</button>
             </div>
             <div id="gender-error" class="error-message"></div>
+            <input type="hidden" name="gender" id="genderInput" value="{{ gender|default:'' }}">
 
             <!-- 직업 -->
             <label for="job">직업</label>
             <div class="job-input">
-              <input id="job" type="text" value="직업 선택" spellcheck="false">
+              <input id="job" name="job" type="text" value="직업 선택" spellcheck="false">
               <img src="{% static 'images/bottom_arrow.svg' %}" alt="드롭다운 화살표">
             </div>
             <div id="job-error" class="error-message"></div>
             <!-- 다음단계 버튼 -->
-            <button id="nextBtn" class="next-btn">다음 단계</button>
-          </div>
+            <button type="submit" id="nextBtn" class="next-btn">다음 단계</button>
+          </form>
         </div>
       </div>
     </div>

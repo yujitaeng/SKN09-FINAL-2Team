@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 import os
 import markdown
-from django.conf import settings
 import random
+from django.conf import settings
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
+from .models import User, PreferType, UserPrefer
+from django.contrib.auth.hashers import make_password
 
 def home(request):
     return render(request, 'index.html')
@@ -55,6 +57,14 @@ def signup_step1(request):
         if len(agree_terms) < 2:
             errors["terms"] = "필수 약관에 동의해주세요."
 
+        # 2) DB 중복 검사: 이메일 혹은 닉네임이 이미 존재하는지
+        if email:
+            if User.objects.filter(email=email).exists():
+                errors["email"] = "이미 사용 중인 이메일입니다."
+        if nickname:
+            if User.objects.filter(nickname=nickname).exists():
+                errors["nickname"] = "이미 사용 중인 닉네임입니다."
+
         if errors:
             # 에러가 있으면 GET과 동일하게 템플릿에 에러 메시지 전달
             return render(request, "signup/signup_step1.html", {
@@ -77,7 +87,7 @@ def signup_step1(request):
 
         # 4) 이메일 발송 (Django send_mail 사용)
         subject = "[Senpick] 이메일 인증 코드 안내"
-        message = f"Senpick 회원가입 인증 번호는 [{code}] 입니다.\n\n해당 번호를 인증번호 입력란에 입력해 주세요."
+        message = f"Senpick 회원가입 인증 번호는 [{code}] 입니다.\n\n해당 번호를 인증번호 입력란에 입력해 주세요.\n\n발신 전용 이메일입니다."
         from_email = settings.DEFAULT_FROM_EMAIL
         recipient_list = [email]
 
@@ -97,14 +107,127 @@ def signup_step1(request):
         # 5) 발송 성공 → Step2로 이동
         return redirect("signup_step2")
 
+@require_GET
+def check_duplicate(request):
+    field = request.GET.get("field")
+    value = request.GET.get("value", "").strip()
+    if field not in ("email", "nickname"):
+        return JsonResponse({"error": "invalid_field"}, status=400)
+    if not value:
+        return JsonResponse({"exists": False})
+
+    # signup_step1과 똑같은 검사 로직
+    exists = User.objects.filter(**{field: value}).exists()
+    return JsonResponse({"exists": exists})
+
 def signup_step2(request):
     return render(request, 'signup/signup_step2.html')
 
 def signup_step3(request):
-    return render(request, 'signup/signup_step3.html')
+    if request.method == "GET":
+        return render(request, "signup/signup_step3.html")
+
+    # POST: 실제로 폼이 제출된 경우
+    birth  = request.POST.get("birth", "").strip()
+    gender = request.POST.get("gender", "").strip()
+    job    = request.POST.get("job", "").strip()
+
+    errors = {}
+    if not birth or len(birth) != 8:
+        errors["birth"] = "생년월일을 YYYYMMDD 형식으로 입력해주세요."
+    if gender not in ("male", "female"):
+        errors["gender"] = "성별을 선택해주세요."
+    if not job:
+        errors["job"] = "직업을 선택해주세요."
+
+    # 검증 오류가 있으면 다시 Step3 폼 렌더
+    if errors:
+        return render(request, "signup/signup_step3.html", {
+            "errors": errors,
+            "birth": birth,
+            "gender": gender,
+            "job": job,
+        })
+
+    # 검증 통과: 세션에 저장 후 Step4로 이동
+    request.session["signup_birth"]  = birth
+    request.session["signup_gender"] = gender
+    request.session["signup_job"]    = job
+    return redirect("signup_step4")
 
 def signup_step4(request):
-    return render(request, 'signup/signup_step4.html')
+    # ──────────────────────────────────────────────────────────────────────────────────
+    # 1) GET 요청: 선호 옵션(스타일/카테고리)을 조회해서 템플릿에 넘김
+    # ──────────────────────────────────────────────────────────────────────────────────
+    if request.method == "GET":
+        style_options    = PreferType.objects.filter(type="스타일")
+        category_options = PreferType.objects.filter(type="카테고리")
+        return render(request, "signup/signup_step4.html", {
+            "style_options": style_options,
+            "category_options": category_options,
+        })
+
+    # ──────────────────────────────────────────────────────────────────────────────────
+    # 2) POST 요청: “회원가입 완료” 버튼 클릭 시
+    #    (a) 세션에서 Step1/3 정보를 가져오고
+    #    (b) POST로 넘어온 preference_ids를 파싱하여 UserPrefer 객체들을 생성하고
+    #    (c) User 객체를 생성/저장 후 UserPrefer 저장 → Step5로 redirect
+    # ──────────────────────────────────────────────────────────────────────────────────
+    # (2-a) 세션에서 이전 단계(1,3)의 정보 꺼내기
+    email    = request.session.get("signup_email")
+    password = request.session.get("signup_password")
+    nickname = request.session.get("signup_nickname")
+    birth    = request.session.get("signup_birth")
+    gender   = request.session.get("signup_gender")
+    job      = request.session.get("signup_job")
+
+    # 세션 정보가 하나라도 없으면, Step 1로 돌아가도록
+    if not (email and password and nickname and birth and gender and job):
+        return redirect("signup_step1")
+
+    # (2-b) POST로 넘어온 “preference_ids” (예: "1,3,7,13,15")
+    pref_ids_str = request.POST.get("preference_ids", "").strip()
+    # 콤마로 분리 → 숫자로만 이루어진 ID 리스트
+    pref_ids = [pid for pid in pref_ids_str.split(",") if pid.isdigit()]
+
+    # (2-c) User 객체 생성 및 저장
+    user = User(
+        email=email,
+        password=make_password(password),
+        nickname=nickname,
+        birth=birth,
+        gender=gender,
+        job=job
+    )
+    user.save()  # 이 순간 user.user_id와 user.created_at이 DB에 채워집니다.
+
+    # (2-d) 생성된 User의 ID와 Created 날짜 가져오기
+    new_user_id     = user.user_id
+    user_created_at = user.created_at  # 만약 UserPrefer에 동일 타임스탬프를 쓰려면 사용
+
+    # (2-e) 하나씩 UserPrefer 레코드 생성
+    for pid in pref_ids:
+        try:
+            prefer_obj = PreferType.objects.get(prefer_id=int(pid))
+        except PreferType.DoesNotExist:
+            # 잘못된 ID면 무시
+            continue
+
+        UserPrefer.objects.create(
+            user=user,
+            prefer_type=prefer_obj
+        )
+
+    # (2-f) 세션 정리 (민감 정보 삭제)
+    for key in [
+        "signup_email", "signup_password", "signup_nickname",
+        "signup_birth", "signup_gender", "signup_job"
+    ]:
+        if key in request.session:
+            del request.session[key]
+
+    # (2-g) 가입 완료 후 Step5로 리다이렉트
+    return redirect("signup_step5")
 
 def signup_step5(request):
     return render(request, 'signup/signup_step5.html')

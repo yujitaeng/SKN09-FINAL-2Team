@@ -45,4 +45,5 @@ urlpatterns = [
     path('signup/step5/', views.signup_step5, name='signup_step5'),
     path('signup/send-code/', views.send_verification_code, name='send_verification_code'),
     path('signup/verify-code/', views.verify_code, name='verify_code'),
+     path('signup/check-dup/', views.check_duplicate, name='check_duplicate'),
 ]
