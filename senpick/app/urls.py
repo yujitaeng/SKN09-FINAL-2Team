@@ -25,6 +25,7 @@ from . import views, birth_views, login_views, chat_views, mypage_views
 urlpatterns = [
     path('', views.home, name='home'),  # 기본 URL
     # path('about/', views.about, name='about'),  # about 페이지
+    path('', chat_views.chat, name='chat'),
     path('birth/', birth_views.birth, name='birth'),  # 생일 페이지
     path('login/', login_views.home, name='login'),                  # 로그인
     path('pswd/', pswd_views.home, name='pswd'),                     # 비밀번호 찾기
@@ -39,6 +40,7 @@ urlpatterns = [
     path('mypage/profile/delete/confirm', mypage_views.profile_delete_confirm, name='profile_delete_confirm'),
     path('signup/step1/', views.signup_step1, name='signup_step1'),
     path('signup/step2/', views.signup_step2, name='signup_step2'),
+    path('signup/step3/', views.signup_step3, name='signup_step3'),
     path('signup/step4/', views.signup_step4, name='signup_step4'),
     path('signup/step5/', views.signup_step5, name='signup_step5'),
     path('signup/send-code/', views.send_verification_code, name='send_verification_code'),

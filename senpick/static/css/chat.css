@@ -26,6 +26,11 @@ body {
   margin-top: 54px;
   text-align: left;
 }
+
+.chatbot-header a {
+  width: fit-content;
+}
+
 .chatbot-header h1 {
   font-size: 32px;
   font-weight: 700;

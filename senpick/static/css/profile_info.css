@@ -4,6 +4,7 @@
     padding: 150px 0;
     overflow-y: scroll;
     scrollbar-width: none;
+    padding: 26px;
 }
 .profile-main {
   flex-grow: 1;

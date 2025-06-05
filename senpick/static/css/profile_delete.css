@@ -5,7 +5,7 @@
   background: #fff;
   border-radius: 16px;
   /* box-shadow: 0 4px 32px rgba(0,0,0,0.1); */
-  /* padding: 50px; */
+  padding: 50px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -52,12 +52,12 @@
 }
 
 /* 버튼 영역 */
-.modal-buttons {
+/* .modal-buttons {
   display: flex;
   gap: 10px;
   margin-top: 12px;
   justify-content: center;
-}
+} */
 
 /* 취소 버튼 */
 .modal-buttons .cancel-btn {
@@ -74,8 +74,8 @@
   max-width: 500px;
 }
 
-.modal-buttons .cancel-btn:hover {
-  background: #FFE900;
+.modal-buttons:hover .cancel-btn {
+  /* background: #FFE900; */
   font-weight: bold;
 }
 
@@ -214,6 +214,20 @@ label.step-option.step-option-other.active {
   align-items: center;
   gap: 20px;
   margin-top: 32px;
+  width: 500px;
+  height: 45px;
+  background-color: #F5F5F8;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+  align-self: center;;
+}
+
+.modal-buttons button.cancel-btn {
+  background-color: transparent;
+}
+
+.modal-buttons:hover{
+  background-color: #FFE900;
 }
 
 .think-again-btn {
@@ -333,3 +347,6 @@ label.step-option.step-option-other.active {
   width: 45px;
 }
 
+.center-card-container {
+  align-self: center;;
+}

@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".job-input").appendChild(jobDropdown);
 
   jobInput.parentNode.addEventListener("click", (e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // Prevent click from closing the dropdown
     jobDropdown.style.display = "block";
   });
 
