@@ -85,16 +85,16 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'senpick_db',  # 데이터베이스 이름
-#         'USER': 'root',        # MySQL 사용자
-#         'PASSWORD': 'root', # MySQL 비밀번호
-#         'HOST': '127.0.0.1',   # 로컬 호스트
-#         'PORT': '3306',        # MySQL 포트
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'senpick_db',  # 데이터베이스 이름
+        'USER': 'root',        # MySQL 사용자
+        'PASSWORD': '3333', # MySQL 비밀번호
+        'HOST': '127.0.0.1',   # 로컬 호스트
+        'PORT': '3306',        # MySQL 포트
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

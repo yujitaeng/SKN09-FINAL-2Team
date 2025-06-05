@@ -18,7 +18,8 @@
         <!-- 1) 로고 -->
         <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo" onclick="location.href=`{% url 'login' %}`">
         <div class="signup-form-wrapper">
-          <div class="signup-form">
+          <form method="post" action="{% url 'signup_step4' %}" class="signup-form profile-form signup-form-area step4">
+            {% csrf_token %}
             <!-- 2) 스텝 인디케이터 -->
             <div class="step-indicator">
               <span class="dot active"></span>
@@ -35,14 +36,15 @@
               선호 스타일 <span class="subtext">(최대 3개 선택)</span>
             </p>
             <div class="options-group style-group">
-              <button type="button" class="option-btn" data-value="감성적">감성적</button>
-              <button type="button" class="option-btn" data-value="실용적">실용적</button>
-              <button type="button" class="option-btn" data-value="트렌디">트렌디</button>
-              <button type="button" class="option-btn" data-value="미니멀">미니멀</button>
-              <button type="button" class="option-btn" data-value="럭셔리">럭셔리</button>
-              <button type="button" class="option-btn" data-value="유니크">유니크</button>
-              <button type="button" class="option-btn" data-value="자연친화">자연친화</button>
-              <button type="button" class="option-btn" data-value="클래식">클래식</button>
+              {% for opt in style_options %}
+                <button
+                  type="button"
+                  class="option-btn"
+                  data-id="{{ opt.prefer_id }}"
+                >
+                  {{ opt.type_name }}
+                </button>
+              {% endfor %}
             </div>
             <div id="style-error" class="error-message"></div>
 
@@ -51,25 +53,25 @@
               선호 카테고리 <span class="subtext">(최대 3개 선택)</span>
             </p>
             <div class="options-group category-group">
-              <button type="button" class="option-btn" data-value="식품">식품</button>
-              <button type="button" class="option-btn" data-value="뷰티">뷰티</button>
-              <button type="button" class="option-btn" data-value="패션">패션</button>
-              <button type="button" class="option-btn" data-value="반려동물">반려동물</button>
-              <button type="button" class="option-btn" data-value="교환권">교환권</button>
-              <button type="button" class="option-btn" data-value="건강·케어">건강·케어</button>
-              <button type="button" class="option-btn" data-value="아기·어린이">아기·어린이</button>
-              <button type="button" class="option-btn" data-value="레저·자동차">레저·자동차</button>
-              <button type="button" class="option-btn" data-value="디지털·가전">디지털·가전</button>
-              <button type="button" class="option-btn" data-value="프리미엄 선물">프리미엄 선물</button>
-              <button type="button" class="option-btn" data-value="리빙·인테리어">리빙·인테리어</button>
+              {% for opt in category_options %}
+                <button
+                  type="button"
+                  class="option-btn"
+                  data-id="{{ opt.prefer_id }}"
+                >
+                  {{ opt.type_name }}
+                </button>
+              {% endfor %}
             </div>
             <div id="category-error" class="error-message"></div>
+            
+            <input type="hidden" name="preference_ids" id="preference-ids" value="">
 
             <!-- 6) 회원가입 완료 버튼 -->
-            <button id="completeBtn" class="verify-btn" style="margin-top: 48px;">
+            <button type="submit" id="completeBtn" class="verify-btn" style="margin-top: 48px;">
               회원가입 완료
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
