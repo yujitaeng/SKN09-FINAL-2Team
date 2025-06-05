@@ -2,95 +2,168 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
-    <link rel="stylesheet" href="{% static 'css/profile_info.css' %}">
-    <link rel="stylesheet" href="{% static 'css/profile_delete.css' %}">
-    <link rel="stylesheet" href="{% static 'css/sidebar_profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-    <link rel="stylesheet" href="{% static 'css/stepper.css' %}">
-
-    <link href="https://fonts.googleapis.com/css2?family=Spoqa+Han+Sans+Neo:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
+  <link rel="stylesheet" href="{% static 'css/profile_info.css' %}">
+  <link rel="stylesheet" href="{% static 'css/profile_delete.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sidebar_profile.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+  <link rel="stylesheet" href="{% static 'css/stepper.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Spoqa+Han+Sans+Neo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cafe24+Supermagic&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div style="display: flex;" class="layout">
-        {% include "sidebar.html" %}
-        <div class="layout">
-          <!-- 좌측 서브 사이드바 -->
-          <div class="sidebar-wrapper">
-            {% include "profile/sidebar_profile.html" with active_tab="delete" %}
+  <div style="display: flex;" class="layout">
+    {% include "sidebar.html" %}
+
+    <div class="layout">
+      <div class="sidebar-wrapper">
+        {% include "profile/sidebar_profile.html" with active_tab="delete" %}
+      </div>
+
+      <div class="profile-main-wrapper">
+        <div class="profile-main">
+
+          <!-- STEP 1 -->
+          <div id="step1" class="step active">
+            <div class="withdraw-card">
+              <h2>정말 <span class="font-cafe24">Senpick</span>을 떠나시나요?</h2>
+              <img src="{% static 'images/delete_step1.png' %}" alt="탈퇴 경고">
+              <p>
+                회원 탈퇴 시, 그동안 <strong>저장된 선물 히스토리, 찜 목록, 수령인 정보</strong>와<br />
+                <strong>추천 결과</strong>는 모두 삭제되며 복구할 수 없어요.<br />
+                그동안 당신이 고른 수많은 마음들이 사라질 수 있어요.
+              </p>
+              <div class="modal-buttons">
+                <button class="think-again-btn" onclick="window.location.href='/mypage'">다시 생각해볼게!</button>
+                <button class="text-withdraw-btn" onclick="goToStep(2)">탈퇴 하기</button>
+              </div>
+            </div>
           </div>
-          <!-- 우측 프로필 수정 메인 영역 -->
-          <div class="profile-main-wrapper">
-            <div class="center-card-container">
-                  <div class="modal-card">
-                    <h2><span class="font-b">Senpick</span><b>의 어떤 점이 바뀌면 좋을까요?</b></h2>
-                    <h3>탈퇴 사유</h3>
-                    <div class="withdraw-reason" style="color: #666;">
-                      <label class="step-option"><input type="checkbox" name="reason"> 추천 결과가 마음에 들지 않음</label>
-                      <label class="step-option"><input type="checkbox" name="reason"> 사용할 일이 없음</label>
-                      <label class="step-option"><input type="checkbox" name="reason"> 서비스가 복잡하고 어렵게 느껴짐</label>
-                      <label class="step-option"><input type="checkbox" name="reason"> 개인정보가 걱정됨</label>
-                      <label class="step-option" id="other-reason">
-                        <input type="checkbox" name="reason"> 기타 (직접 입력)
-                      </label>
-                      <div class="other-input-wrapper" style="display: none;">
-                        <input type="text" class="other-input" placeholder="내용을 입력해주세요" >
-                      </div>
-                    </div>
-                    <div class="warning">
-                      <b style="color:red;">탈퇴 후에는 데이터를 복구할 수 없어요.<br>정말 탈퇴하실건가요?</b>
-                    </div>
-                    <div class="modal-buttons">
-                      <button class="cancel-btn" onclick="history.back();">다시 생각할게</button>
-                    </div>
-                    <div class="modal-buttons delete-btn">
-                      <button class="confirm-btn" id="real-delete-btn">탈퇴 하기</button>
-                    </div>
+
+          <!-- STEP 2 -->
+          <div id="step2" class="step">
+            <div class="modal-card">
+              <h2><span class="font-b font-cafe24">Senpick</span><b>의 어떤 점이 바뀌면 좋을까요?</b></h2>
+              <h3>탈퇴 사유</h3>
+            
+              <div class="withdraw-reason">
+                <label class="step-option">
+                  <input type="checkbox" name="reason"> 추천 결과가 마음에 들지 않음
+                </label>
+                <label class="step-option">
+                  <input type="checkbox" name="reason"> 사용할 일이 없음
+                </label>
+                <label class="step-option">
+                  <input type="checkbox" name="reason"> 서비스가 복잡하고 어렵게 느껴짐
+                </label>
+                <label class="step-option">
+                  <input type="checkbox" name="reason"> 개인정보가 걱정됨
+                </label>
+                <label class="step-option" id="other-reason">
+                  <div class="checkbox-line">
+                    <input type="checkbox" name="reason"> 기타 (직접 입력)
                   </div>
+                </label>
+                <div class="other-input-wrapper" id="other-input-wrapper" style="display: none;">
+                  <input type="text" class="other-input" id="other-input" placeholder="직접 입력" maxlength="80">
+                  <div class="char-limit"><span id="char-count">0</span> / 80</div>
                 </div>
+              </div>
+            
+              <div class="warning">
+                <b style="color:red;">탈퇴 후에는 데이터를 복구할 수 없어요.<br>정말 탈퇴하실건가요?</b>
+              </div>
+            
+              <div class="modal-buttons">
+                <button class="think-again-btn" onclick="window.location.href='/mypage'">다시 생각해볼게!</button>
+                <button class="text-withdraw-btn" onclick="goToStep(3)">탈퇴 하기</button>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- STEP 3 -->
+          <div id="step3" class="step">
+            <div class="modal-card">
+              <h2>그동안 <span class="font-cafe24">Senpick</span>과 함께해주셔서 감사합니다 :)</h2>
+              <p>언제든 다시 찾아주세요.</p>
+              <div class="img-wrapper">
+                <img src="{% static 'images/delete_confirm.png' %}" alt="탈퇴 완료">
+              </div>            
+              <div class="modal-buttons">
+                <button class="think-again-btn" onclick="window.location.href='/login/'">센픽 홈으로 가기</button>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
     </div>
-    <script>
-      // 기타 사유 선택시 입력창 노출
-      const reasonRadios = document.querySelectorAll('input[type="checkbox"][name="reason"]');
-      const otherInput = document.querySelector('.other-input');
-      reasonRadios.forEach(radio => {
-        radio.onchange = function() {
-          reasonRadios.forEach(r => {
-            if (r !== this) r.checked = false; // 다른 체크박스는 해제
+  </div>
+
+  <script>
+    function goToStep(stepNumber) {
+      const steps = document.querySelectorAll('.step');
+      steps.forEach(step => step.classList.remove('active'));
+      document.getElementById(`step${stepNumber}`).classList.add('active');
+    }
+  
+    document.addEventListener("DOMContentLoaded", function () {
+      const stepOptions = document.querySelectorAll('.step-option');
+      const otherOption = document.getElementById('other-reason');
+      const otherCheckbox = otherOption.querySelector('input[type="checkbox"]');
+      const otherInputWrapper = document.getElementById('other-input-wrapper');
+      const otherInput = document.getElementById('other-input');
+      const charCount = document.getElementById('char-count');
+    
+      // 공통 체크박스 동작
+      stepOptions.forEach(option => {
+        const checkbox = option.querySelector('input[type="checkbox"]');
+    
+        checkbox.addEventListener('change', function () {
+          stepOptions.forEach(opt => {
+            const cb = opt.querySelector('input[type="checkbox"]');
+            if (cb !== this) {
+              cb.checked = false;
+              opt.classList.remove('active');
+            }
           });
-          if (this.parentElement.textContent.includes('기타') && this.checked) {
-            otherInput.parentElement.style.display = 'flex';
+    
+          if (option.id === 'other-reason') {
+            if (checkbox.checked) {
+              otherInputWrapper.style.display = 'flex';
+              otherOption.classList.add('active');
+            } else {
+              otherInputWrapper.style.display = 'none';
+              otherInput.value = '';
+              charCount.textContent = '0';
+              otherOption.classList.remove('active');
+            }
           } else {
-            otherInput.parentElement.style.display = 'none';
+            // 기타 체크 해제
+            otherCheckbox.checked = false;
+            otherInputWrapper.style.display = 'none';
             otherInput.value = '';
+            charCount.textContent = '0';
+            otherOption.classList.remove('active');
+    
+            // 본인 active 처리
+            if (checkbox.checked) {
+              option.classList.add('active');
+            } else {
+              option.classList.remove('active');
+            }
           }
-        }
+        });
       });
-
-      // 탈퇴 처리
-      const realDeleteBtn = document.getElementById('real-delete-btn');
-      realDeleteBtn.addEventListener('click', function(event) {
-        event.preventDefault(); // 기본 동작 방지
-        alert('탈퇴 처리가 완료되었습니다.');
-        location.href = "{% url 'profile_delete_confirm' %}"; // 탈퇴 후 메인으로 이동 등
+    
+      // 글자 수 카운팅
+      otherInput.addEventListener('input', () => {
+        charCount.textContent = otherInput.value.length;
       });
-
-      // 기타 입력창 토글
-      const otherLabel = document.querySelector('#other-reason');
-      const checkbox = otherLabel.querySelector('input[type="checkbox"]');
-
-      checkbox.addEventListener('change', function () {
-        if (this.checked) {
-          otherLabel.classList.add('active');
-        } else {
-          otherLabel.classList.remove('active');
-        }
-      });
-    </script>
+    });    
+  </script>
 </body>
 </html>

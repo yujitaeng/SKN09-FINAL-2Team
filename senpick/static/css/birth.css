@@ -60,7 +60,7 @@
 
 .birth-container p {
     color: #666666;
-    font-size: 24px;
+    font-size: 20px;
     margin: 0;
 }
 
@@ -86,8 +86,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 80px 0;
-    height: 60vh; /* 원하는 높이로 조절 */
+    margin: 50px auto 25px;
+    height: 53vh; /* 원하는 높이로 조절 */
     overflow: hidden;
 }
 
