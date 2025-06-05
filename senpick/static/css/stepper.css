@@ -17,11 +17,11 @@ body {
   width: 340px;
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(44,44,44,0.10);
+  /* box-shadow: 0 2px 10px rgba(44,44,44,0.10); */
   padding: 22px 22px 20px 22px;
-  margin: 40px auto 8px auto;
+  margin: 30px auto 5px;
   font-size: 18px;
-  color: #222;
+  color: #2e2e2e;
   font-weight: 500;
   line-height: 1.6;
   margin-right: auto;
@@ -33,9 +33,9 @@ body {
   width: 340px;
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 4px 18px rgba(44,44,44,0.10);
+  /* box-shadow: 0 4px 18px rgba(44,44,44,0.10); */
   padding: 22px;
-  margin: 0 auto 18px auto;
+  margin: 0 auto;
   animation: fadeIn 0.4s;
   margin-right: auto;
   margin-left: 0;
@@ -51,14 +51,14 @@ body {
 .step-title {
   font-size: 15px;
   font-weight: bold;
-  color: #222;
+  color: #2e2e2e;
   margin-bottom: 4px;
 }
 .step-question {
   font-size: 16px;
-  color: #434343;
+  color: #2e2e2e;
   /* margin-bottom: 16px; */
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* 옵션 리스트 */
@@ -76,16 +76,26 @@ body {
   gap: 10px;
   padding: 8px 14px;
   border-radius: 8px;
-  background: #F7F8FA;
+  background: #FFF;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
-  border: 1.2px solid #f3f3f3;
+  border: 1.2px solid #E0E0E0;
   margin-bottom: 0;
   transition: background 0.13s, border 0.13s;
   box-sizing: border-box;
   position: relative;
+  color: #666666;
 }
+
+.step-card .step-options .step-option {
+  margin-top: 5px !important;
+}
+
+.step-option.skip-option {
+  margin-top: 7px !important;
+}
+
 .step-option.selected,
 .step-option:hover {
   background: #fffde8;
@@ -102,7 +112,7 @@ body {
   appearance: none;
   -webkit-appearance: none;
   outline: none;
-  border: 2px solid #F5F5F8;
+  border: 2px solid #E0E0E0;
   background: #fff;
   border-radius: 5px;
   width: 20px;
@@ -147,9 +157,8 @@ body {
   width: 100%;
   border: none;
   background: #F5F5F8;
-  color: #222;
+  color: #2e2e2e;
   font-size: 16px;
-  font-weight: 600;
   border-radius: 10px;
   padding: 12px 0;
   cursor: pointer;
@@ -157,7 +166,10 @@ body {
   box-shadow: none;
   transition: background 0.16s;
 }
-.step-next-btn:hover { background: #ffe600; }
+.step-next-btn:hover { 
+  background: #ffe600; 
+  font-weight: 600;
+}
 
 /* 카드 여러 개 쌓일 때 컨테이너 */
 #stepper-box {
@@ -170,24 +182,50 @@ body {
 .file-upload-form { width: 100%; }
 .file-dropzone {
   min-height: 90px;
-  border: 3px dashed #aaa;
+  border: 2px dashed #E0E0E0;
   border-radius: 14px;
   box-sizing: border-box;
   text-align: center;
   padding: 16px 0 14px 0;
   font-size: 16px;
-  background: #f9f9fb;
+  background: #fff;
   cursor: pointer;
   transition: border-color 0.2s;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin: 0;
 }
-.file-dropzone:hover { border: 3px solid #19a5fe; }
-.file-drop-content { text-align:center; color:#4d4d4d; font-size:15px;}
-.file-hint { color: #bbb; font-size:12px; }
-.file-actions { display: flex; justify-content: space-between; width: 92%; gap: 10px; }
+
+.file-dropzone:hover { 
+  border: 2px solid #ffe900; 
+  background: #FFFDE7;
+}
+
+.file-drop-content {
+  text-align:center; 
+  color:#666666; 
+  font-size:15px;
+}
+
+.file-drop-text {
+  font-weight: 500;
+}
+
+.file-hint { 
+  color: #666666; 
+  font-size:12px; 
+  font-weight: 400;
+}
+
+.file-actions { 
+  display: flex; 
+  justify-content: space-between; 
+  width: 92%; 
+  gap: 10px; 
+}
+
 .skip-btn {
   flex: 1 1 0;
   background: #fff;
@@ -199,19 +237,19 @@ body {
   cursor: pointer;
   transition: border 0.13s, color 0.13s;
 }
-.skip-btn:hover { border: 1.5px solid #19a5fe; color: #19a5fe; }
+.skip-btn:hover { border: 1.5px solid #ffe900; color: #ffe900; }
 
 .step-card-file .step-next-btn:hover { background: #ffe900; }
 
 .file-dropzone.error {
-  border-color: #e53a3a !important;
+  border-color: #EB1C24 !important;
   border-style: dashed !important;
-  background: #fff7f7;
 }
+
 .file-drop-error {
-  color: #e53a3a;
-  font-size: 15px;
-  margin: 8px 0 0 0;
-  min-height: 22px;
-  text-align: center;
+  color: #EB1C24;
+  font-size: 12px;
+  margin: 5px 0 0 0;
+  min-height: 16px;
+  /* text-align: center; */
 }
