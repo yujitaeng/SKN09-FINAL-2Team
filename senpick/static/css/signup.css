@@ -27,8 +27,8 @@ body {
 
 .signup-container {
   padding: var(--form-offset-y) 0 0 var(--form-offset-x);
-  width: 50%;
   z-index: 1;
+  flex: 1;
 }
 
 .signup-form-area {
