@@ -39,7 +39,7 @@
       </div>
 
       <div class="form-block">
-        <form method="post" action="{% url 'login' %}" class="login-form">
+        <form method="post" class="login-form">
           {% csrf_token %}
           <input type="email" name="username" id="email" placeholder="이메일 입력 (예:senpick@senpick.com)" required>
           <div class="error-message" id="email-error">이메일을 필수 입력해주세요.</div>

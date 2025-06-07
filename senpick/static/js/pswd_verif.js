@@ -1,47 +1,27 @@
 document.addEventListener("DOMContentLoaded", function () {
   const logoBtn = document.querySelector(".logo");
-  const testButton = document.querySelector(".pswd-verif-test");
-
   const hiddenInput = document.getElementById("hidden-input");
   const boxes = Array.from(document.querySelectorAll(".digit-box"));
-
   const timerText = document.getElementById("timer-text");
   const resendText = document.getElementById("resend-text");
-  const verifBtn = document.querySelector(".verif-comp-btn"); // 인증완료 버튼
+  const verifBtn = document.querySelector(".verif-comp-btn");
+  const errorMsg = document.getElementById("verif-error-msg");
 
   let timerInterval;
-  let remainingTime = 5*60; // 5분 (현재는 테스트용 3초)
+  let remainingTime = 300;
 
-  // function startTimer() {
-  //   document.getElementById("verif-error-msg").style.display = "none";
-  //   clearInterval(timerInterval);
-  //   remainingTime = 3;
-  //   updateTimer();
-  //   timerText.style.display = "block";
-  //   resendText.style.display = "none";
+  function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}
 
-  //   timerInterval = setInterval(() => {
-  //     remainingTime--;
-  //     if (remainingTime >= 0) {
-  //       updateTimer();
-  //     }
-  //     if (remainingTime === 0) {
-  //       clearInterval(timerInterval);
-  //       resendText.style.display = "block";
-  //     }
-  //   }, 1000);
-  // }
   function startTimer() {
-    // 🔹 오류 메시지 숨기기
-    document.getElementById("verif-error-msg").style.display = "none";
-
-    // 🔹 입력 초기화
-    hiddenInput.value = ""; // 실제 입력 값 초기화
-    boxes.forEach(box => box.textContent = ""); // 각 digit-box 시각적 숫자 초기화
-
-    // 🔹 타이머 초기화
+    errorMsg.style.display = "none";
+    hiddenInput.value = "";
+    boxes.forEach(box => box.textContent = "");
     clearInterval(timerInterval);
-    remainingTime = 5*60;
+    remainingTime = 300;
     updateTimer();
     timerText.style.display = "block";
     resendText.style.display = "none";
@@ -58,28 +38,36 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 1000);
   }
 
-
   function updateTimer() {
     const minutes = String(Math.floor(remainingTime / 60)).padStart(2, '0');
     const seconds = String(remainingTime % 60).padStart(2, '0');
     timerText.textContent = `${minutes}:${seconds}`;
   }
 
-  // 초기 타이머 시작
   startTimer();
 
-  // 인증코드 재전송 클릭
-  resendText.addEventListener("click", startTimer);
+  resendText.addEventListener("click", () => {
+    fetch("/api/resend_code/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken")
+      },
+      credentials: "include" 
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          startTimer();
+        } else {
+          errorMsg.textContent = data.message || "인증번호 재전송 실패";
+          errorMsg.style.display = "block";
+        }
+      });
+  });
 
-  // 로고 클릭
   logoBtn.addEventListener("click", () => window.location.href = "/login");
 
-  // // 테스트용 버튼 → 강제 이동
-  // testButton.addEventListener("click", function () {
-  //   window.location.href = "/pswd_gen";
-  // });
-
-  // 클릭 시 입력 포커스
   document.querySelector(".digit-boxes").addEventListener("click", () => {
     hiddenInput.focus();
   });
@@ -90,7 +78,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   hiddenInput.addEventListener("input", (e) => {
     const value = e.target.value.slice(0, 5).replace(/\D/g, "");
-    console.log("입력된 값:", value);  // ✅ 확인용 로그
     for (let i = 0; i < 5; i++) {
       boxes[i].textContent = value[i] || "";
     }
@@ -102,11 +89,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   hiddenInput.focus();
 
-  // 이메일 인증 완료 버튼 → 입력값 체크 후 이동
   verifBtn.addEventListener("click", () => {
     const entered = boxes.map(box => box.textContent).join('');
-    const testCode = "12345";
-    const errorMsg = document.getElementById("verif-error-msg");
 
     if (remainingTime <= 0) {
       errorMsg.textContent = "인증 시간이 만료되었습니다. 인증번호 재전송 요청 후 재입력 부탁드립니다.";
@@ -114,15 +98,26 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    if (entered !== testCode) {
-      errorMsg.textContent = "인증번호가 올바르지 않습니다.";
+    fetch("/api/verify_code/", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken")
+      },
+      body: JSON.stringify({ code: entered }),
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        window.location.href = "/pswd_gen";
+      } else {
+        errorMsg.textContent = data.message || "인증번호가 올바르지 않습니다.";
+        errorMsg.style.display = "block";
+      }
+    })
+    .catch(() => {
+      errorMsg.textContent = "서버 통신 오류. 다시 시도해 주세요.";
       errorMsg.style.display = "block";
-      return;
-    }
-
-    // 인증 성공
-    window.location.href = "/pswd_gen";
+    });
   });
-
-
 });
