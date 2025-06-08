@@ -216,22 +216,77 @@
           };
 
           fetch('/chat/start/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
           })
-          .then(r => r.json())
-          .then(data => {
-            const chatHistory = document.getElementById('chat-history');
-            if (data.products) {
-              renderProductCards(data.products);
-            } else if (data.bot) {
-              chatHistory.insertAdjacentHTML(
-                'beforeend', `<div class="chat-msg bot">${data.bot}</div>`
-              );
-            }
-            document.getElementById('chat-form').style.display = 'block';
-            document.getElementById('chat-form').scrollIntoView({ behavior: 'smooth' });
+          .then(res => {
+              const contentType = res.headers.get('Content-Type') || '';
+              console.log(contentType);
+
+              const chatHistory = document.getElementById('chat-history');
+              const loadingDiv = document.getElementById('chat-loading-spin');
+
+              if (contentType.includes('text/plain')) {
+                  if (loadingDiv) loadingDiv.remove();
+                  console.log("Streaming text/plain response");
+
+                  const reader = res.body.getReader();
+                  const decoder = new TextDecoder('utf-8');
+
+                  // 1️⃣ 빈 bot div 먼저 추가
+                  const botMsgDiv = document.createElement('div');
+                  botMsgDiv.className = 'chat-msg bot';
+                  botMsgDiv.innerHTML = ''; // 초기 빈 상태
+                  chatHistory.appendChild(botMsgDiv);
+
+                  function read() {
+                      reader.read().then(({ done, value }) => {
+                          if (done) {
+                              console.log('Stream complete');
+                              chatHistory.scrollTop = chatHistory.scrollHeight;
+                              return;
+                          }
+
+                          const chunk = decoder.decode(value, { stream: true });
+                          console.log('Received chunk:', chunk);
+
+                          botMsgDiv.innerHTML += chunk;
+                          chatHistory.scrollTop = chatHistory.scrollHeight;
+                          setTimeout(() => {
+                            read(); // 계속 읽기
+                          }, 50);
+                      });
+
+                  }
+
+                  read();
+              }
+              else if (contentType.includes('application/json')) {
+                  res.json().then(data => {
+                      console.log('Received JSON:', data);
+
+                      if (loadingDiv) loadingDiv.remove();
+
+                      if (data.products) {
+                          renderProductCards(data.products);
+                      } else if (data.bot) {
+                          chatHistory.insertAdjacentHTML(
+                              'beforeend',
+                              `<div class="chat-msg bot">${data.bot}</div>`
+                          );
+                      }
+
+                      document.getElementById('chat-form').style.display = 'block';
+                      document.getElementById('chat-form').scrollIntoView({ behavior: 'smooth' });
+                  });
+              }
+              else {
+                  console.warn(`Unsupported Content-Type: ${contentType}`);
+              }
+          })
+          .catch(error => {
+              console.error('Fetch error:', error);
           });
 
           document.getElementById('chat-form').style.display = 'flex';
@@ -370,23 +425,75 @@
 
           // === 실제 백엔드 연결 ===
           fetch('/chat/message/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: msg })
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ message: msg })
           })
-          .then(r => r.json())
-          .then(data => {
-            const loadingDiv = document.getElementById('chat-loading-spin');
-            if (loadingDiv) loadingDiv.remove();
-            if (data.products) {
-              renderProductCards(data.products);
-            } else if (data.bot) {
-              chatHistory.insertAdjacentHTML(
-                'beforeend',
-                `<div class="chat-msg bot">${data.bot}</div>`
-              );
-            }
-            chatHistory.scrollTop = chatHistory.scrollHeight;
+          .then(res => {
+              const contentType = res.headers.get('Content-Type') || '';
+              console.log(contentType)
+              const loadingDiv = document.getElementById('chat-loading-spin');
+              if (contentType.includes('text/plain')) {
+                  if (loadingDiv) loadingDiv.remove();
+                  console.log("streaming text/plain response");
+                  // 스트리밍 처리 - ReadableStream으로 처리
+                  const reader = res.body.getReader();
+                  const decoder = new TextDecoder('utf-8');
+                  const chatHistory = document.getElementById('chat-history');  // 가정
+
+                  // 1️⃣ 빈 bot div 먼저 추가
+                  const botMsgDiv = document.createElement('div');
+                  botMsgDiv.className = 'chat-msg bot';
+                  botMsgDiv.innerHTML = ''; // 초기 빈 상태
+                  chatHistory.appendChild(botMsgDiv);
+
+                  function read() {
+                      reader.read().then(({ done, value }) => {
+                          if (done) {
+                              console.log('Stream complete');
+                              const loadingDiv = document.getElementById('chat-loading-spin');
+                              return;
+                          }
+
+                          const chunk = decoder.decode(value, { stream: true });
+                          console.log('Received chunk:', chunk);
+
+                          // 화면에 실시간 추가
+                          botMsgDiv.innerHTML += chunk;
+
+                          chatHistory.scrollTop = chatHistory.scrollHeight;
+                          read(); // 계속 읽기
+                      });
+                  }
+
+                  read();
+              }
+              else if (contentType.includes('application/json')) {
+                  // 기존 JSON 처리
+                  return res.json().then(data => {
+                      const loadingDiv = document.getElementById('chat-loading-spin');
+                      if (loadingDiv) loadingDiv.remove();
+
+                      const chatHistory = document.getElementById('chat-history');  // 가정
+
+                      if (data.products) {
+                          renderProductCards(data.products);
+                      } else if (data.bot) {
+                          chatHistory.insertAdjacentHTML(
+                              'beforeend',
+                              `<div class="chat-msg bot">${data.bot}</div>`
+                          );
+                      }
+
+                      chatHistory.scrollTop = chatHistory.scrollHeight;
+                  });
+              }
+              else {
+                  console.warn('Unknown content type:', contentType);
+              }
+          })
+          .catch(error => {
+              console.error('Fetch error:', error);
           });
 
           input.value = "";

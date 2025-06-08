@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 import json
 from giftgraph.graph import gift_fsm 
 
@@ -38,9 +38,36 @@ def chat_start(request):
             "situation_info": situation_info
         }
         
-        state = gift_fsm.invoke(state)
+        # # try:
+        # situation_info = state.get("situation_info", {})
+        # chat_str = "\n".join(state["chat_history"][-10:])
+        # recipient_info = state.get("recipient_info", {})
+        # prompt = prompt_template.format(
+        #     chat_history=chat_str, 
+        #     recipient_info=recipient_info, 
+        #     situation_info=situation_info
+        # )
+
+        # for chunk in llm.stream(prompt):
+        #     token = getattr(chunk, "content", "")
+        #     yield token  # 실시간으로 토큰 출력
+        
+        # 스트림 처리 
+        
+        res = gift_fsm.invoke(state)
+        
+        if isinstance(res, dict):
+            state = res
+            output = state.get("output", "")
+        else:  # 만약 res가 dict가 아니라면, 단순 문자열로 처리
+            # 스트림 처리 
+            def stream():
+                for chunk in res:
+                    yield chunk
+    
+            return StreamingHttpResponse(stream(), content_type='text/plain')
         save_state(request, state)
-        return JsonResponse({"bot": state.get("output")})
+        return JsonResponse({"bot": output})
     return JsonResponse({"error": "POST only"})
 
 @csrf_exempt
@@ -58,7 +85,11 @@ def chat_message(request):
             state = res
             output = state.get("output", "")
         else:  
-            output = res
+            def stream():
+                for chunk in res:
+                    yield chunk
+    
+            return StreamingHttpResponse(stream(), content_type='text/plain')
 
         save_state(request, state if isinstance(res, dict) else state)
         return JsonResponse({"bot": output})
