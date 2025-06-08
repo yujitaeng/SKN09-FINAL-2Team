@@ -90,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'senpick_db',  # 데이터베이스 이름
         'USER': 'root',        # MySQL 사용자
-        'PASSWORD': '1234', # MySQL 비밀번호
+        'PASSWORD': os.getenv('DB_PASSWORD'), # MySQL 비밀번호
         'HOST': '127.0.0.1',   # 로컬 호스트
         'PORT': '3306',        # MySQL 포트
     }
