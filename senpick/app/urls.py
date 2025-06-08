@@ -50,4 +50,6 @@ urlpatterns = [
     path('signup/send-code/', views.send_verification_code, name='send_verification_code'),
     path('signup/verify-code/', views.verify_code, name='verify_code'),
     path('signup/check-dup/', views.check_duplicate, name='check_duplicate'),
+    path('chat/start/', chat_views.chat_start, name='chat_start'),
+    path('chat/message/', chat_views.chat_message, name='chat_message'),
 ]
