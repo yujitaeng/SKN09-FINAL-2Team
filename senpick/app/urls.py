@@ -28,6 +28,7 @@ urlpatterns = [
     path('', chat_views.chat, name='chat'),
     path('birth/', birth_views.birth, name='birth'),  # 생일 페이지
     path('login/', login_views.login_view, name='login'),                                                # 로그인
+    path('logout/', login_views.logout_view, name='logout'),                                             # 로그아웃
     path('pswd/', pswd_views.home, name='pswd'),                                                         # 비밀번호 찾기
     path('pswd/verif/', pswd_verif_views.home, name='pswd_verif'),                                       # 이메일 인증
     path("api/pswd_request/", pswd_views.password_reset_request, name="password_reset_request"),         # 인증번호 전송

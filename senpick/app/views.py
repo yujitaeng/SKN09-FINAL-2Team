@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
-from .models import User, PreferType, UserPrefer
+from app.models import User, PreferType, UserPrefer
 from django.contrib.auth.hashers import make_password
 
 def home(request):
