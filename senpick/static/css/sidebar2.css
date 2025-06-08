@@ -76,7 +76,8 @@
 
 .sidebar-right .card-wrapper {
   overflow-y: auto;
-  scrollbar-width: none;
+  /* scrollbar-width: none; */
+  justify-content: center;;
   -ms-overflow-style: none;
   flex-shrink: 0;
   /* Adjust height based on header */

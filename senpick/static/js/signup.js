@@ -58,10 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 이메일, 비밀번호, 닉네임 정규식
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordPattern = /^[a-z0-9]{6,15}$/;
-    const nicknamePattern = /^[가-힣]{1,8}$/;
+    const passwordPattern = /^[a-z0-9]{8,15}$/;
+    const nicknamePattern = /^[가-힣]{2,8}$/;
 
-    nextBtn.addEventListener("click", e => {
+    nextBtn.addEventListener("click", async e => {
       e.preventDefault();
       resetErrors();
       let hasError = false;
@@ -69,29 +69,34 @@ document.addEventListener('DOMContentLoaded', () => {
       // 이메일 검증
       const emailValue = email.value.trim();
       if (emailValue === "") {
-        emailErr.textContent = "이메일을 필수 입력해주세요.";
-        emailErr.style.display = "block";
-        email.classList.add("error");
-        hasError = true;
-      } else if (!emailPattern.test(emailValue)) {
-        emailErr.textContent = "올바른 이메일 형식으로 입력해주세요.";
-        emailErr.style.display = "block";
-        email.classList.add("error");
-        hasError = true;
+      emailErr.textContent = "이메일을 필수 입력해주세요.";
+      emailErr.style.display = "block";
+      email.classList.add("error");
+      hasError = true;
+    } else if (!emailPattern.test(emailValue)) {
+      emailErr.textContent = "올바른 이메일 형식으로 입력해주세요.";
+      emailErr.style.display = "block";
+      email.classList.add("error");
+      hasError = true;
+    } else {
+      try {
+        const res = await fetch(`/signup/check-dup/?field=email&value=${encodeURIComponent(emailValue)}`);
+        const data = await res.json();
+        if (data.exists) {
+          emailErr.textContent = "이미 사용 중인 이메일입니다.";
+          emailErr.style.display = "block";
+          email.classList.add("error");
+          hasError = true;
+        }
+      } catch (err) {
+        console.error("이메일 중복검사 오류:", err);
       }
-      /*
-      else if (중복검사) {
-        emailErr.textContent = "이미 가입된 이메일 입니다.";
-        emailErr.style.display = "block";
-        email.classList.add("error");
-        hasError = true;
-      }
-      */
+    }
 
       // 비밀번호 검증 (통합 메시지)
       const pwValue = password.value.trim();
       if (pwValue === "" || !passwordPattern.test(pwValue)) {
-        pwErr.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자를 이용하여 최소 6~15자리";
+        pwErr.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자를 이용하여 최소 8~15자리";
         pwErr.style.display = "block";
         password.classList.add("error");
         hasError = true;
@@ -104,15 +109,20 @@ document.addEventListener('DOMContentLoaded', () => {
         nickErr.style.display = "block";
         nickname.classList.add("error");
         hasError = true;
+      } else {
+      try {
+        const res = await fetch(`/signup/check-dup/?field=nickname&value=${encodeURIComponent(nickValue)}`);
+        const data = await res.json();
+        if (data.exists) {
+          nickErr.textContent = "이미 사용 중인 닉네임입니다.";
+          nickErr.style.display = "block";
+          nickname.classList.add("error");
+          hasError = true;
+        }
+      } catch (err) {
+        console.error("닉네임 중복검사 오류:", err);
       }
-      /*
-      else if (닉네임 중복검사) {
-        nickErr.textContent = "이미 사용중인 닉네임입니다.";
-        nickErr.style.display = "block";
-        nickname.classList.add("error");
-        hasError = true;
-      }
-      */
+    }
 
       // 약관 검증
       if (!Array.from(requiredChk).every(c => c.checked)) {
@@ -131,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ✅ step2: 이메일 인증 (5자리 입력)
 else if (path.includes("signup/step2")) {
-
     // 1) DOM 요소 참조
     const inputs    = document.querySelectorAll('.verify-input');   // 5칸 입력박스
     const verifyBtn = document.getElementById('verifyBtn');         // "이메일 인증 완료" 버튼
@@ -192,21 +201,7 @@ else if (path.includes("signup/step2")) {
     // 4) “이메일 인증 완료” 버튼 클릭 이벤트
     verifyBtn.addEventListener('click', () => {
       const code = Array.from(inputs).map(i => i.value).join('');
-      // 예시: 서버 검증 대신 “12345”와 비교
-      // if (code === '12345') {
-      //   window.location.href = '/signup/step3/';
-      // } else {
-      //   // 틀린 경우: 입력박스 전체 빨간 테두리 + 에러 메시지 출력
-      //   inputs.forEach(i => i.classList.add('error'));
-      //   errorMsg.textContent = '인증번호가 일치하지 않습니다.';
-      //   errorMsg.style.display = 'block';
-      //   // 2초 뒤 초기화
-      //   setTimeout(() => {
-      //     inputs.forEach(i => i.classList.remove('error'));
-      //     errorMsg.style.display = 'none';
-      //   }, 2000);
-      // }
-      // ❗ AJAX로 서버 verify_code 뷰 호출
+
       fetch("/signup/verify-code/", {
         method: "POST",
         headers: {
@@ -281,8 +276,6 @@ else if (path.includes("signup/step2")) {
       .catch(() => {
         alert('네트워크 오류로 인증코드 재전송에 실패했습니다.');
       });
-      // 예시: 실제 서비스에서는 서버에 재전송 API 호출합니다.
-      // alert('새로운 인증코드를 이메일로 발송했습니다.');
     });
     // **CSRF 토큰을 가져오는 헬퍼 함수**
     function getCookie(name) {
@@ -325,6 +318,7 @@ else if (path.includes("signup/step2")) {
         femaleBtn.classList.add("selected");
         maleBtn.classList.remove("selected");
       }
+      genderInput.value = gender;
     }
     maleBtn.addEventListener("click", () => {
       selectGender("male");
@@ -366,7 +360,7 @@ else if (path.includes("signup/step2")) {
 
       // 3-3) 직업 검증: 값이 빈 문자열이 아닌지
       const jobValue = jobSelect.value;
-      if (jobValue === "") {
+      if (jobValue === "직업 선택") {
         jobErrEl.textContent = "직업을 선택해주세요.";
         jobErrEl.style.display = "block";
         jobSelect.classList.add("error");
@@ -378,12 +372,8 @@ else if (path.includes("signup/step2")) {
 
       // 3-4) 모든 검증 통과 시 다음 단계로 이동
       if (!hasError) {
-        window.location.href = "/signup/step4/";
+        document.querySelector("form.signup-form-area.step3").submit();
       }
-      if (!hasError) {
-      // ← 여기가 “검증 통과 시 이동시키는 부분”입니다!
-      window.location.href = "/signup/step4/";
-    }
     });
 
     // 4) 입력값이 변경되면 에러 표시 제거(실시간 UX 개선)
@@ -397,8 +387,7 @@ else if (path.includes("signup/step2")) {
     });
   }
 
-  // ✅ step4 자리 확보
-  // signup.js 파일 중에서 Step 4 블록을 아래 코드로 반드시 덮어쓰기 해 주세요.
+  // ✅ step4
 else if (path.includes("signup/step4")) {
   // 1) DOM 요소 참조
   const styleButtons     = document.querySelectorAll('.style-group .option-btn');
@@ -406,6 +395,7 @@ else if (path.includes("signup/step4")) {
   const styleErrorEl     = document.getElementById('style-error');
   const categoryErrorEl  = document.getElementById('category-error');
   const completeBtn      = document.getElementById('completeBtn');
+  const prefInput       = document.getElementById("preference-ids");
 
   let selectedStyles     = []; // 최대 3개 저장
   let selectedCategories = []; // 최대 3개 저장
@@ -413,60 +403,42 @@ else if (path.includes("signup/step4")) {
   // 2) “선호 스타일” 버튼 클릭 핸들링
   styleButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      const value = btn.dataset.value;
-      const idx   = selectedStyles.indexOf(value);
-
-      if (idx > -1) {
-        // 이미 선택된 상태 → 선택 해제
-        selectedStyles.splice(idx, 1);
-        btn.classList.remove('selected');
-      } else if (selectedStyles.length < 3) {
-        // 최대 3개 미만이면 선택 추가
-        selectedStyles.push(value);
-        btn.classList.add('selected');
-      } else {
-        // 3개 이미 선택된 상태에서 4번째 클릭 시 에러
-        styleErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
-        styleErrorEl.style.display = "block";
-      }
-
-      // 이미 에러 메시지가 떠있다면 클릭 시 숨기기
-      if (styleErrorEl.style.display === "block" && selectedStyles.length < 3) {
-        styleErrorEl.style.display = "none";
-      }
+      const id = btn.dataset.id;
+        if (selectedStyles.includes(id)) {
+          selectedStyles = selectedStyles.filter(x => x !== id);
+          btn.classList.remove("selected");
+        } else if (selectedStyles.length < 3) {
+          selectedStyles.push(id);
+          btn.classList.add("selected");
+        } else {
+          styleErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
+          styleErrorEl.style.display = "block";
+        }
+        if (styleErrorEl.style.display === "block" && selectedStyles.length < 3) {
+          styleErrorEl.style.display = "none";
+        }
     });
-
-    // 키보드 Tab 이동 시에도 포커스 스타일이 보이도록 tabindex 부여
     btn.setAttribute('tabindex', '0');
   });
 
   // 3) “선호 카테고리” 버튼 클릭 핸들링
   categoryButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      const value = btn.dataset.value;
-      const idx   = selectedCategories.indexOf(value);
-
-      if (idx > -1) {
-        // 이미 선택 상태 → 해제
-        selectedCategories.splice(idx, 1);
-        btn.classList.remove('selected');
-      } else if (selectedCategories.length < 3) {
-        // 최대 3개 미만일 때만 선택
-        selectedCategories.push(value);
-        btn.classList.add('selected');
-      } else {
-        // 3개 이미 선택된 상태에서 4번째 클릭 시 에러
-        categoryErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
-        categoryErrorEl.style.display = "block";
-      }
-
-      // 이미 에러 메시지가 떠있다면 클릭 시 숨기기
-      if (categoryErrorEl.style.display === "block" && selectedCategories.length < 3) {
-        categoryErrorEl.style.display = "none";
-      }
+      const id = btn.dataset.id;
+        if (selectedCategories.includes(id)) {
+          selectedCategories = selectedCategories.filter(x => x !== id);
+          btn.classList.remove("selected");
+        } else if (selectedCategories.length < 3) {
+          selectedCategories.push(id);
+          btn.classList.add("selected");
+        } else {
+          categoryErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
+          categoryErrorEl.style.display = "block";
+        }
+        if (categoryErrorEl.style.display === "block" && selectedCategories.length < 3) {
+          categoryErrorEl.style.display = "none";
+        }
     });
-
-    // tabindex 부여 (접근성 및 포커스 가능)
     btn.setAttribute('tabindex', '0');
   });
 
@@ -493,10 +465,11 @@ else if (path.includes("signup/step4")) {
       categoryErrorEl.style.display = "none";
     }
 
-    // 4-3) 모두 통과 시 Step 5 이동
-    if (!hasError) {
-      window.location.href = "/signup/step5/";
-    }
+    if (hasError) return;
+      const allIds = [...selectedStyles, ...selectedCategories];
+      prefInput.value = allIds.join(",");
+
+      document.querySelector("form.signup-form-area.step4").submit();
   });
 }
 

@@ -60,14 +60,14 @@
 
 .birth-container p {
     color: #666666;
-    font-size: 24px;
+    font-size: 20px;
     margin: 0;
 }
 
 .birth-container h1 {
     display: flex;
     align-items: center;
-    font-size: 38px;
+    font-size: 32px;
     margin: 10px 0;
 }
 
@@ -86,7 +86,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 80px 0;
+    margin: 50px auto 25px;
+    height: 53vh; /* 원하는 높이로 조절 */
+    overflow: hidden;
+}
+
+.birth-inner-container .img-wrapper img {
+    height: 100%;       /* 부모 높이에 맞춤 */
+    width: auto;        /* 비율 유지 */
+    display: block;
+    object-fit: contain; /* 비율 유지하면서 전체 보이게 */
 }
 
 .snap-container {

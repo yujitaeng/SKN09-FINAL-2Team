@@ -21,14 +21,21 @@ document.addEventListener("DOMContentLoaded", function () {
   jobList.forEach((job) => {
     const li = document.createElement("li");
     li.textContent = job;
-    li.addEventListener("click", () => {
+    li.addEventListener("click", (e) => {
+      e.stopPropagation();
       jobInput.value = job;
       jobDropdown.style.display = "none";
+      validateJob();
     });
     jobDropdown.appendChild(li);
   });
 
   document.querySelector(".job-input").appendChild(jobDropdown);
+
+  jobInput.parentNode.addEventListener("click", (e) => {
+    e.stopPropagation(); // Prevent click from closing the dropdown
+    jobDropdown.style.display = "block";
+  });
 
   jobInput.addEventListener("focus", () => {
     jobDropdown.style.display = "block";
@@ -48,6 +55,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const tags = document.querySelectorAll(selector);
     tags.forEach((tag) => {
       tag.addEventListener("click", () => {
+        const container = tag.closest(".preference-tags");
+        const isStyle = container.classList.contains("style-tags");
+        const isCategory = container.classList.contains("category-tags");
+
         if (tag.classList.contains("active")) {
           tag.classList.remove("active");
         } else {
@@ -60,21 +71,26 @@ document.addEventListener("DOMContentLoaded", function () {
             alert(`최대 ${maxCount}개까지만 선택할 수 있습니다.`);
           }
         }
+
+        if (isStyle) validateStyleTags();
+        if (isCategory) validateCategoryTags();
       });
     });
   }
 
   // ------------------------ 유효성 검사 ------------------------
   const form = document.querySelector("form");
+  const password = form.querySelector("#password");
+  const nickname = form.querySelector("#nickname");
+  const birth = form.querySelector("#birth");
+
   form.addEventListener("submit", function (e) {
+    e.preventDefault();
     let isValid = true;
 
-    const password = form.querySelector("input[type='password']");
-    const nickname = form.querySelector("input[type='text'][value='유지니어스']");
-    const birth = form.querySelector("input[type='text'][value='19990101']");
     const genderSelected = document.querySelector(".gender-toggle .active");
-    const selectedStyleTags = document.querySelectorAll(".preference-tags:nth-of-type(1) .tag.active");
-    const selectedCategoryTags = document.querySelectorAll(".preference-tags:nth-of-type(2) .tag.active");
+    const selectedStyleTags = document.querySelectorAll(".style-tags .tag.active");
+    const selectedCategoryTags = document.querySelectorAll(".category-tags .tag.active");
 
     clearError(password);
     clearError(nickname);
@@ -82,18 +98,18 @@ document.addEventListener("DOMContentLoaded", function () {
     clearError(jobInput);
 
     if (!password.value) {
-      setError(password, "비밀번호를 입력해주세요. *영문 소문자, 숫자를 이용하여 최소 6~15자리");
+      setError(password, "비밀번호를 입력해주세요. *영문 소문자, 숫자를 이용하여 최소 8~15자리");
       isValid = false;
-    } else if (password.value.length < 6 || password.value.length > 15) {
-      setError(password, "비밀번호는 6~15자 이내여야 합니다.");
+    } else if (password.value.length < 8 || password.value.length > 15) {
+      setError(password, "비밀번호는 8~15자 이내여야 합니다.");
       isValid = false;
     }
 
     if (!nickname.value) {
-      setError(nickname, "닉네임을 입력해주세요. *한글로 최대 8자");
+      setError(nickname, "닉네임을 입력해주세요. *한글 2~8자");
       isValid = false;
     } else if (!/^[가-힣]{2,8}$/.test(nickname.value)) {
-      setError(nickname, "이미 사용중인 닉네임입니다.");
+      setError(nickname, "닉네임은 한글 2~8자로 입력해주세요.");
       isValid = false;
     }
 
@@ -112,36 +128,102 @@ document.addEventListener("DOMContentLoaded", function () {
       isValid = false;
     }
 
-    if (selectedStyleTags.length === 0) {
+    if (selectedStyleTags.length < 3) {
       alert("선호 스타일을 선택해주세요. 최대 3개 선택 가능.");
       isValid = false;
     }
 
-    if (selectedCategoryTags.length === 0) {
+    if (selectedCategoryTags.length < 3) {
       alert("선호 카테고리를 선택해주세요. 최대 3개 선택 가능.");
       isValid = false;
     }
 
-    if (!isValid) {
-      e.preventDefault();
+    if (isValid) {
+      alert("프로필 정보가 성공적으로 업데이트되었습니다.");
+      window.location.href = "/mypage";
     }
   });
+
+  // ------------------------ 실시간 유효성 검사 ------------------------
+  function validatePassword() {
+    if (!password.value || password.value.length < 8 || password.value.length > 15) {
+      setError(password, "비밀번호는 8~15자 이내여야 합니다.");
+    } else {
+      clearError(password);
+    }
+  }
+  password.addEventListener("input", validatePassword);
+  password.addEventListener("focus", validatePassword);
+
+  function validateNickname() {
+    if (!nickname.value) {
+      setError(nickname, "닉네임을 입력해주세요. *한글 2~8자");
+    } else if (!/^[가-힣]{2,8}$/.test(nickname.value)) {
+      setError(nickname, "닉네임은 한글 2~8자로 입력해주세요.");
+    } else {
+      clearError(nickname);
+    }
+  }
+  nickname.addEventListener("input", validateNickname);
+  nickname.addEventListener("focus", validateNickname);
+
+  function validateBirth() {
+    if (!/^[0-9]{8}$/.test(birth.value)) {
+      setError(birth, "생년월일이 올바르지 않습니다. (숫자만 8자리 입력)");
+    } else {
+      clearError(birth);
+    }
+  }
+  birth.addEventListener("input", validateBirth);
+  birth.addEventListener("focus", validateBirth);
+
+  function validateJob() {
+    if (!jobInput.value || jobInput.value.trim() === "") {
+      setError(jobInput, "직업을 선택해주세요.");
+    } else {
+      clearError(jobInput);
+    }
+  }
+  jobInput.addEventListener("input", validateJob);
+  jobInput.addEventListener("focus", validateJob);
+
+  function validateStyleTags() {
+    const selected = document.querySelectorAll(".style-tags .tag.active");
+    if (selected.length < 3) {
+      setError(document.querySelector(".style-tags"), "선호 스타일을 선택해주세요. 최대 3개 선택 가능.");
+    } else {
+      clearError(document.querySelector(".style-tags"));
+    }
+  }
+
+  function validateCategoryTags() {
+    const selected = document.querySelectorAll(".category-tags .tag.active");
+    if (selected.length < 3) {
+      setError(document.querySelector(".category-tags"), "선호 카테고리를 선택해주세요. 최대 3개 선택 가능.");
+    } else {
+      clearError(document.querySelector(".category-tags"));
+    }
+  }
 
   // ------------------------ 헬퍼 함수 ------------------------
   function setError(el, message) {
     el.classList.add("error");
-    let msg = document.createElement("p");
-    msg.className = "error-message";
-    msg.style.color = "#EB1C24";
-    msg.style.fontSize = "13px";
-    msg.style.marginTop = "6px";
-    msg.textContent = message;
-    el.insertAdjacentElement("afterend", msg);
+    if (el.nextElementSibling && el.nextElementSibling.classList.contains("error-message")) {
+      el.nextElementSibling.textContent = message;
+    } else {
+      let msg = document.createElement("p");
+      msg.className = "error-message";
+      msg.style.color = "#EB1C24";
+      msg.style.fontSize = "13px";
+      msg.style.marginTop = "6px";
+      msg.textContent = message;
+      el.insertAdjacentElement("afterend", msg);
+    }
   }
 
   function clearError(el) {
     el.classList.remove("error");
-    if (el.nextElementSibling && el.nextElementSibling.className === "error-message") {
+    if (el.nextElementSibling && el.nextElementSibling.classList.contains("error-message")) {
       el.nextElementSibling.remove();
     }
   }

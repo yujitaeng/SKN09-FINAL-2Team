@@ -77,6 +77,14 @@ WSGI_APPLICATION = 'senpick.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# 데이터베이스 설정 (기본은 SQLite)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

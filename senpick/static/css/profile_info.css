@@ -1,8 +1,10 @@
 /* ===== profile_info.css ===== */
 .profile-main-wrapper {
     flex-grow: 1;
-    padding-top: 150px;
+    padding: 150px 0;
     overflow-y: scroll;
+    scrollbar-width: none;
+    /* padding: 26px; */
 }
 .profile-main {
   flex-grow: 1;
@@ -61,14 +63,16 @@
   outline: none;
 }
 
-.profile-form input.error {
+.profile-form input.error,
+.profile-form input.error:hover,
+.profile-form input.error:focus {
   border: 2px solid #EB1C24;
-  background-color: #FFF5F5;
+  /* background-color: #FFF5F5; */
 }
 
-.profile-form input:hover:not([readonly]) {
+/* .profile-form input:hover:not([readonly]) {
   border: 1px solid #999;
-}
+} */
 
 .profile-form select {
   width: 100%;
@@ -121,6 +125,7 @@
   border: 1px solid #CCCCCC;
   border-radius: 24px;
   background-color: white;
+  color: #2e2e2e;
   font-size: 14px;
   cursor: pointer;
   transition: 0.2s;
@@ -129,7 +134,9 @@
 }
 
 .preference-tags .tag:hover {
-  border: 1px solid #FFE900;
+  border: 2px solid #FFE900;
+  font-weight: bold;
+  background-color: #FFFBEA;
 }
 
 .preference-tags .tag.active {
@@ -270,9 +277,11 @@
 
 .job-input img {
   position: absolute;
+  top: 16px;
   right: 12px;
   width: 16px;
   height: 16px;
+  cursor: pointer;
 }
 
 .job-dropdown {
@@ -302,15 +311,14 @@
   background-color: #F4F4F4;
 }
 
-
 .submit-button {
   margin-top: 40px;
   padding: 14px;
   width: 100%;
   font-size: 16px;
-  font-weight: bold;
+  /* font-weight: bold; */
   color: black;
-  background-color: #FFE900;
+  background-color: #F5F5F8;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -318,18 +326,26 @@
   font-family: 'Spoqa Han Sans Neo', sans-serif;
 }
 
-.submit-button:hover {
-  background-color: #FFDE00;
-}
-
 .submit-button button {
   width: 100%;
-  background-color: #FFE900;
+  background-color: #F5F5F8;
   border: none;
   border-radius: 12px;
-  font-weight: bold;
+  /* font-weight: bold; */
   font-size: 15px;
-  font-family: 'Spoqa Han Sans Neo', sans-serif;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
 }
 
+.submit-button:hover, .submit-button:hover button {
+  background-color: #FFDE00;
+  font-weight: bold;
+}
+
+/* current-password 전용 스타일 */
+#current-password:disabled {
+  background-color: #F5F5F8; 
+  color: #2E2E2E;               
+  border: 1px solid #E0E0E0;  
+}

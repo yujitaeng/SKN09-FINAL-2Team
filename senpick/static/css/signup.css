@@ -1,5 +1,6 @@
 :root {
-  --card-bg: #FFF4D6;
+  --card-bg: #FFFDE7;
+  /* --card-bg: #FFF4D6; */
   --white: #FFFFFF;
   --gray-light: #F4F4F4;
   --gray-medium: #CCCCCC;
@@ -8,7 +9,7 @@
   --primary: #FFE900;
   --info: #005BAC;
   --error: #EB1C24;
-
+  --soft-gray: #E0E0E0;
   --form-offset-x: 26px;
   --form-offset-y: 27px;
 }
@@ -25,62 +26,44 @@ body {
 }
 
 .signup-container {
-  display: flex;
-  align-items: flex-start;
-  padding: var(--form-offset-y) 0 0 var(--form-offset-x);
-  position: relative;
+  z-index: 1;
+  flex: 1;
+
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+  user-select: none;
 }
 
 .signup-form-area {
-  position: relative;
-  width: 904px;
-  height: 100vh;
+  width: 100%;
+  min-width: 700px;
+  height: calc(100vh - 52px);
   background: var(--white);
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
   border-radius: 32px;
-}
-
-.signup-visual {
-  position: absolute;
-  top: var(--form-offset-y);
-  left: calc(var(--form-offset-x) + 904px);
-  width: 964px;
-  height: 1025px;
-  z-index: 0;
-}
-
-.signup-logo {
-  position: absolute;
-  left: calc(51px - var(--form-offset-x));
-  top:  calc(53px - var(--form-offset-y));
-  width: 148px;
-  height: 42px;
+  z-index: 1;
 }
 
 .step-indicator {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(137px - var(--form-offset-y));
   width: 114px;
   height: 15px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-start; /* ✅ 왼쪽 정렬 */
+  gap: 10px; /* 원하는 만큼 간격 */
 }
 .step-indicator::before {
   content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
   height: 1px;
   background: var(--gray-light);
   transform: translateY(-50%);
   z-index: 1;
 }
 .step-indicator .dot {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   border: 1px solid var(--gray-medium);
   border-radius: 50%;
   background: var(--white);
@@ -92,42 +75,27 @@ body {
 }
 
 .signup-title {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(192px - var(--form-offset-y));
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
 }
 
 /* 입력 라벨 */
 .label-email, .label-password, .label-nickname {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
 }
 
-.label-email { top: calc(276px - var(--form-offset-y)); }
-.label-password { top: calc(405px - var(--form-offset-y)); }
-.label-nickname { top: calc(534px - var(--form-offset-y)); }
-
 /* 입력창 위치 */
 .input-email, .input-password, .input-nickname {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  width: 526px;
-  height: 64px;
+  width: 100%;
+  height: 50px;
 }
-
-.input-email { top: calc(316px - var(--form-offset-y)); }
-.input-password { top: calc(445px - var(--form-offset-y)); }
-.input-nickname { top: calc(574px - var(--form-offset-y)); }
 
 /* 📌 공통 input 스타일 */
 input[type="email"], input[type="password"], input[type="text"] {
   padding: 0 12px;
-  font-size: 14px;
-  border: 1px solid var(--gray-medium);
+  /* font-size: 14px; */
+  border: 1px solid var(--soft-gray);
   border-radius: 8px;
   background: var(--white);
   color: var(--text);
@@ -150,47 +118,21 @@ input[type="terms"].error {
   color: var(--error);
 }
 
-#email-error {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top: calc(316px - var(--form-offset-y) + 64px + 4px);
-  width: 526px;
-  z-index: 10;
-}
-
-#password-error {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top: calc(445px - var(--form-offset-y) + 64px + 4px);
-  width: 526px;
-  z-index: 10;
-}
-
-#nickname-error {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top: calc(574px - var(--form-offset-y) + 64px + 4px);
-  width: 526px;
+#email-error, #password-error, #nickname-error, #terms-error {
   z-index: 10;
 }
 
 /* 약관 */
 .label-terms {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top: calc(663px - var(--form-offset-y));
   font-size: 14px;
   font-weight: bold;
 }
 
 .terms-box {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top: calc(707px - var(--form-offset-y));
-  width: 526px;
+  width: 100%;
   height: 165px;
   background: var(--white);
-  border: 2px solid var(--gray-medium);
+  border: 1px solid var(--soft-gray);
   border-radius: 15px;
   padding: 24px;
   box-sizing: border-box;
@@ -201,7 +143,6 @@ input[type="terms"].error {
   align-items: center;
   gap: 8px;
   margin-bottom: 12px;
-  font-weight: bold;
   font-size: 14px;
 }
 
@@ -214,7 +155,7 @@ input[type="terms"].error {
 
 .terms-box hr {
   margin: 0 0 12px;
-  border-top: 1px solid var(--gray-medium);
+  border-top: 1px solid var(--soft-gray);
 }
 
 .checkbox {
@@ -222,7 +163,6 @@ input[type="terms"].error {
   align-items: center;
   gap: 8px;
   margin-bottom: 12px;
-  font-weight: bold;
   font-size: 14px;
 }
 
@@ -243,21 +183,12 @@ input[type="terms"].error {
   color: var(--text);
 }
 
-/* 약관 에러 */
-#terms-error {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top: calc(707px - var(--form-offset-y) + 165px + 4px);
-  width: 526px;
-  z-index: 10;
-}
-
-/* 다음 단계 버튼 */
-.signup-form-area.step1 .next-btn {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(912px - var(--form-offset-y));
-  width: 526px;
+/* =======================
+   공통 버튼 스타일
+======================= */
+.next-btn,
+.verify-btn {
+  width: 100%;
   height: 65px;
   font-size: 16px;
   font-weight: 600;
@@ -266,229 +197,125 @@ input[type="terms"].error {
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: background 0.3s, color 0.3s;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* 항상 hover시 노란색으로 */
-.signup-form-area.step1 .next-btn:hover {
+.next-btn:hover,
+.verify-btn:hover {
   background: var(--primary);
   color: var(--text);
 }
 
+/* =======================
+   모달
+======================= */
 .signup-form-area .modal-overlay {
   display: none;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.2);
-  justify-content: center;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.2);
+  justify-content: start;
   align-items: center;
   z-index: 200;
 }
-
 .signup-form-area .modal-overlay.open {
   display: flex;
 }
-
 .signup-form-area .modal-content {
   background: var(--white);
-  border-radius: 16px;
-  width: 90%;
+  /* border-radius: 16px; */
+  width: 45%;
   max-width: 480px;
+  min-width: 400px;
   max-height: 80%;
-  overflow-y: auto;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  /* overflow-y: auto; */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   padding: 24px;
+
+  margin-left: 25%;
+  transform: translateX(-50%);
 }
 
-
-/* 2 페이지 */
-
-/* 1) 설명 텍스트 (.verify-description) */
+/* =======================
+   Step 2: 인증
+======================= */
 .verify-description {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top: calc(276px - var(--form-offset-y));
   font-size: 16px;
   line-height: 26px;
   color: var(--text);
 }
-
-/* 2) 인증번호 입력 그룹 (.verification-input-group) */
 .verification-input-group {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top: calc(330px - var(--form-offset-y)); /* 디자인 시안 맞춤 */
-  width: 526px; /* 5칸 × 90px + 간격 조정 */
+  width: 100%;
   display: flex;
   justify-content: space-between;
 }
-
-/* 2-1) 인증번호 개별 박스 (.verify-input) */
 .verify-input {
-  width: 90px;
-  height: 90px;
+  width: calc(100% / 5 - 8px);
+  aspect-ratio: 1 / 1;
   background: var(--white);
   border: 1px solid var(--gray-medium);
   border-radius: 12px;
   text-align: center;
-  line-height: 90px; /* 숫자 세로 중앙 정렬 */
+  line-height: 90px;
   color: var(--text);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   outline: none;
-}
-input[type="text"].verify-input {
-  font-size: 48px; 
+  font-size: 48px;
   font-weight: bold;
 }
-
-/* 2-2) 포커스 시 파란색 테두리 */
 .verify-input:focus {
-  border-color: var(--info); /* #005BAC */
+  border-color: var(--info);
   box-shadow: 0 0 0 3px rgba(0, 91, 172, 0.2);
 }
-
-/* 2-3) JS에서 .error 클래스를 붙이면 테두리 빨간색으로 표시 */
 .verify-input.error {
-  border-color: var(--error) !important; /* #EB1C24 */
+  border-color: var(--error) !important;
   box-shadow: none !important;
 }
-
-/* 3) 에러 메시지 (.error-message) */
 .error-message {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top: calc(330px - var(--form-offset-y) + 90px + 8px); /* 입력 박스 바로 아래 */
-  width: 526px;
   font-size: 13px;
-  color: var(--error); /* #EB1C24 */
-  display: none; /* 기본 숨김 */
+  color: var(--error);
+  display: none;
   line-height: 1.4;
 }
-
-/* 4) 인증코드 재전송 + 타이머 그룹 (.resend-container) */
 .resend-container {
-  position: absolute;
-
-  /* 
-    left: verification-input-group의 left(215px - offsetX) + 
-          “5번째 입력박스 시작 좌표”(4 × (90px + 19px) = 436px)
-    → 215px - var(--form-offset-x) + 436px 
-  */
-  left: calc(215px - var(--form-offset-x) + 436px);
-
-  /*
-    top: verification-input-group의 top(330px - offsetY) + 
-         입력박스 높이(90px) + 에러 메시지 여유(8px) 
-  */
-  top: calc(330px - var(--form-offset-y) + 90px + 8px);
-
   display: flex;
-  flex-direction: column;   /* “타이머”가 위, “재전송 텍스트”가 아래로 쌓이도록 */
-  align-items: flex-end;    /* 오른쪽 끝 정렬 → 마지막 글자가 5번째 입력박스 우측 모서리와 맞춰짐 */
-  gap: 4px;                 /* 타이머와 재전송 텍스트 사이 간격 */
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  align-self: flex-end;
 }
-
-/* 4-1) 타이머 텍스트 (위쪽) */
-.timer-text {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--gray-dark);
-  /* position: 없음 → .resend-container의 flex layout에서 차례대로 배치 */
-}
-
-/* 4-2) 인증코드 재전송 (텍스트) */
+.timer-text,
 .resend-code {
   font-size: 14px;
-  color: var(--gray-dark);        /* 기본 회색 */
-  text-decoration: underline;     /* 항상 밑줄 표시 */
-  cursor: pointer;                /* 항상 클릭 가능 커서 */
-  user-select: none;              /* 드래그 방지 */
-  font-weight: normal;            /* 기본 폰트 웨이트: normal */
+  color: var(--gray-dark);
+}
+.resend-code {
+  text-decoration: underline;
+  cursor: pointer;
+  user-select: none;
+  font-weight: normal;
   transition: color 0.2s ease, font-weight 0.2s ease;
 }
-
-/* Hover 되었을 때: 검은색(#111111) + 볼드 + 밑줄 */
 .resend-code:hover {
-  color: var(--text);                 /* 완전 검은색 */
-  font-weight: bold;              
-  text-decoration: underline;     /* 밑줄 유지 */
-}
-
-/* 5) 이메일 인증 완료 버튼 (.verify-btn)
-   - 기본 상태(비호버): 회색(#CCCCCC), 글자색 회색(#666666), 클릭 가능
-   - 마우스 호버 시 배경 노란색(#FFE900), 글자색 짙은 회색(#2E2E2E) */
-.verify-btn {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top: calc(330px - var(--form-offset-y) + 90px + 90px); /* 입력박스 + 에러메시지 + 재전송영역 아래 배치 */
-  width: 526px;
-  height: 65px;
-  font-size: 16px;
-  font-weight: 600;
-  background: var(--gray-medium); /* #CCCCCC */
-  color: var(--gray-dark);        /* #666666 */
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;                /* 항상 클릭 가능 */
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-/* 5-1) 마우스 호버 시 */
-.verify-btn:hover {
-  background: var(--primary); /* #FFE900 */
-  color: var(--text);         /* #2E2E2E */
-}
-
-/* 6) (선택) 모바일 대응 */
-@media (max-width: 400px) {
-  .verification-input-group {
-    left: calc(50% - (5 * 48px + 4 * 8px) / 2);
-    top: calc(300px - var(--form-offset-y));
-    width: auto;
-    gap: 8px;
-  }
-  .verify-input {
-    width: 48px;
-    height: 48px;
-    font-size: 24px;
-    line-height: 48px;
-  }
-  .verify-btn {
-    left: calc(215px - var(--form-offset-x));
-    width: calc(100% - 2 * calc(215px - var(--form-offset-x)));
-    height: 50px;
-    font-size: 14px;
-  }
-  .timer-text {
-    font-size: 12px;
-  }
-}
-
-
-/* 3 페이지 */
-
-/* ──────────────────────────────────────────────────────────────
-   3 페이지: 기본정보 입력 (생년월일, 성별, 직업) 수정본
-────────────────────────────────────────────────────────────── */
-
-/* 1) “생년월일” 라벨 */
-.label-birth {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(276px - var(--form-offset-y));
-  font-size: 14px;
+  color: var(--text);
   font-weight: bold;
 }
 
-/* 1-1) “생년월일” 입력창 */
-.input-birth {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(316px - var(--form-offset-y));
-  width: 526px;
+/* =======================
+   Step 3: 기본 정보 입력
+======================= */
+.label-birth,
+.label-gender,
+.label-job {
+  font-size: 14px;
+  font-weight: bold;
+}
+.input-birth,
+.input-job {
+  width: 100%;
   height: 64px;
   padding: 0 12px;
   font-size: 14px;
@@ -498,47 +325,28 @@ input[type="text"].verify-input {
   color: var(--text);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-
-/* 포커스 시 파란색 테두리 */
-.input-birth:focus {
-  border-color: var(--info);               /* #005BAC */
+.input-birth:focus,
+.input-job:focus {
+  border-color: var(--info);
   box-shadow: 0 0 0 3px rgba(0, 91, 172, 0.2);
   outline: none;
 }
-
-/* 1-2) “생년월일” 에러 메시지 */
-#birth-error {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(316px - var(--form-offset-y) + 64px + 4px);
-  width: 526px;
+#birth-error,
+#gender-error,
+#job-error {
+  /* width: 526px; */
   font-size: 13px;
   color: var(--error);
   display: none;
   line-height: 1.4;
 }
-
-/* 2) “성별” 라벨 */
-.label-gender {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(405px - var(--form-offset-y));
-  font-size: 14px;
-  font-weight: bold;
-}
-
-/* 2-1) 성별 버튼 그룹 */
 .gender-group {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(445px - var(--form-offset-y));
   display: flex;
   gap: 20px;
+  width: 100%;
 }
-
-/* 2-2) 개별 성별 버튼 */
 .gender-btn {
-  width: 256px;
+  width: calc(50% - 10px);
   height: 64px;
   background: var(--white);
   border: 1px solid var(--gray-medium);
@@ -548,191 +356,33 @@ input[type="text"].verify-input {
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s, color 0.2s;
 }
-
-/* (기존 파란색 배경 대신) 선택 시 노란색 배경, 검정 텍스트, 볼드 */
 .gender-btn.selected {
-  background: var(--primary);    /* #FFE900 */
-  color: var(--text);            /* #2E2E2E */
+  background: var(--primary);
+  color: var(--text);
   border-color: var(--primary);
   font-weight: bold;
 }
 
-/* 2-3) 성별 에러 메시지 */
-#gender-error {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(445px - var(--form-offset-y) + 64px + 4px);
-  width: 526px;
-  font-size: 13px;
-  color: var(--error);
-  display: none;
-  line-height: 1.4;
-}
-
-/* 3) “직업” 라벨 */
-.label-job {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(534px - var(--form-offset-y));
+/* =======================
+   Step 4: 스타일·카테고리 선택
+======================= */
+.signup-form-area.step4 .section-title {
   font-size: 14px;
   font-weight: bold;
 }
-
-/* 3-1) “직업” 셀렉트박스 */
-.input-job {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(574px - var(--form-offset-y));
-  width: 526px;
-  height: 64px;
-  padding-left: 12px;
-  font-size: 14px;
-  border: 1px solid var(--gray-medium);
-  border-radius: 8px;
-  background: var(--white);
-  color: var(--text);
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-/* 포커스 시 파란색 테두리 */
-.input-job:focus {
-  border-color: var(--info);               /* #005BAC */
-  box-shadow: 0 0 0 3px rgba(0, 91, 172, 0.2);
-  outline: none;
-}
-
-/* 3-2) 직업 에러 메시지 */
-#job-error {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(574px - var(--form-offset-y) + 64px + 4px);
-  width: 526px;
-  font-size: 13px;
-  color: var(--error);
-  display: none;
-  line-height: 1.4;
-}
-
-/* 4) 다음 단계 버튼 */
-.next-btn {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  top:  calc(672px - var(--form-offset-y));
-  width: 526px;
-  height: 65px;
-  font-size: 16px;
-  font-weight: 600;
-  background: var(--gray-medium);
-  color: var(--gray-dark);
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-.next-btn:hover {
-  background: var(--primary);
-  color: var(--text);
-}
-
-/* 5) (선택) 반응형 조정: 화면 너비 400px 이하일 때 */
-@media (max-width: 400px) {
-  .label-birth { top: calc(250px - var(--form-offset-y)); }
-  .input-birth {
-    left: calc(50% - 48px);
-    top: calc(290px - var(--form-offset-y));
-    width: 96px;
-    height: 48px;
-    font-size: 12px;
-  }
-  #birth-error {
-    left: calc(50% - 48px);
-    top: calc(290px - var(--form-offset-y) + 48px + 4px);
-    width: 96px;
-  }
-  .label-gender { top: calc(360px - var(--form-offset-y)); }
-  .gender-group {
-    left: calc(50% - (80px + 8px));
-    top: calc(400px - var(--form-offset-y));
-  }
-  .gender-btn {
-    width: 80px;
-    height: 48px;
-    font-size: 12px;
-  }
-  #gender-error {
-    left: calc(50% - 48px);
-    top: calc(400px - var(--form-offset-y) + 48px + 4px);
-    width: 96px;
-  }
-  .label-job { top: calc(440px - var(--form-offset-y)); }
-  .input-job {
-    left: calc(50% - 48px);
-    top: calc(480px - var(--form-offset-y));
-    width: 96px;
-    height: 48px;
-    font-size: 12px;
-  }
-  #job-error {
-    left: calc(50% - 48px);
-    top: calc(480px - var(--form-offset-y) + 48px + 4px);
-    width: 96px;
-  }
-  /* (Step 1) 다음 단계 버튼 – 모든 단계에 걸쳐 동일하게 적용되어 있습니다 */
-  .next-btn {
-    position: absolute;
-    left: calc(215px - var(--form-offset-x));
-    top:  calc(912px - var(--form-offset-y));  /* ← 이 값이 너무 커서 Step 3 에서는 버튼이 보이지 않습니다 */
-    width: 526px;
-    height: 65px;
-    font-size: 16px;
-    font-weight: 600;
-    background: var(--gray-medium);
-    color: var(--gray-dark);
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background 0.3s, color 0.3s;
-  }
-
-  .next-btn:hover {
-    background: var(--primary);
-    color: var(--text);
-  }
-
-}
-
-/* 4 페이지 */
-/* ──────────────────────────────────────────
-   Step 4 전용: 선호 스타일·카테고리 선택
-────────────────────────────────────────── */
-
-/* 1) “선호 스타일” 제목 */
-.signup-form-area.step4 .section-title:first-of-type {
-  position: absolute;
-  left:  calc(215px - var(--form-offset-x));
-  top:   calc(306px - var(--form-offset-y));
-  font-size: 14px;
-  font-weight: bold;
-}
-
-/* 2) 스타일 옵션 버튼 그룹 */
-.signup-form-area.step4 .style-group {
-  position: absolute;
-  left:  calc(215px - var(--form-offset-x));
-  top:   calc(346px - var(--form-offset-y));
+.signup-form-area.step4 .style-group,
+.signup-form-area.step4 .category-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px; /* 버튼 사이의 간격 */
+  gap: 10px;
+  width: 100%;
 }
-
-/* 2-1) 개별 옵션 버튼 (.option-btn) */
 .signup-form-area.step4 .option-btn {
-  width: 120px;
+  width: calc(25% - 8px);
   height: 48px;
   background: var(--white);
   border: 1px solid var(--gray-medium);
-  border-radius: 8px;
+  border-radius: 90px;
   font-size: 14px;
   color: var(--text);
   cursor: pointer;
@@ -741,104 +391,111 @@ input[type="text"].verify-input {
   align-items: center;
   justify-content: center;
 }
-
-/* Hover 시 (선택 전) 테두리만 어두워짐 */
 .signup-form-area.step4 .option-btn:hover {
   border-color: var(--info);
 }
-
-/* 선택된 상태 */
 .signup-form-area.step4 .option-btn.selected {
-  background: var(--primary);  /* 옐로우 */
-  color: var(--text);          /* 다크 차콜 */
+  background: var(--primary);
+  color: var(--text);
   border-color: var(--primary);
   font-weight: bold;
 }
-
-/* 3) 스타일 오류 메시지 */
-.signup-form-area.step4 #style-error {
-  position: absolute;
-  left:  calc(215px - var(--form-offset-x));
-  /* .style-group(top:316) + 옵션 버튼 높이(48) + 간격(8) = 약 372px */
-  top:   calc(442px - var(--form-offset-y) + 4px);
-  width: 526px;
-  font-size: 13px;
-  color: var(--error);
-  display: none;
-  line-height: 1.4;
-}
-
-/* 4) “선호 카테고리” 제목 */
-.signup-form-area.step4 .section-title:nth-of-type(2) {
-  position: absolute;
-  left:  calc(215px - var(--form-offset-x));
-  /* #style-error(top:~372) + 여유(24px) ≈ 396px */
-  top:   calc(456px - var(--form-offset-y));
-  font-size: 14px;
-  font-weight: bold;
-}
-
-/* 5) 카테고리 옵션 버튼 그룹 */
-.signup-form-area.step4 .category-group {
-  position: absolute;
-  left:  calc(215px - var(--form-offset-x));
-  /* “카테고리 제목(top:420) + 높이(약 20px) + 여유(8px) ≈ 448px */
-  top:   calc(514px - var(--form-offset-y));
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-/* 5-1) 옵션 버튼은 앞서 정의한 .option-btn 규칙 사용 */
-
-/* 6) 카테고리 오류 메시지 */
+.signup-form-area.step4 #style-error,
 .signup-form-area.step4 #category-error {
-  position: absolute;
-  left:  calc(215px - var(--form-offset-x));
-  /* .category-group(top:460) + 버튼 높이(48) + 간격(8) ≈ 516px */
-  top:   calc(670px - var(--form-offset-y) + 4px);
-  width: 526px;
   font-size: 13px;
   color: var(--error);
   display: none;
   line-height: 1.4;
 }
 
-/* 7) “회원가입 완료” 버튼 (.verify-btn) */
-.signup-form-area.step4 .verify-btn {
-  position: absolute;
-  left:  calc(215px - var(--form-offset-x));
-  /* #category-error(top:~576) + 여유(24px) + 버튼 높이(65px) ≈ 665px */
-  top:   calc(680px - var(--form-offset-y));
-  width: 526px;
-  height: 65px;
-  font-size: 16px;
-  font-weight: 600;
-  background: var(--gray-medium);
-  color: var(--gray-dark);
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-.signup-form-area.step4 .verify-btn:hover {
-  background: var(--primary);
-  color: var(--text);
-}
-
-
-
-/* 5 페이지 */
-/* ────────────────────────────────────────────────
-   Step 5 전용: 서브타이틀 (.signup-subtitle) 배치
-───────────────────────────────────────────────────────── */
-
+/* =======================
+   Step 5: 서브타이틀
+======================= */
 .signup-form-area.step5 .signup-subtitle {
-  position: absolute;
-  left: calc(215px - var(--form-offset-x));
-  /* 타이틀(top:192px) + 제목 높이(약 32px) + 여유(4px) = 228px 정도 */
-  top: calc(228px - var(--form-offset-y));
   font-size: 16px;
   color: var(--gray-dark);
   line-height: 1.6;
+}
+
+.signup-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(100vh - 152px); /* 헤더/푸터 제외하고 전체 높이 */
+  overflow-y: auto;
+  margin: 0 150px 25px 150px;
+  scrollbar-width: none;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  flex-grow: 1;
+  margin-bottom: 25px;
+  /* overflow 제거 */
+}
+
+/* 네모 노란 체크박스 */
+.step-option input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  border: 2px solid #F5F5F8;
+  background: #fff;
+  border-radius: 5px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  transition: border-color 0.13s, background 0.13s;
+  display: inline-block;
+}
+.step-option input[type="checkbox"]:checked {
+  background: #ffe900;
+  border: 2px solid #ffe900;
+}
+.step-option input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: -1px;
+  width: 6px;
+  height: 12px;
+  border: solid #ffffff;
+  border-width: 0 2.2px 2.2px 0;
+  transform: rotate(45deg);
+  display: block;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: var(--text);
+}
+
+.modal-header span {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.modal-body {
+  overflow-y: scroll;
+  max-height: 60vh; /* 최대 높이 설정 */
+  border-radius: 20px;
+  background-color: #F5F5F8;
+  padding: 20px;
 }

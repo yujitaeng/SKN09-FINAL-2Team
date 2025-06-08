@@ -1,9 +1,7 @@
 
 console.log("자바스크립트 테스트")
 
-function createProductCard(data) {
-    const wrapper = document.querySelector(".card-wrapper:last-child");
-
+function createProductCard(wrapper, data) {
     const card = document.createElement("div");
     card.className = "product-card";
 

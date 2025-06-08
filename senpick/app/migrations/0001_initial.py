@@ -12,21 +12,49 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='PreferType',
+            fields=[
+                ('prefer_id', models.AutoField(db_column='PREFER_ID', primary_key=True, serialize=False)),
+                ('type', models.CharField(db_column='TYPE', max_length=20)),
+                ('type_name', models.CharField(db_column='TYPE_NAME', max_length=100)),
+            ],
+            options={
+                'db_table': 'prefer_type',
+                'managed': False,
+            },
+        ),
+        migrations.CreateModel(
             name='User',
             fields=[
-                ('user_id', models.CharField(max_length=32, primary_key=True, serialize=False)),
-                ('email', models.EmailField(max_length=254, unique=True)),
-                ('password', models.CharField(max_length=255)),
-                ('nickname', models.CharField(max_length=30)),
-                ('birth', models.CharField(max_length=8)),
-                ('gender', models.CharField(max_length=8)),
-                ('job', models.CharField(blank=True, max_length=50, null=True)),
-                ('profile_image', models.CharField(blank=True, max_length=255, null=True)),
-                ('type', models.CharField(default='guest', max_length=10)),
-                ('social_provider', models.CharField(blank=True, max_length=10, null=True)),
-                ('is_email_verified', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('user_id', models.CharField(db_column='USER_ID', editable=False, max_length=32, primary_key=True, serialize=False)),
+                ('email', models.EmailField(db_column='EMAIL', max_length=255, unique=True)),
+                ('password', models.CharField(db_column='PASSWORD', max_length=255)),
+                ('nickname', models.CharField(db_column='NICKNAME', max_length=30)),
+                ('birth', models.CharField(db_column='BIRTH', max_length=8)),
+                ('gender', models.CharField(db_column='GENDER', max_length=8)),
+                ('job', models.CharField(blank=True, db_column='JOB', max_length=50, null=True)),
+                ('profile_image', models.CharField(blank=True, db_column='PROFILE_IMAGE', max_length=255, null=True)),
+                ('type', models.CharField(db_column='TYPE', default='guest', max_length=10)),
+                ('social_provider', models.CharField(blank=True, db_column='SOCIAL_PROVIDER', max_length=10, null=True)),
+                ('is_email_verified', models.BooleanField(db_column='IS_EMAIL_VERIFIED', default=False)),
+                ('created_at', models.DateTimeField(auto_now_add=True, db_column='CREATED_AT')),
+                ('updated_at', models.DateTimeField(blank=True, db_column='UPDATED_AT', null=True)),
             ],
+            options={
+                'db_table': 'user',
+                'managed': False,
+            },
+        ),
+        migrations.CreateModel(
+            name='UserPrefer',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('created_at', models.DateTimeField(auto_now_add=True, db_column='CREATED_AT')),
+                ('updated_at', models.DateTimeField(blank=True, db_column='UPDATED_AT', null=True)),
+            ],
+            options={
+                'db_table': 'user_prefer',
+                'managed': False,
+            },
         ),
     ]
