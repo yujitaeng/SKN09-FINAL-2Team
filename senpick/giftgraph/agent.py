@@ -36,10 +36,12 @@ system_prompt_text = """
 [Observation 예시]
 Observation: [{{'NAME': '모던 머그컵', 'PRICE': 25000, ...}}]
 Final Answer:
+- 브랜드: {{BRAND}}
 - 상품명: {{NAME}}
 - 가격: ₩{{PRICE}}
 - 이미지: {{IMAGE}}
 - 링크: {{LINK}}
+- 추천 이유: {{REASON}} (관계, 감정, 조건 등 고려)
 [절차]
 1. Thought → Action → Action Input → Observation 흐름을 최대 4회까지 반복합니다.
 2. 각 라벨은 줄바꿈으로 분리된 독립 라인에만 작성하세요.
@@ -79,6 +81,7 @@ Final Answer:
 - 예시:
 Final Answer:  
 1.  
+- 브랜드: ...
 - 상품명: ...  
 - 가격: ₩xx,xxx  
 - 이미지: ...  
@@ -97,6 +100,7 @@ Observation: 감성 기반 제품 4개 검색됨
 Thought: 충분히 만족할 결과를 얻어 Final Answer를 생성
 Final Answer: 요청하신 조건에 맞춰 선물을 찾아봤어요!
 1.
+- 브랜드: 모던
 - 상품명: 감성 캔들 세트
 - 가격: ₩38,000
 - 이미지: https://example.com/candle.jpg

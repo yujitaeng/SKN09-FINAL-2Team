@@ -27,7 +27,7 @@
           </a>
           <!-- 질문/옵션 카드가 번갈아 추가됨 -->
         </div>
-        <!-- 질문 다 끝나면 등장하는 채팅 입력창 -->
+        <!-- 질문 다 끝나면 등d장하는 채팅 입력창 -->
         <form class="chat-input-form" id="chat-form" autocomplete="off" style="display:none;">
           <div class="chat-input-wrap">
             <input type="text" id="user-input" placeholder="예: '친구 결혼 선물 5만원대 추천해줘'" />
@@ -208,7 +208,7 @@
 
           // [카드 답변 → 백엔드 전달] 파일 첨부는 추후 FormData 적용
           const payload = {
-            who: answers[0],
+            relation: answers[0],
             age: answers[1],
             gender: answers[2],
             event: answers[3],
@@ -268,25 +268,40 @@
 
                       if (loadingDiv) loadingDiv.remove();
 
-                      if (data.products) {
-                          renderProductCards(data.products);
-                      } else if (data.bot) {
+                      if (data.bot) {
                           chatHistory.insertAdjacentHTML(
                               'beforeend',
                               `<div class="chat-msg bot">${data.bot}</div>`
                           );
                       }
+                      if (data.products) {
+                          const cardWrapper = document.createElement('div');
+                          cardWrapper.className = 'card-wrapper';
+                          chatHistory.appendChild(cardWrapper);
+                          for (const product of data.products) {
+                              createProductCard(cardWrapper, product);
+                          }
+                      } 
 
                       document.getElementById('chat-form').style.display = 'block';
                       document.getElementById('chat-form').scrollIntoView({ behavior: 'smooth' });
+                      document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
                   });
               }
               else {
-                  console.warn(`Unsupported Content-Type: ${contentType}`);
+                  throw new Error(`Unsupported Content-Type: ${contentType}`);
               }
           })
           .catch(error => {
               console.error('Fetch error:', error);
+              const loadingDiv = document.getElementById('chat-loading-spin');
+              if (loadingDiv) loadingDiv.remove();
+              const chatHistory = document.getElementById('chat-history');
+              chatHistory.insertAdjacentHTML(
+                'beforeend',
+                `<div class="chat-msg bot">오류가 발생했습니다. 다시 시도해주세요.</div>`
+              );
+              chatHistory.scrollTop = chatHistory.scrollHeight;
           });
 
           document.getElementById('chat-form').style.display = 'flex';
@@ -364,33 +379,9 @@
       if (inputs.length === 0) { alert('선택해주세요!'); return; }
       const selected = Array.from(inputs).map(i => i.value).join(', ');
       stepCard.insertAdjacentHTML('afterend', `<div class="chat-msg user">${selected}</div>`);
-      answers[stepIdx] = Array.from(inputs).map(i => i.value);
+      answers[stepIdx] = selected
       currentStep++;
       renderStep();
-    }
-
-    // 4. 상품 카드 렌더링 함수
-    function renderProductCards(products) {
-      const chatHistory = document.getElementById('chat-history');
-      let cardsHTML = `<div class="product-cards">`;
-      products.forEach(prod => {
-        cardsHTML += `
-          <div class="product-card">
-            <a href="${prod.link}" target="_blank">
-              <img src="${prod.image}" alt="${prod.name}" class="product-img" />
-            </a>
-            <div class="product-info">
-              <div class="product-title">${prod.name}</div>
-              <div class="product-price">${prod.price}</div>
-              <div class="product-desc">${prod.desc}</div>
-              <a href="${prod.link}" class="product-link" target="_blank">상세보기</a>
-            </div>
-          </div>
-        `;
-      });
-      cardsHTML += `</div>`;
-      chatHistory.insertAdjacentHTML('beforeend', cardsHTML);
-      chatHistory.scrollTop = chatHistory.scrollHeight;
     }
 
     // 5. 챗봇 대화 입력
@@ -476,24 +467,38 @@
 
                       const chatHistory = document.getElementById('chat-history');  // 가정
 
-                      if (data.products) {
-                          renderProductCards(data.products);
-                      } else if (data.bot) {
+                      if (data.bot) {
                           chatHistory.insertAdjacentHTML(
                               'beforeend',
                               `<div class="chat-msg bot">${data.bot}</div>`
                           );
+                      }
+                      if (data.products) {
+                          const cardWrapper = document.createElement('div');
+                          cardWrapper.className = 'card-wrapper';
+                          chatHistory.appendChild(cardWrapper);
+                          for (const product of data.products) {
+                              createProductCard(cardWrapper, product);
+                          }
                       }
 
                       chatHistory.scrollTop = chatHistory.scrollHeight;
                   });
               }
               else {
-                  console.warn('Unknown content type:', contentType);
+                  throw new Error(`Unsupported Content-Type: ${contentType}`);
               }
           })
           .catch(error => {
               console.error('Fetch error:', error);
+              const loadingDiv = document.getElementById('chat-loading-spin');
+              if (loadingDiv) loadingDiv.remove();
+              const chatHistory = document.getElementById('chat-history');
+              chatHistory.insertAdjacentHTML(
+                'beforeend',
+                `<div class="chat-msg bot">오류가 발생했습니다. 다시 시도해주세요.</div>`
+              );
+              chatHistory.scrollTop = chatHistory.scrollHeight;
           });
 
           input.value = "";

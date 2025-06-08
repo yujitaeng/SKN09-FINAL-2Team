@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, StreamingHttpResponse
-import json
+import json, re
 from giftgraph.graph import gift_fsm 
 
 def chat(request):
     return render(request, 'chat.html')
-
 
 def get_state(request):
     return request.session.get("chat_state", {
@@ -16,44 +15,89 @@ def get_state(request):
             "emotion": "",
             "preferred_style": "",
             "price_range": ""
+        },
+        "recipient_info": {
+            'gender': "",
+            'ageGroup': "",
+            'relation': "",
+            'anniversary': "",
         }
     })
 
 def save_state(request, state):
     request.session["chat_state"] = state
+    request.session.save()
+    
+def extract_products_from_response(data):
+    # 상품 블록 분리
+    data = re.split(r'\n\d+\.\s*', data.strip())
+    msg = data[0]
+    blocks = data[1:]
+
+    # JSON 배열 구성
+    items = []
+    for idx, block in enumerate(blocks):
+        brand = re.search(r'-\s*\*?\s*\*?\s*브랜드\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
+        name = re.search(r'-\s*\*?\s*\*?\s*상품명\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
+        price = re.search(r'-\s*\*?\s*\*?\s*가격\s*\*?\s*\*?\s*:\s*₩\s*([\d,]+)', block).group(1)
+        # 이미지 robust 패턴
+        image_match = re.search(
+            r'-\s*\*?\s*\*?\s*이미지\s*\*?\s*\*?\s*:\s*(?:!\[.*?\]\(\s*(.*?)\s*\)|(\S+))',
+            block
+        )
+        image = image_match.group(1) or image_match.group(2) if image_match else None
+
+        # 링크 robust 패턴
+        link_match = re.search(
+            r'-\s*\*?\s*\*?\s*링크\s*\*?\s*\*?\s*:\s*(?:\[.*?\]\(\s*(.*?)\s*\)|(\S+))',
+            block
+        )
+        link = link_match.group(1) or link_match.group(2) if link_match else None
+
+        reason = re.search(r'-\s*\*?\s*\*?\s*추천\s*이유\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
+
+        items.append({
+            # "id": len(st.session_state.all_products) + idx,
+            "brand": brand,
+            "title": name,
+            "price": price,
+            "imageUrl": image,
+            "link": link,
+            "reason": reason
+        })
+
+    return msg, items
 
 @csrf_exempt
 def chat_start(request):
     if request.method == "POST":
+        request.session.pop("chat_state", None)
+
         data = json.loads(request.body)
        
         situation_info = {
-            "closeness": ", ".join(data.get("who", [])),
-            "emotion": ", ".join(data.get("emotion", [])),
-            "preferred_style": ", ".join(data.get("style", [])),
-            "price_range": ", ".join(data.get("budget", [])),
+            "closeness": "",
+            "emotion": "",
+            "preferred_style": "",
+            "price_range": "",
         }
+        
+        recipient_info = {
+            'gender': data.get("gender", ""),
+            'ageGroup': data.get("age", ""),
+            'relation': data.get("relation", ""),
+            'anniversary': data.get("event", ""),
+        }
+        
         state = {
             "chat_history": [],
-            "situation_info": situation_info
+            "situation_info": situation_info,
+            "recipient_info": recipient_info, 
         }
         
-        # # try:
-        # situation_info = state.get("situation_info", {})
-        # chat_str = "\n".join(state["chat_history"][-10:])
-        # recipient_info = state.get("recipient_info", {})
-        # prompt = prompt_template.format(
-        #     chat_history=chat_str, 
-        #     recipient_info=recipient_info, 
-        #     situation_info=situation_info
-        # )
-
-        # for chunk in llm.stream(prompt):
-        #     token = getattr(chunk, "content", "")
-        #     yield token  # 실시간으로 토큰 출력
+        request.session["chat_state"] = state  # 초기 상태 저장
         
         # 스트림 처리 
-        
         res = gift_fsm.invoke(state)
         
         if isinstance(res, dict):
@@ -62,8 +106,16 @@ def chat_start(request):
         else:  # 만약 res가 dict가 아니라면, 단순 문자열로 처리
             # 스트림 처리 
             def stream():
+                output_parts = []
                 for chunk in res:
-                    yield chunk
+                    output_parts.append(chunk)
+                    yield chunk  # str or bytes 확인 필요
+                
+                # 최종 출력 누적해서 chat_history 에 기록
+                output = "".join(output_parts)
+                state["output"] = output
+                state.get("chat_history").append(f"bot: {output}")
+                save_state(request, state)
     
             return StreamingHttpResponse(stream(), content_type='text/plain')
         save_state(request, state)
@@ -80,17 +132,30 @@ def chat_message(request):
 
         res = gift_fsm.invoke(state)
 
-        
         if isinstance(res, dict):
             state = res
             output = state.get("output", "")
+            print(state.get("chat_history")[-1])
+            print(output)
+            output, products = extract_products_from_response(output)
+            output = output.split("Final Answer:")[1].strip() if "Final Answer:" in output else output
+            
         else:  
             def stream():
+                output_parts = []
                 for chunk in res:
-                    yield chunk
+                    output_parts.append(chunk)
+                    yield chunk  # str or bytes 확인 필요
+                
+                # 최종 출력 누적해서 chat_history 에 기록
+                output = "".join(output_parts)
+                state["output"] = output
+                state.get("chat_history").append(f"bot: {output}")
+                request.session["chat_state"] = state
+                request.session.save()
     
             return StreamingHttpResponse(stream(), content_type='text/plain')
 
         save_state(request, state if isinstance(res, dict) else state)
-        return JsonResponse({"bot": output})
+        return JsonResponse({"bot": output, "products": products})
     return JsonResponse({"error": "POST only"})

@@ -7,7 +7,7 @@ function createProductCard(wrapper, data) {
 
     // 카드 전체를 감싸는 링크
     const link = document.createElement("a");
-    link.href = "#";
+    link.href = data.link || "#"; // 링크가 없으면 기본적으로 #로 설정
 
     // 이미지 영역
     const imageWrapper = document.createElement("div");
@@ -74,7 +74,7 @@ function createProductCard(wrapper, data) {
     if (data.reason){
         const reason = document.createElement("div");
         reason.className = "reason";
-        reason.textContent = data.reason;
+        reason.textContent = "추천 이유 : " + data.reason;
         card.appendChild(reason);
     }
     wrapper.appendChild(card);
