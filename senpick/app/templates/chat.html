@@ -19,12 +19,14 @@
       <div class="chatbot-body">
         <div class="chat-window" id="chat-history">
           <div class="chatbot-header">
-            <h1>안녕하세요! {{ username }}님</h1>
+            <h1>안녕하세요! {{request.session.nickname}}님</h1>
             <p>오늘은 누구를 위한 선물을 고민하고 계신가요?</p>
           </div>
+          {% if is_birth_today %}
           <a href="{% url 'birth' %}">
             <img src="{% static 'images/birth_message.svg' %}" alt="Birth-Card" class="birth-card" width="500">
           </a>
+          {% endif %}
           <!-- 질문/옵션 카드가 번갈아 추가됨 -->
         </div>
         <!-- 질문 다 끝나면 등d장하는 채팅 입력창 -->

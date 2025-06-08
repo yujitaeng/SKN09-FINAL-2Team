@@ -1,11 +1,22 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, StreamingHttpResponse
 import json, re
 from giftgraph.graph import gift_fsm 
+from django.utils import timezone
 
 def chat(request):
-    return render(request, 'chat.html')
+    if request.session.get("user_id") is None:
+        return redirect('login')  # 로그인하지 않은 경우 로그인 페이지로 리디렉션
+    birth = request.session.get('birth')  # 예: '19990101'
+    
+    # 오늘 날짜 구하기 → 'YYYYMMDD' 형식으로 변환
+    today_str = timezone.now().strftime('%Y%m%d')
+    
+    is_birth_today = (birth == today_str)
+    return render(request, 'chat.html', {
+        'is_birth_today': is_birth_today,
+    })
 
 def get_state(request):
     return request.session.get("chat_state", {

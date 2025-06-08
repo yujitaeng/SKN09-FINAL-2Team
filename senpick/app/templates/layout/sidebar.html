@@ -24,10 +24,12 @@
       <span class="btn-label">Chat</span>
     </div>
     <ul class="chat-list"></ul>
+    {% if is_birth_today %}
     <div class="menu-btn-row" id="gift-btn" onclick="location.href=`{% url 'birth' %}`">
       <img src="{% static 'images/gift.svg' %}" alt="Gift">
       <span class="btn-label">Happy Birthday</span>
     </div>
+    {% endif %}
   </div>
   <!-- 하단: 마이페이지/브랜드바 -->
   <div class="sidebar-bottom">
@@ -35,9 +37,9 @@
     <div class="brand-bar">
       <a href="{% url 'mypage' %}" style="display: flex; align-items: center; text-decoration: none;">
         <img src="{% static 'images/bottom_logo.svg' %}" alt="Brand" class="brand-logo">
-        <span class="brand-label">유지니어스</span>
+        <span class="brand-label">{{request.session.nickname}}</span>
       </a>
-      <a href="{% url 'login' %}" class="brand-link tooltip" title="로그아웃">
+      <a href="{% url 'logout' %}" class="brand-link tooltip" title="로그아웃">
         <span class="tooltip-text">로그아웃</span>
         <img src="{% static 'images/logout.svg' %}" alt="로그아웃">
       </a>
@@ -102,22 +104,4 @@
   });
   const observer = new MutationObserver(showToggleIfOpen);
   observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
-
-  let loginState = true; // 로그인 상태를 나타내는 변수
-  let brandLink = document.querySelector('.brand-link');
-  brandLink.addEventListener('click', function(e) {
-    // e.preventDefault();
-    let brandBar = document.querySelector('.brand-bar');
-    if (loginState) {
-      // 로그아웃 처리
-      loginState = false;
-      brandBar.getElementsByClassName('brand-label')[0].textContent = '로그인';
-      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo_white.svg' %}";
-    } else {
-      // 로그인 처리
-      loginState = true;
-      brandBar.getElementsByClassName('brand-label')[0].textContent = '유지니어스';
-      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo.svg' %}";
-    }
-  });
 </script>

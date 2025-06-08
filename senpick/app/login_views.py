@@ -39,6 +39,8 @@ def login_view(request):
             return JsonResponse({"success": False, "password_error": "비밀번호가 올바르지 않습니다."})
 
         request.session["user_id"] = user.user_id
+        request.session["nickname"] = user.nickname
+        request.session["birth"] = user.birth
         return JsonResponse({"success": True})
 
     return JsonResponse({"success": False, "email_error": "잘못된 접근입니다."})
