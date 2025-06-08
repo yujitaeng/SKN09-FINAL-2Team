@@ -19,7 +19,7 @@ class MySQLQueryInput(BaseModel):
 class MySQLQueryTool(BaseTool):
     name: str = "mysql_query_tool"
     description: str = """RDS의 MySQL 데이터베이스에서 상품 및 관련 정보를 검색합니다. 반드시 SELECT 쿼리만 사용해야 하며, 상품 이름, 가격대, 브랜드, 카테고리 등 구체적인 정보를 검색할 때 유용합니다. 복잡한 조건 필터링에 강점이 있습니다. 
-        The `PRODUCT` table has the following structure:
+        The `product` table has the following structure:
         - BRAND: Brand name
         - NAME: Product name
         - CATEGORY: Main category

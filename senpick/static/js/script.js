@@ -1,5 +1,5 @@
 
-console.log("자바스크립트 테스트")
+console.log("load script.js");
 
 function createProductCard(wrapper, data) {
     const card = document.createElement("div");
@@ -45,15 +45,35 @@ function createProductCard(wrapper, data) {
     heartIcon.src = "/static/images/heart_gray.svg";
     heartIcon.alt = "Heart Icon";
     heartIcon.className = "heart-icon";
+    heartIcon.dataset.recd_id = data.rcmd_id
+    if (data.is_liked === true) {
+        heartIcon.classList.add("active");
+        heartIcon.src = "/static/images/heart_red.svg";
+    }
 
     heartDiv.appendChild(heartIcon);
 
-    heartIcon.addEventListener("click", (event) => {
-        event.stopPropagation();
+    heartIcon.addEventListener("click", (e) => {
+        e.stopPropagation();
         heartIcon.classList.toggle("active");
         heartIcon.src = heartIcon.classList.contains("active")
             ? "/static/images/heart_red.svg"
             : "/static/images/heart_gray.svg";
+        fetch(`/recommends/${heartIcon.dataset.recd_id}/like`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                is_liked: heartIcon.classList.contains("active")
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
     });
 
     heartIcon.addEventListener("mouseenter", () => {

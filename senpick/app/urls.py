@@ -19,7 +19,7 @@ from . import pswd_views
 from . import pswd_verif_views
 from . import pswd_gen_views
 from . import chat_views
-from . import views, birth_views, login_views, chat_views, mypage_views
+from . import views, birth_views, login_views, chat_views, mypage_views, recommend_views
 # from app.views import user_views, chat_views, recommend_views
 
 urlpatterns = [
@@ -53,4 +53,7 @@ urlpatterns = [
     path('signup/check-dup/', views.check_duplicate, name='check_duplicate'),
     path('chat/start/', chat_views.chat_start, name='chat_start'),
     path('chat/message/', chat_views.chat_message, name='chat_message'),
+    path('chat/history/', chat_views.chat_history, name='chat_history'),
+    path('recommends', recommend_views.index, name='recommends'),  # 추천 상품 조회
+    path('recommends/<int:recommend_id>/like', recommend_views.like, name='recommend_like'),  # 추천 상품 좋아요
 ]

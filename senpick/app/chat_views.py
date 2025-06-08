@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, StreamingHttpResponse
 import json, re
 from giftgraph.graph import gift_fsm 
+from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend
 from django.utils import timezone
 
 def chat(request):
@@ -99,6 +100,19 @@ def chat_start(request):
             'relation': data.get("relation", ""),
             'anniversary': data.get("event", ""),
         }
+        # insert recipient_info into db recipient table
+        chat_obj = Chat.objects.create(
+            user_id=request.session.get("user_id", None),
+            title=f"{recipient_info['relation']}를 위한 선물",
+        )  # 채팅 시작 시 새로운 Chat 객체 생성
+        recipient = Recipient.objects.create(
+            chat_id=chat_obj,
+            gender=recipient_info["gender"],
+            age_group=recipient_info["ageGroup"],
+            relation=recipient_info["relation"],
+            anniversary=recipient_info["anniversary"],
+            situation_info=json.dumps(situation_info)  # 상황 정보는 JSON 문자열로 저장
+        )
         
         state = {
             "chat_history": [],
@@ -113,24 +127,24 @@ def chat_start(request):
         
         if isinstance(res, dict):
             state = res
-            output = state.get("output", "")
+            output = res.get("output", "")
+            state["chat_history"].append(f"bot: {output}")
+            request.session["chat_state"] = state
         else:  # 만약 res가 dict가 아니라면, 단순 문자열로 처리
             # 스트림 처리 
-            def stream():
-                output_parts = []
-                for chunk in res:
-                    output_parts.append(chunk)
-                    yield chunk  # str or bytes 확인 필요
-                
-                # 최종 출력 누적해서 chat_history 에 기록
-                output = "".join(output_parts)
-                state["output"] = output
-                state.get("chat_history").append(f"bot: {output}")
-                save_state(request, state)
-    
-            return StreamingHttpResponse(stream(), content_type='text/plain')
+            output = ""
+            for chunk in res:
+                output += chunk
+            state["output"] = output
+            state["chat_history"].append(f"bot: {output}")
+            request.session["chat_state"] = state
+        ChatMessage.objects.create(
+            chat_id=chat_obj,
+            sender="bot",
+            message=output
+        )
         save_state(request, state)
-        return JsonResponse({"bot": output})
+        return JsonResponse({"bot": output, "chat_id": chat_obj.chat_id})
     return JsonResponse({"error": "POST only"})
 
 @csrf_exempt
@@ -138,17 +152,58 @@ def chat_message(request):
     if request.method == "POST":
         data = json.loads(request.body)
         msg = data["message"]
+        chat_id = data["chat_id"]  # 클라이언트가 보내는 chat_id 사용
+        # chat_id로 Chat 인스턴스 가져오기
+        chat_obj = Chat.objects.get(chat_id=chat_id)
         state = get_state(request)
+        
         state["chat_history"].append(f"user: {msg}")
+        ChatMessage.objects.create(
+            chat_id=chat_obj,
+            sender="user",
+            message=msg
+        )
 
         res = gift_fsm.invoke(state)
 
         if isinstance(res, dict):
             state = res
+            situation_info = state.get("situation_info", {})
             output = state.get("output", "")
-            print(state.get("chat_history")[-1])
-            print(output)
+            ChatMessage.objects.create(
+                chat_id=chat_obj,
+                sender="bot",
+                message=output
+            )
+            if situation_info:
+                Recipient.objects.filter(chat_id=chat_obj).update(
+                    situation_info=json.dumps(situation_info)
+                )
             output, products = extract_products_from_response(output)
+            recommend_produsts = []
+            for product in products:
+                product_obj, created = Product.objects.get_or_create(
+                    name=product["title"],
+                    defaults={
+                        "brand": product["brand"],
+                        "price": int(product["price"].replace(",", "").replace("₩", "").strip()),
+                        "image_url": product["imageUrl"],
+                        "product_url": product["link"],
+                    }
+                )
+                recommend = ChatRecommend.objects.create(
+                    chat_id=chat_obj,
+                    product_id=product_obj,
+                )
+                recommend_produsts.append({
+                    "recommend_id": recommend.rcmd_id,
+                    "title": product_obj.name,
+                    "image_url": product_obj.image_url,
+                    "price": product_obj.price,
+                    "product_url": product_obj.product_url,
+                    "is_liked": recommend.is_liked,
+                })
+                
             output = output.split("Final Answer:")[1].strip() if "Final Answer:" in output else output
             
         else:  
@@ -162,11 +217,22 @@ def chat_message(request):
                 output = "".join(output_parts)
                 state["output"] = output
                 state.get("chat_history").append(f"bot: {output}")
+                ChatMessage.objects.create(
+                    chat_id=chat_obj,
+                    sender="bot",
+                    message=output
+                )
                 request.session["chat_state"] = state
                 request.session.save()
     
             return StreamingHttpResponse(stream(), content_type='text/plain')
 
         save_state(request, state if isinstance(res, dict) else state)
-        return JsonResponse({"bot": output, "products": products})
+        return JsonResponse({"bot": output, "products": recommend_produsts})
     return JsonResponse({"error": "POST only"})
+
+def chat_history(request):
+    chats = Chat.objects.filter(user_id=request.session.get("user_id", None)) \
+                        .order_by('-created_at') \
+                        .values('chat_id', 'title', 'created_at')
+    return JsonResponse({"chatlist": list(chats)})

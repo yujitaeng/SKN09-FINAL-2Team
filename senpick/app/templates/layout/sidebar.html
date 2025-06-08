@@ -47,32 +47,50 @@
   </div>
 </div>
 <script>
-    const chatlist = [
-      "글자몇개를넣으면좋을까요",
-      "공백포함11글자가능하다",
-      "귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물"
-    ]      
-      
-  // 접힘/펼침 상태 관리
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('sidebar-toggle-btn');
-  const searchRow = document.getElementById('sidebar-search-row');
-  const chathistory = document.querySelector('.chat-list');
-  chathistory.append(...chatlist.map(chat => {
-    const li = document.createElement('li');
-    const span = document.createElement('span');
-    span.className = 'chat-title';
-    span.textContent = chat;
-    li.appendChild(span);
-    li.addEventListener('click', () => {
-      document.querySelector('.chat-list li.selected')?.classList.remove('selected');
-      li.classList.add('selected');
-    });
-    return li;
-  }));
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    const searchRow = document.getElementById('sidebar-search-row');
+    const chatHistoryEl = document.querySelector('.chat-list');
+
+    // 채팅 리스트 렌더링 함수
+    function renderChatList(chatList) {
+      chatHistoryEl.innerHTML = '';  // 기존 목록 초기화
+
+      chatList.forEach(chat => {
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.className = 'chat-title';
+        span.textContent = chat.title;
+
+        // chat_id 를 dataset 으로 저장 (클릭 시 사용 가능)
+        li.dataset.chatId = chat.chat_id;
+
+        li.appendChild(span);
+
+        // 선택 시 selected 클래스 토글
+        li.addEventListener('click', () => {
+          document.querySelector('.chat-list li.selected')?.classList.remove('selected');
+          li.classList.add('selected');
+
+          // 필요시 chat_id 를 활용해서 채팅 불러오기 등 추가 동작 가능
+          console.log('Selected chat_id:', li.dataset.chatId);
+          window.currentChatId = li.dataset.chatId; // 현재 선택된 chat_id 저장
+        });
+
+        chatHistoryEl.appendChild(li);
+      });
+    }
+
+  // 채팅 히스토리 가져오기
+  fetch("/chat/history")
+    .then(response => response.json())
+    .then(data => {
+      if (data?.chatlist) {
+        renderChatList(data.chatlist);
+      }
+    })
+    .catch(error => console.error('Error fetching chat history:', error));
+
 
   chathistory.firstElementChild?.classList.add('selected');
 

@@ -5,6 +5,11 @@ class Product(models.Model):
         primary_key=True,
         db_column='PRODUCT_ID'
     )
+    brand = models.CharField(
+        max_length=100,
+        db_column='BRAND',
+        default='브랜드 없음',
+    )
     name = models.CharField(
         max_length=255,
         db_column='NAME'
@@ -20,6 +25,12 @@ class Product(models.Model):
         decimal_places=2,
         db_column='PRICE'
     )
+    options = models.CharField(
+        max_length=255,
+        db_column='OPTIONS',
+        null=True,
+        blank=True
+    )
     description = models.TextField(
         db_column='DESCRIPTION',
         null=True,
@@ -28,6 +39,12 @@ class Product(models.Model):
     category = models.CharField(
         max_length=50,
         db_column='CATEGORY'
+    )
+    sub_category = models.CharField(
+        max_length=100,
+        db_column='SUB_CATEGORY',
+        null=True,
+        blank=True
     )
     product_url = models.CharField(
         max_length=255,

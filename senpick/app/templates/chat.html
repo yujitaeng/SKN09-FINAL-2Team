@@ -30,7 +30,7 @@
           <!-- 질문/옵션 카드가 번갈아 추가됨 -->
         </div>
         <!-- 질문 다 끝나면 등d장하는 채팅 입력창 -->
-        <form class="chat-input-form" id="chat-form" autocomplete="off" style="display:none;">
+        <form class="chat-input-form" id="chat-form" autocomplete="off">
           <div class="chat-input-wrap">
             <input type="text" id="user-input" placeholder="예: '친구 결혼 선물 5만원대 추천해줘'" />
           </div>
@@ -259,7 +259,6 @@
                             read(); // 계속 읽기
                           }, 50);
                       });
-
                   }
 
                   read();
@@ -267,6 +266,7 @@
               else if (contentType.includes('application/json')) {
                   res.json().then(data => {
                       console.log('Received JSON:', data);
+                      window.currentChatId = data.chat_id;
 
                       if (loadingDiv) loadingDiv.remove();
 
@@ -285,7 +285,7 @@
                           }
                       } 
 
-                      document.getElementById('chat-form').style.display = 'block';
+                      document.getElementById('chat-form').style.display = 'flex';
                       document.getElementById('chat-form').scrollIntoView({ behavior: 'smooth' });
                       document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
                   });
@@ -420,7 +420,7 @@
           fetch('/chat/message/', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ message: msg })
+              body: JSON.stringify({ message: msg, chat_id: window.currentChatId })
           })
           .then(res => {
               const contentType = res.headers.get('Content-Type') || '';
@@ -455,7 +455,9 @@
                           botMsgDiv.innerHTML += chunk;
 
                           chatHistory.scrollTop = chatHistory.scrollHeight;
-                          read(); // 계속 읽기
+                          setTimeout(() => {
+                            read(); // 계속 읽기
+                          }, 50);
                       });
                   }
 
@@ -480,6 +482,7 @@
                           cardWrapper.className = 'card-wrapper';
                           chatHistory.appendChild(cardWrapper);
                           for (const product of data.products) {
+                              product.brand = product.brand || "";
                               createProductCard(cardWrapper, product);
                           }
                       }
