@@ -91,7 +91,6 @@ class User(models.Model):
 
     class Meta:
         db_table = 'user'
-        managed = False
 
     def save(self, *args, **kwargs):
         # user_id(UUID) 가 없으면, 하이픈 없는 32자리 hex 문자열 생성
@@ -118,7 +117,6 @@ class PreferType(models.Model):
 
     class Meta:
         db_table = 'prefer_type'
-        managed = False
 
     def __str__(self):
         return f"{self.type} / {self.type_name}"
@@ -150,7 +148,6 @@ class UserPrefer(models.Model):
 
     class Meta:
         db_table = 'user_prefer'
-        managed = False
         unique_together = (('user', 'prefer_type'),)
 
     def __str__(self):
