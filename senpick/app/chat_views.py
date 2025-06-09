@@ -10,19 +10,46 @@ def chat(request, chat_id=None):
     if request.session.get("user_id") is None:
         return redirect('login')  # 로그인하지 않은 경우 로그인 페이지로 리디렉션
     birth = request.session.get('birth')  # 예: '19990101'
-    
-    # 오늘 날짜 구하기 → 'YYYYMMDD' 형식으로 변환
-    today_str = timezone.now().strftime('%Y%m%d')
-    
-    is_birth_today = (birth == today_str)
+
+    # 오늘 날짜 → 'MMDD'만 추출
+    today_mmdd = timezone.now().strftime('%m%d')
+
+    # 생일에서 'MMDD'만 추출
+    birth_mmdd = birth[4:] if birth else ''
+
+    is_birth_today = (birth_mmdd == today_mmdd)
     if chat_id is not None:
         user_id = request.session.get("user_id", None)
+        request.session.pop("chat_state", None)
         chat = Chat.objects.filter(chat_id=chat_id, user_id=user_id).first()
         if not chat:
             return JsonResponse({"error": "Chat not found"}, status=404)
         
+        chatHistory = []
+        
         messages = ChatMessage.objects.filter(chat_id=chat).order_by('created_at').values('sender', 'message', 'created_at')
         recipient = Recipient.objects.filter(chat_id=chat).first()
+        
+        for message in messages:
+            chatHistory.append({
+                "sender": message['sender'],
+                "message": message['message'],
+            })
+        
+        recipient_info = {
+            'gender': recipient.gender,
+            'ageGroup': recipient.age_group,
+            'relation': recipient.relation,
+            'anniversary': recipient.anniversary,
+        }
+        
+        state = {
+            "chat_history": chatHistory,
+            "situation_info": json.loads(recipient.situation_info),
+            "recipient_info": recipient_info, 
+        }
+        
+        request.session["chat_state"] = state  # 초기 상태 저장
         
         return render(request, 'chat_detail.html', {
             'chat': chat,
