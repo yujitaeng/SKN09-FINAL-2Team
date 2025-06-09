@@ -24,10 +24,12 @@
       <span class="btn-label">Chat</span>
     </div>
     <ul class="chat-list"></ul>
+    {% if is_birth_today %}
     <div class="menu-btn-row" id="gift-btn" onclick="location.href=`{% url 'birth' %}`">
       <img src="{% static 'images/gift.svg' %}" alt="Gift">
       <span class="btn-label">Happy Birthday</span>
     </div>
+    {% endif %}
   </div>
   <!-- 하단: 마이페이지/브랜드바 -->
   <div class="sidebar-bottom">
@@ -35,9 +37,9 @@
     <div class="brand-bar">
       <a href="{% url 'mypage' %}" style="display: flex; align-items: center; text-decoration: none;">
         <img src="{% static 'images/bottom_logo.svg' %}" alt="Brand" class="brand-logo">
-        <span class="brand-label">유지니어스</span>
+        <span class="brand-label">{{request.session.nickname}}</span>
       </a>
-      <a href="{% url 'login' %}" class="brand-link tooltip" title="로그아웃">
+      <a href="{% url 'logout' %}" class="brand-link tooltip" title="로그아웃">
         <span class="tooltip-text">로그아웃</span>
         <img src="{% static 'images/logout.svg' %}" alt="로그아웃">
       </a>
@@ -45,34 +47,53 @@
   </div>
 </div>
 <script>
-    const chatlist = [
-      "글자몇개를넣으면좋을까요",
-      "공백포함11글자가능하다",
-      "귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물"
-    ]      
-      
-  // 접힘/펼침 상태 관리
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('sidebar-toggle-btn');
-  const searchRow = document.getElementById('sidebar-search-row');
-  const chathistory = document.querySelector('.chat-list');
-  chathistory.append(...chatlist.map(chat => {
-    const li = document.createElement('li');
-    const span = document.createElement('span');
-    span.className = 'chat-title';
-    span.textContent = chat;
-    li.appendChild(span);
-    li.addEventListener('click', () => {
-      document.querySelector('.chat-list li.selected')?.classList.remove('selected');
-      li.classList.add('selected');
-    });
-    return li;
-  }));
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    const searchRow = document.getElementById('sidebar-search-row');
+    const chatHistoryEl = document.querySelector('.chat-list');
 
-  chathistory.firstElementChild?.classList.add('selected');
+    // 채팅 리스트 렌더링 함수
+    function renderChatList(chatList) {
+      chatHistoryEl.innerHTML = '';  // 기존 목록 초기화
+
+      chatList.forEach(chat => {
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.className = 'chat-title';
+        span.textContent = chat.title;
+
+        // chat_id 를 dataset 으로 저장 (클릭 시 사용 가능)
+        li.dataset.chatId = chat.chat_id;
+
+        li.appendChild(span);
+
+        // 선택 시 selected 클래스 토글
+        li.addEventListener('click', () => {
+          document.querySelector('.chat-list li.selected')?.classList.remove('selected');
+          li.classList.add('selected');
+
+          // 필요시 chat_id 를 활용해서 채팅 불러오기 등 추가 동작 가능
+          console.log('Selected chat_id:', li.dataset.chatId);
+          window.currentChatId = li.dataset.chatId; // 현재 선택된 chat_id 저장
+          window.location.href = `/chat/${li.dataset.chatId}`; // 채팅 페이지로 이동
+        });
+
+        chatHistoryEl.appendChild(li);
+      });
+    }
+
+  // 채팅 히스토리 가져오기
+  fetch("/chat/history")
+    .then(response => response.json())
+    .then(data => {
+      if (data?.chatlist) {
+        renderChatList(data.chatlist);
+      }
+    })
+    .catch(error => console.error('Error fetching chat history:', error));
+
+
+  chatHistoryEl.firstElementChild?.classList.add('selected');
 
   function showToggleIfOpen() {
     if (sidebar.classList.contains('mini')) {
@@ -102,22 +123,4 @@
   });
   const observer = new MutationObserver(showToggleIfOpen);
   observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
-
-  let loginState = true; // 로그인 상태를 나타내는 변수
-  let brandLink = document.querySelector('.brand-link');
-  brandLink.addEventListener('click', function(e) {
-    // e.preventDefault();
-    let brandBar = document.querySelector('.brand-bar');
-    if (loginState) {
-      // 로그아웃 처리
-      loginState = false;
-      brandBar.getElementsByClassName('brand-label')[0].textContent = '로그인';
-      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo_white.svg' %}";
-    } else {
-      // 로그인 처리
-      loginState = true;
-      brandBar.getElementsByClassName('brand-label')[0].textContent = '유지니어스';
-      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo.svg' %}";
-    }
-  });
 </script>

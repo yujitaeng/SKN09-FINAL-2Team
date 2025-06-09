@@ -1,5 +1,5 @@
 
-console.log("자바스크립트 테스트")
+console.log("load script.js");
 
 function createProductCard(wrapper, data) {
     const card = document.createElement("div");
@@ -7,7 +7,7 @@ function createProductCard(wrapper, data) {
 
     // 카드 전체를 감싸는 링크
     const link = document.createElement("a");
-    link.href = "#";
+    link.href = data.link || "#"; // 링크가 없으면 기본적으로 #로 설정
 
     // 이미지 영역
     const imageWrapper = document.createElement("div");
@@ -45,15 +45,35 @@ function createProductCard(wrapper, data) {
     heartIcon.src = "/static/images/heart_gray.svg";
     heartIcon.alt = "Heart Icon";
     heartIcon.className = "heart-icon";
+    heartIcon.dataset.recd_id = data.rcmd_id
+    if (data.is_liked === true) {
+        heartIcon.classList.add("active");
+        heartIcon.src = "/static/images/heart_red.svg";
+    }
 
     heartDiv.appendChild(heartIcon);
 
-    heartIcon.addEventListener("click", (event) => {
-        event.stopPropagation();
+    heartIcon.addEventListener("click", (e) => {
+        e.stopPropagation();
         heartIcon.classList.toggle("active");
         heartIcon.src = heartIcon.classList.contains("active")
             ? "/static/images/heart_red.svg"
             : "/static/images/heart_gray.svg";
+        fetch(`/recommends/${heartIcon.dataset.recd_id}/like`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                is_liked: heartIcon.classList.contains("active")
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
     });
 
     heartIcon.addEventListener("mouseenter", () => {
@@ -74,7 +94,7 @@ function createProductCard(wrapper, data) {
     if (data.reason){
         const reason = document.createElement("div");
         reason.className = "reason";
-        reason.textContent = data.reason;
+        reason.textContent = "추천 이유 : " + data.reason;
         card.appendChild(reason);
     }
     wrapper.appendChild(card);

@@ -14,7 +14,7 @@
     <div class="birth-container">
         <div class="birth-inner-container snap-container font-a">
             <section class="snap-section animate-on-scroll">
-                <h1>생일 축하해요, 유지니어스님!<img src="{% static 'images/pops.svg' %}" width="90" height="60"></h1> 
+                <h1>생일 축하해요, {{request.session.nickname}}님!<img src="{% static 'images/pops.svg' %}" width="90" height="60"></h1> 
                 <p>오늘 하루, 당신만을 위한 선물을 준비했어요 :)</p>
                 <p><span class="font-b">Senpick</span>이 마음을 담아, 당신만을 위한 선물을 준비했는데, 한번 보실래요?</p>
                 <div class="img-wrapper">
@@ -22,7 +22,7 @@
                 </div>
             </section>
             <section class="snap-section animate-on-scroll">
-                <h2>유지니어스님의 생일, &nbsp;<span class="font-b">Senpick</span>이 함께 축하드려요.</h2>
+                <h2>{{request.session.nickname}}님의 생일, &nbsp;<span class="font-b">Senpick</span>이 함께 축하드려요.</h2>
                 <p><span class="font-b">Senpick</span>이 마음을 담아, 당신만을 위한 선물을 준비했어요.</p>
                 <div class="card-wrapper" style="margin: 60px auto;"></div>
             </section>
@@ -42,7 +42,7 @@
                         imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
                         brand: '브랜드명',
                         title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...',
-                        reason: '추천 이유: 이 제품은 휴대성이 뛰어나고, 캠핑이나 피크닉에 적합한 무선 스피커입니다. JBL의 품질을 믿을 수 있어요.',
+                        reason: '이 제품은 휴대성이 뛰어나고, 캠핑이나 피크닉에 적합한 무선 스피커입니다. JBL의 품질을 믿을 수 있어요.',
                     });
                 }
                 const observer = new IntersectionObserver((entries) => {
