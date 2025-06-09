@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 def home(request):
+    if not request.session.get('user_id') or request.session.get('type') == 'guest':
+        return redirect('login')
     return render(request, 'mypage.html')
 
 def profile_info(request):

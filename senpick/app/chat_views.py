@@ -419,3 +419,31 @@ def chat_upload(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
     
+def chat_guest_start(request):
+    if request.method == "POST":
+        if request.session.get("user_id") is not None:
+            return redirect('chat')
+        
+        import uuid
+        guest_user_id = uuid.uuid4().hex
+
+        # USER 테이블에 guest 계정 insert
+        from app.models import User  # 네 User 모델명에 맞게 import
+
+        User.objects.create(
+            user_id=guest_user_id,
+            email=f"{guest_user_id}@guest.senpick.kr",  # 더미 이메일
+            password="",  # 비회원은 password 없음
+            nickname="비회원",  # 기본값
+            birth="19000101",  # 기본값 (있으면 넣고 아니면 null 가능)
+            gender="unknown",  # 기본값
+            type="guest",  # 핵심 → guest로 명시
+            is_email_verified=False
+        )
+
+        # 세션에 user_id 저장 → chat()에서도 그대로 사용 가능
+        request.session["user_id"] = guest_user_id
+        request.session["nickname"] = "비회원"
+        request.session["type"] = "guest"  # guest 타입으로 설정
+
+        return redirect('chat')
