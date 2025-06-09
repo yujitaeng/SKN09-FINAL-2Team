@@ -2,9 +2,9 @@
 .sidebar {
   position: sticky;
   top: 0;
-  width: 310px;
-  min-width: 310px;
-  max-width: 310px;
+  width: 270px;
+  /* min-width: 310px;
+  max-width: 310px; */
   flex-shrink: 0;  /* ← 추가! */
   /* position: fixed; */
   /* top: 0; */

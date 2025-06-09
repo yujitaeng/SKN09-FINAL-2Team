@@ -5,7 +5,7 @@
     <!-- 상단 헤더 (브랜드/토글) -->
     <div class="sidebar-header">
       <img src="{% static 'images/top_logo.svg' %}" alt="Senpick Logo" class="logo-img">
-      <button class="menu-btn tooltip" id="sidebar-toggle-btn" title="사이드바 접기">
+      <button class="menu-btn tooltip" id="sidebar-toggle-btn">
         <span class="tooltip-text">사이드바 접기</span>
         <img src="{% static 'images/sidebar_toggle.png' %}" alt="사이드바 토글">
       </button>
@@ -39,7 +39,7 @@
         <img src="{% static 'images/bottom_logo.svg' %}" alt="Brand" class="brand-logo">
         <span class="brand-label">{{request.session.nickname}}</span>
       </a>
-      <a href="{% url 'logout' %}" class="brand-link tooltip" title="로그아웃">
+      <a href="{% url 'logout' %}" class="brand-link tooltip">
         <span class="tooltip-text">로그아웃</span>
         <img src="{% static 'images/logout.svg' %}" alt="로그아웃">
       </a>
@@ -128,6 +128,24 @@
 
   // 초기 상태 설정
   showToggleIfOpen();
+  document.querySelector('.logo-img').addEventListener('click', function() {
+    if (sidebar.classList.contains('mini')) {
+      sidebar.classList.remove('mini');
+      showToggleIfOpen();
+    }
+  });
+  searchRow.addEventListener('click', function() {
+    if (sidebar.classList.contains('mini')) {
+      sidebar.classList.remove('mini');
+      sidebarSearch.focus();
+      showToggleIfOpen();
+    }
+  });
+  toggleBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    sidebar.classList.add('mini');
+    showToggleIfOpen();
+  });
 
   const observer = new MutationObserver(showToggleIfOpen);
   observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
