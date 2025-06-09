@@ -37,13 +37,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (remainingTime <= 0) {
       errorMsg.textContent = "인증 시간이 만료되었습니다. 인증번호 재전송 요청 후 재입력 부탁드립니다.";
-      errorMsg.style.display = "block";
+      errorMsg.style.visibility = "visible";
       return;
     }
 
     if (code !== testCode) {
       errorMsg.textContent = "인증번호가 올바르지 않습니다.";
-      errorMsg.style.display = "block";
+      errorMsg.style.visibility = "visible";
       return;
     }
 
@@ -69,6 +69,10 @@ document.addEventListener("DOMContentLoaded", function () {
     errorMsg.style.display = "none";
     hiddenInput.value = "";
     boxes.forEach(box => box.textContent = "");
+    // 🔹 오류 메시지 숨기기
+    // document.getElementById("verif-error-msg").style.visibility = "hidden";
+
+    // 🔹 타이머 초기화
     clearInterval(timerInterval);
     remainingTime = 300;
     updateTimer();

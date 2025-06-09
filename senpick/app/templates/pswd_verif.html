@@ -7,8 +7,7 @@
   <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
   <link rel="stylesheet" href="{% static 'css/slide.css' %}">
   <link rel="stylesheet" href="{% static 'css/login.css' %}">
-  <link rel="stylesheet" href="{% static 'css/signup.css' %}">
-  <link rel="stylesheet" href="{% static 'css/pswd_verif.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pswd.css' %}">
   <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css">
   <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css' rel='stylesheet' type='text/css'>
   <script src="{% static 'js/slide.js' %}" defer></script>
@@ -20,28 +19,17 @@
     <!-- 왼쪽 카드 (배경 역할만) -->
     <div class="left-card">
       <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
+      <div class="step-indicator">
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+      </div>
       <div class="outer-wrapper">
         <div class="login-wrapper">
-          <div class="static-indicator-group">
-            <div class="static-dot static-dot-1 active"></div>
-            <div class="static-line static-line-1"></div>
-            <div class="static-dot static-dot-2 active"></div>
-            <div class="static-line static-line-2"></div>
-            <div class="static-dot static-dot-3"></div>
-          </div>
           <div class="text-block">
             <h2 class="main-title">이메일 인증</h2>
             <p class="sub-title">이메일로 받은 인증번호 5자리를 입력해주세요.</p>
           </div>
-          {% comment %} <div class="verification-container">
-            <div class="digit-boxes">
-              <div class="digit-box" id="digit-0"></div>
-              <div class="digit-box" id="digit-1"></div>
-              <div class="digit-box" id="digit-2"></div>
-              <div class="digit-box" id="digit-3"></div>
-              <div class="digit-box" id="digit-4"></div>
-            </div>
-          </div> {% endcomment %}
           <div class="verification-input-group">
               <input type="text" maxlength="1" class="verify-input" id="code1" autofocus="">
               <input type="text" maxlength="1" class="verify-input" id="code2">
@@ -53,7 +41,7 @@
             <div id="timer-text">00:00</div>
             <div id="resend-text" style="display: none;">인증코드 재전송</div>
           </div>
-          <div id="verif-error-msg">인증번호가 올바르지 않습니다.</div>
+          <div id="verif-error-msg" class="error-message"></div>
           <button class="verif-comp-btn">이메일 인증 완료</button>
         </div>
       </div>

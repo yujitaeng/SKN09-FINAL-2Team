@@ -17,16 +17,15 @@
       <div class="signup-form-area step5">
         <!-- 1) 로고 -->
         <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo" onclick="location.href=`{% url 'login' %}`">
+        <!-- 2) 스텝 인디케이터 (모두 완료 상태) -->
+        <div class="step-indicator">
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+        </div>
         <div class="signup-form-wrapper">
           <div class="signup-form">
-            <!-- 2) 스텝 인디케이터 (모두 완료 상태) -->
-            <div class="step-indicator">
-              <span class="dot active"></span>
-              <span class="dot active"></span>
-              <span class="dot active"></span>
-              <span class="dot active"></span>
-            </div>
-
             <!-- 3) 타이틀 -->
             <h2 class="signup-title">이제 센픽할 준비가 끝났어요.</h2>
             <p class="signup-subtitle">로그인하고 첫 번째 추천을 받아보세요.</p>

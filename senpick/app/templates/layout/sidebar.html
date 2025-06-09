@@ -95,32 +95,40 @@
 
   chatHistoryEl.firstElementChild?.classList.add('selected');
 
-  function showToggleIfOpen() {
-    if (sidebar.classList.contains('mini')) {
-      toggleBtn.style.display = 'none';
-    } else {
-      toggleBtn.style.display = '';
+    // 접힘/펼침 상태에 따른 토글 버튼 표시
+    function showToggleIfOpen() {
+      toggleBtn.style.display = sidebar.classList.contains('mini') ? 'none' : '';
     }
-  }
+
+    // 채팅 기록 불러오기 및 렌더링
+    fetch("/chat/history")
+      .then(res => res.ok ? res.json() : Promise.reject("채팅 기록을 가져오는 데 실패했습니다."))
+      .then(data => {
+        if (data && Array.isArray(data.chat_history)) {
+          const chatElements = data.chat_history.map(chat => {
+            const li = document.createElement('li');
+            const span = document.createElement('span');
+            span.className = 'chat-title';
+            span.textContent = chat.title;
+
+            li.appendChild(span);
+            li.addEventListener('click', () => {
+              document.querySelector('.chat-list li.selected')?.classList.remove('selected');
+              li.classList.add('selected');
+            });
+
+            return li;
+          });
+
+          chathistory.append(...chatElements);
+          chathistory.firstElementChild?.classList.add('selected');
+        }
+      })
+      .catch(error => console.error("채팅 기록을 가져오는 중 오류 발생:", error));
+
+  // 초기 상태 설정
   showToggleIfOpen();
-  document.querySelector('.logo-img').addEventListener('click', function() {
-    if (sidebar.classList.contains('mini')) {
-      sidebar.classList.remove('mini');
-      showToggleIfOpen();
-    }
-  });
-  searchRow.addEventListener('click', function() {
-    if (sidebar.classList.contains('mini')) {
-      sidebar.classList.remove('mini');
-      sidebarSearch.focus();
-      showToggleIfOpen();
-    }
-  });
-  toggleBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    sidebar.classList.add('mini');
-    showToggleIfOpen();
-  });
+
   const observer = new MutationObserver(showToggleIfOpen);
   observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
 </script>

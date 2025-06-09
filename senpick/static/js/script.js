@@ -107,7 +107,6 @@ function toggleLikeBlock(cardEl) {
     const likeCount = likeBlock.querySelector('.like-count');
 
     const isOpen = likeBlock.classList.contains('active');
-
     if (isOpen) {
         scrollWrapper.classList.add('hidden');
         likeBlock.classList.remove('active');
