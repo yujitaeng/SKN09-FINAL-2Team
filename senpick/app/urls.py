@@ -22,8 +22,6 @@ from . import views, birth_views, login_views, chat_views, mypage_views, recomme
 # from app.views import user_views, chat_views, recommend_views
 
 urlpatterns = [
-    # path('', views.home, name='home'),  # 기본 URL
-    # path('about/', views.about, name='about'),  # about 페이지
     path('', chat_views.chat, name='chat'),
     path('birth/', birth_views.birth, name='birth'),  # 생일 페이지
     path('login/', login_views.login_view, name='login'),                                                # 로그인
@@ -37,7 +35,7 @@ urlpatterns = [
     path("api/set_password/", pswd_gen_views.set_new_password, name="set_password"),
     path('birth/recommend-products/', birth_views.birth_recommend_products, name='birth_recommend_products'),  # 생일 추천 상품 페이지
     path('chat/', chat_views.chat, name='chat'),
-    path('chat/<int:chat_id>/', chat_views.chat, name='chat_detail'),  # 채팅 상세 페이지
+    path('chat/<int:chat_id>/', chat_views.chat_detail, name='chat_detail'),  # 채팅 상세 페이지
     path('mypage/', mypage_views.home, name='mypage'),
     path('mypage/profile/', mypage_views.profile_info, name='profile_info'),
     path('mypage/profile/password/', mypage_views.profile_password, name='profile_password'),
@@ -55,6 +53,7 @@ urlpatterns = [
     path('chat/start/', chat_views.chat_start, name='chat_start'),
     path('chat/message/', chat_views.chat_message, name='chat_message'),
     path('chat/history/', chat_views.chat_history, name='chat_history'),
+    path('chat/upload/', chat_views.chat_upload, name='chat_upload'),
     path('recommends', recommend_views.index, name='recommends'),  # 추천 상품 조회
     path('recommends/<int:recommend_id>/like', recommend_views.like, name='recommend_like'),  # 추천 상품 좋아요
 ]

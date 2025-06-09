@@ -83,6 +83,7 @@
     ];
     let currentStep = 0;
     const answers = [];
+    let messager_analysis = {}
 
     // 2. 스텝 카드 렌더링 함수
     function renderStep() {
@@ -172,7 +173,7 @@
           return name.endsWith('.txt') || name.endsWith('.json');
         }
 
-        fileDropzone.onclick = () => fileInput.click();
+        // fileDropzone.onclick = () => fileInput.click();
 
         fileInput.onchange = function () {
           fileDropzone.classList.remove('error');
@@ -186,6 +187,31 @@
               return;
             }
             fileDropContent.innerHTML = `<b>${this.files[0].name}</b> 업로드됨`;
+            const startBtn = document.getElementById("start-btn")
+            startBtn.disabled = true
+            const formData = new FormData();
+            formData.append('file', this.files[0]);
+            fetch('/chat/upload/', {
+              method: 'POST',
+              body: formData
+            }).then(res => {
+              if (!res.ok) {
+                throw new Error('파일 업로드 실패');
+              }
+              res.json().then(data => {
+                console.log('파일 업로드 성공:', data);
+                fileDropzone.classList.remove('error');
+                errorBox.textContent = '';
+                fileDropContent.innerHTML = `<b>${this.files[0].name}</b> 업로드 완료!`;
+                console.log("llm_analysis:\n", data.llm_analysis);
+                messager_analysis = data.llm_analysis
+                startBtn.disabled = false
+              });
+            }).catch(err => {
+              console.error(err);
+              fileDropzone.classList.add('error');
+              errorBox.textContent = '파일 업로드 중 오류가 발생했습니다.';
+            });
             skipCheckbox.checked = false;
           } else {
             fileDropContent.innerHTML = `대화내역 파일 첨부하기<br><span class="file-hint">(txt, json 파일, 1개만 첨부 가능)</span>`;
@@ -215,7 +241,8 @@
             age: answers[1],
             gender: answers[2],
             event: answers[3],
-            file_skip: skipChecked ? 1 : 0
+            file_skip: skipChecked ? 1 : 0,
+            messager_analysis: messager_analysis
           };
 
           const chatHistory = document.getElementById('chat-history');
@@ -233,7 +260,8 @@
             </div>`
           );
           chatHistory.scrollTop = chatHistory.scrollHeight;
-
+          const chatForm = document.getElementById('chat-form');
+          chatForm.disabled = true
           fetch('/chat/start/', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -248,6 +276,7 @@
 
               if (contentType.includes('text/plain')) {
                   if (loadingDiv) loadingDiv.remove();
+                  chatForm.disabled = false
                   console.log("Streaming text/plain response");
 
                   const reader = res.body.getReader();
@@ -287,7 +316,7 @@
                       document.querySelector('#chat-form').dataset.chatId = data.chat_id; // 폼에 chat_id 저장
 
                       if (loadingDiv) loadingDiv.remove();
-
+                      chatForm.disabled = false
                       if (data.bot) {
                           chatHistory.insertAdjacentHTML(
                               'beforeend',
@@ -433,7 +462,8 @@
             </div>`
           );
           chatHistory.scrollTop = chatHistory.scrollHeight;
-
+          const chatForm = document.getElementById("chat-form");
+          chatForm.disabled = true
           // === 실제 백엔드 연결 ===
           fetch('/chat/message/', {
               method: 'POST',
@@ -446,6 +476,7 @@
               const loadingDiv = document.getElementById('chat-loading-spin');
               if (contentType.includes('text/plain')) {
                   if (loadingDiv) loadingDiv.remove();
+                  chatForm.disabled = false
                   console.log("streaming text/plain response");
                   // 스트리밍 처리 - ReadableStream으로 처리
                   const reader = res.body.getReader();
@@ -486,6 +517,7 @@
                   return res.json().then(data => {
                       const loadingDiv = document.getElementById('chat-loading-spin');
                       if (loadingDiv) loadingDiv.remove();
+                      chatForm.disabled = false
 
                       const chatHistory = document.getElementById('chat-history');  // 가정
 
