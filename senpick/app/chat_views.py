@@ -6,7 +6,7 @@ from giftgraph.graph import gift_fsm
 from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend
 from django.utils import timezone
 
-def chat(request):
+def chat(request, chat_id=None):
     if request.session.get("user_id") is None:
         return redirect('login')  # 로그인하지 않은 경우 로그인 페이지로 리디렉션
     birth = request.session.get('birth')  # 예: '19990101'
@@ -15,6 +15,20 @@ def chat(request):
     today_str = timezone.now().strftime('%Y%m%d')
     
     is_birth_today = (birth == today_str)
+    if chat_id is not None:
+        user_id = request.session.get("user_id", None)
+        chat = Chat.objects.filter(chat_id=chat_id, user_id=user_id).first()
+        if not chat:
+            return JsonResponse({"error": "Chat not found"}, status=404)
+        
+        messages = ChatMessage.objects.filter(chat_id=chat).order_by('created_at').values('sender', 'message', 'created_at')
+        recipient = Recipient.objects.filter(chat_id=chat).first()
+        
+        return render(request, 'chat_detail.html', {
+            'chat': chat,
+            'messages': list(messages),
+            'recipient_info': recipient,
+        })
     return render(request, 'chat.html', {
         'is_birth_today': is_birth_today,
     })
@@ -236,3 +250,20 @@ def chat_history(request):
                         .order_by('-created_at') \
                         .values('chat_id', 'title', 'created_at')
     return JsonResponse({"chatlist": list(chats)})
+
+def chat_detail(request, chat_id):
+    user_id = request.session.get("user_id", None)
+    if user_id is None:
+        return redirect('login')  # 로그인하지 않은 경우 로그인 페이지로 리디렉션
+    chat = Chat.objects.filter(chat_id=chat_id, user_id=user_id).first()
+    if not chat:
+        return JsonResponse({"error": "Chat not found"}, status=404)
+    
+    messages = ChatMessage.objects.filter(chat_id=chat).order_by('created_at').values('sender', 'message', 'created_at')
+    recipient = Recipient.objects.filter(chat_id=chat).first()
+    
+    return render(request, 'chat_detail.html', {
+        'chat': chat,
+        'messages': list(messages),
+        'recipient_info': recipient,
+    })

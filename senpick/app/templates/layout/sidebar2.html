@@ -40,7 +40,8 @@
 
     function clickFloatingHistory() {
         sidebarRight.classList.remove("collapsed");
-        fetch("/recommends?chat_id="+window.currentChatId)
+        const chatForm = document.getElementById('chat-form');
+        fetch("/recommends?chat_id="+chatForm.dataset.chatId)
             .then(response => response.json())
             .then(data => {
                 const cardWrapper = document.querySelector('.card-wrapper');

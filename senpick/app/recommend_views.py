@@ -43,9 +43,6 @@ def index(request):
 def like(request, recommend_id):
     data = json.loads(request.body)
     is_liked = data.get("is_liked", False)
-    print(data)
-    print(is_liked)
-    
     if recommend_id is None:
         return JsonResponse({"error": "recommend_id are required"}, status=400)
     

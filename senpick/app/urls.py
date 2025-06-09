@@ -37,6 +37,7 @@ urlpatterns = [
     path("pswd/gen/", pswd_gen_views.home, name="pswd_gen"),                                             # 비밀번호 생성 
     path("api/set_password/", pswd_gen_views.set_new_password, name="set_password"),
     path('chat/', chat_views.chat, name='chat'),
+    path('chat/<int:chat_id>/', chat_views.chat, name='chat_detail'),  # 채팅 상세 페이지
     path('mypage/', mypage_views.home, name='mypage'),
     path('mypage/profile/', mypage_views.profile_info, name='profile_info'),
     path('mypage/profile/password/', mypage_views.profile_password, name='profile_password'),
