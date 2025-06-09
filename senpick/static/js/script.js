@@ -115,14 +115,11 @@ function toggleLikeBlock(cardEl) {
         likeBlock.classList.add('active');
 
         if (cardWrapper.children.length === 0) {
-            for (let i = 0; i < 7; i++) {
-                createProductCard(cardWrapper, {
-                    imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
-                    brand: '브랜드명',
-                    title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...'
-                });
-            }
-            likeCount.innerText = `💛 ${cardWrapper.children.length}`;
+            const chatId = likeBlock.dataset.chat_id;
+            const products = window.productMap?.[chatId] || [];
+
+            products.forEach(product => createProductCard(cardWrapper, product));
+            likeCount.innerText = `💛 ${products.length}`;
         }
     }
 }

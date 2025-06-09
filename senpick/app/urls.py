@@ -20,6 +20,8 @@ from . import pswd_verif_views
 from . import pswd_gen_views
 from . import views, birth_views, login_views, chat_views, mypage_views, recommend_views
 # from app.views import user_views, chat_views, recommend_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # path('', views.home, name='home'),  # 기본 URL
@@ -57,4 +59,4 @@ urlpatterns = [
     path('chat/history/', chat_views.chat_history, name='chat_history'),
     path('recommends', recommend_views.index, name='recommends'),  # 추천 상품 조회
     path('recommends/<int:recommend_id>/like', recommend_views.like, name='recommend_like'),  # 추천 상품 좋아요
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
