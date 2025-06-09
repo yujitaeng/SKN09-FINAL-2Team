@@ -5,10 +5,10 @@ function createProductCard(wrapper, data) {
     const card = document.createElement("div");
     card.className = "product-card";
 
-    // 카드 전체를 감싸는 링크
-    console.log(data)
     const link = document.createElement("a");
     link.href = data.link || "#"; // 링크가 없으면 기본적으로 #로 설정
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
 
     // 이미지 영역
     const imageWrapper = document.createElement("div");

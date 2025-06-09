@@ -2,11 +2,56 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, StreamingHttpResponse
 import json, re
+from datetime import datetime
 from giftgraph.graph import gift_fsm 
 from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend
 from django.utils import timezone
+from collections import defaultdict
+from langchain_openai import ChatOpenAI
+from langchain.prompts import PromptTemplate
 
-def chat(request, chat_id=None):
+# Initialize the OpenAI model
+llm = ChatOpenAI(
+    model="gpt-4.1-nano",  # 원하는 모델로 사용 가능
+    temperature=0,
+)
+
+prompt = PromptTemplate(
+    input_variables=["input", "today"],
+    template="""
+You are an expert in language and psychology. Analyze the following conversation and respond in JSON format with:
+
+1. "intimacy_level": 매우 낮음 / 낮음 / 보통 / 높음 / 매우 높음  
+   - 기준:
+     - Today is {today}
+     - 평균 응답 < 10분 → 빠름
+     - 마지막 메시지로부터 30일 이상 경과 → 낮음 또는 매우 낮음
+     - 총 대화 기간이 1개월 미만이고 메시지 수가 적음 → 낮음
+     - 하루에 20개 이상 메시지 → 높음
+
+2. "emotional_tone": 아래 중 하나 선택  
+   - 긍정적 감정 / 축하/응원 / 스트레스/위로 / 유머/친근 / 부정적 감정 / 감성/감정폭발 / 불확실/애매
+3. "personality": 상대방의 성격 (e.g. 외향적, 유쾌함, 섬세함 등)  
+4. "interests": 상대방의 관심사 (e.g. 영화, 여행, 음식 등)
+5. "reason": 판단 근거를 **한국어**로 구체적으로 작성
+
+If information is insufficient, return "unknown".
+---
+
+Conversation:
+{input}
+
+※ Response format (JSON only):
+  "intimacy_level": "...",
+  "emotional_tone": "...",
+  "personality": "...",
+  "interests": "...",
+  "reason": "...",
+""")
+
+llm_chain = prompt | llm
+
+def chat(request):
     if request.session.get("user_id") is None:
         return redirect('login')  # 로그인하지 않은 경우 로그인 페이지로 리디렉션
     birth = request.session.get('birth')  # 예: '19990101'
@@ -18,44 +63,7 @@ def chat(request, chat_id=None):
     birth_mmdd = birth[4:] if birth else ''
 
     is_birth_today = (birth_mmdd == today_mmdd)
-    if chat_id is not None:
-        user_id = request.session.get("user_id", None)
-        request.session.pop("chat_state", None)
-        chat = Chat.objects.filter(chat_id=chat_id, user_id=user_id).first()
-        if not chat:
-            return JsonResponse({"error": "Chat not found"}, status=404)
-        
-        chatHistory = []
-        
-        messages = ChatMessage.objects.filter(chat_id=chat).order_by('created_at').values('sender', 'message', 'created_at')
-        recipient = Recipient.objects.filter(chat_id=chat).first()
-        
-        for message in messages:
-            chatHistory.append({
-                "sender": message['sender'],
-                "message": message['message'],
-            })
-        
-        recipient_info = {
-            'gender': recipient.gender,
-            'ageGroup': recipient.age_group,
-            'relation': recipient.relation,
-            'anniversary': recipient.anniversary,
-        }
-        
-        state = {
-            "chat_history": chatHistory,
-            "situation_info": json.loads(recipient.situation_info),
-            "recipient_info": recipient_info, 
-        }
-        
-        request.session["chat_state"] = state  # 초기 상태 저장
-        
-        return render(request, 'chat_detail.html', {
-            'chat': chat,
-            'messages': list(messages),
-            'recipient_info': recipient,
-        })
+    
     return render(request, 'chat.html', {
         'is_birth_today': is_birth_today,
     })
@@ -127,7 +135,6 @@ def chat_start(request):
         request.session.pop("chat_state", None)
 
         data = json.loads(request.body)
-       
         situation_info = {
             "closeness": "",
             "emotion": "",
@@ -141,6 +148,8 @@ def chat_start(request):
             'relation': data.get("relation", ""),
             'anniversary': data.get("event", ""),
         }
+        
+        messager_analysis = data.get("messager_analysis")
         # insert recipient_info into db recipient table
         chat_obj = Chat.objects.create(
             user_id=request.session.get("user_id", None),
@@ -159,6 +168,7 @@ def chat_start(request):
             "chat_history": [],
             "situation_info": situation_info,
             "recipient_info": recipient_info, 
+            "messager_analysis": messager_analysis
         }
         
         request.session["chat_state"] = state  # 초기 상태 저장
@@ -296,3 +306,116 @@ def chat_detail(request, chat_id):
         'messages': list(messages),
         'recipient_info': recipient,
     })
+    
+def decode_utf8_escaped(s):
+    return s.encode('latin1').decode('utf-8')
+
+def normalize_message(content):
+    content = content.strip()
+    if '이모티콘' in content:
+        return '(이모티콘)'
+    if '사진' in content:
+        return '(사진)'
+    content = re.sub(r'(!|ㄷ|ㅎ|ㅋ|ㅠ|ㅜ|\?|헐|하|헤|호|흐|허|와우|오오|진짜){2,}', r'\1\1', content)
+    content = re.sub(r'\.{3,}', '...', content)
+    content = re.sub(r'http[s]?://\S+', '(링크)', content)
+    content = re.sub(r'\b\d{10,14}\b', '(계좌번호)', content)
+    content = re.sub(r'\b01[016789]-?\d{3,4}-?\d{4}\b', '(전화번호)', content)
+    content = re.sub(r'\b(0\d{1,2}-?\d{3,4}-?\d{4})\b', '(전화번호)', content)
+    content = re.sub(r'\b\d{4}-\d{4}-\d{4}-\d{4}|\d{16}\b', '(카드번호)', content)
+    content = re.sub(r'\b[\w\.-]+@[\w\.-]+\.\w+\b', '(이메일)', content)
+    return content
+
+@csrf_exempt
+def chat_upload(request):
+    if request.method == "POST":
+        if 'file' not in request.FILES:
+            return JsonResponse({"error": "No file provided"}, status=400)
+        
+        file = request.FILES['file']
+        if not file.name.endswith('.json') and not file.name.endswith('.txt'):
+            return JsonResponse({"error": "File must be a JSON or TXT"}, status=400)
+
+        try:
+            raw_bytes = file.read()
+            raw_str = raw_bytes.decode('utf-8')
+
+            # JSON 처리
+            if file.name.endswith('.json'):
+                raw_chat = json.loads(raw_str)
+                messages = raw_chat.get("messages", [])
+
+                # 디코드 처리
+                for msg in messages:
+                    msg['sender_name'] = decode_utf8_escaped(msg['sender_name'])
+                    if 'content' in msg:
+                        msg['content'] = decode_utf8_escaped(msg['content'])
+
+                # 정렬 및 그룹화
+                sorted_data = sorted(messages, key=lambda x: x['timestamp_ms'])
+                grouped_by_date = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+
+                for item in sorted_data:
+                    if 'content' in item and "sent an attachment" not in item['content']:
+                        timestamp = datetime.fromtimestamp(item['timestamp_ms'] / 1000.0)
+                        date_str = timestamp.strftime("%Y-%m-%d")
+                        time_str = timestamp.strftime("%H:%M")
+                        sender = item['sender_name']  # key 없이 sender_name 그대로 사용
+                        content = normalize_message(item['content'])
+                        grouped_by_date[date_str][time_str][sender].append(content)
+
+                # 포맷팅
+                formatted_lines = []
+                for date in sorted(grouped_by_date):
+                    formatted_lines.append(f"[{date}]")
+                    for time in sorted(grouped_by_date[date]):
+                        for sender in grouped_by_date[date][time]:
+                            merged_msg = " | ".join(grouped_by_date[date][time][sender])
+                            formatted_lines.append(f"{time} - {sender}: {merged_msg}")
+                    formatted_lines.append("")
+
+                formatted_chat = "\n".join(formatted_lines).strip()
+
+            # TXT 처리
+            else:
+                lines = raw_str.splitlines()
+                formatted_lines = []
+
+                for line in lines:
+                    line = line.strip()
+                    if line:
+                        formatted_lines.append(normalize_message(line))
+
+                formatted_chat = "\n".join(formatted_lines).strip()
+
+            # === LLM 분석 ===
+            res = llm_chain.invoke(
+                {
+                    "input": formatted_chat,
+                    "today": datetime.now().strftime("%Y-%m-%d"),
+                }
+            )
+
+            try:
+                llm_result = json.loads(res.content)
+            except Exception as e:
+                llm_result = {
+                    "intimacy_level": "unknown",
+                    "emotional_tone": "unknown",
+                    "personality": "unknown",
+                    "interests": "unknown",
+                    "reason": f"LLM parsing error: {str(e)}"
+                }
+
+            # 최종 결과 반환
+            return JsonResponse({
+                "message": "File uploaded and analyzed successfully",
+                "llm_analysis": llm_result
+            })
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON format"}, status=400)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    
