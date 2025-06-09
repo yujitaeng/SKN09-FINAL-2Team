@@ -238,11 +238,13 @@ def chat_message(request):
                 )
                 recommend_produsts.append({
                     "recommend_id": recommend.rcmd_id,
+                    "brand": product_obj.brand,
                     "title": product_obj.name,
-                    "image_url": product_obj.image_url,
+                    "imageUrl": product_obj.image_url,
                     "price": product_obj.price,
-                    "product_url": product_obj.product_url,
+                    "link": product_obj.product_url,
                     "is_liked": recommend.is_liked,
+                    "reason": product["reason"],
                 })
                 
             output = output.split("Final Answer:")[1].strip() if "Final Answer:" in output else output

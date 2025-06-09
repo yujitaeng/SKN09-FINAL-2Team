@@ -6,6 +6,7 @@ function createProductCard(wrapper, data) {
     card.className = "product-card";
 
     // 카드 전체를 감싸는 링크
+    console.log(data)
     const link = document.createElement("a");
     link.href = data.link || "#"; // 링크가 없으면 기본적으로 #로 설정
 
@@ -45,7 +46,7 @@ function createProductCard(wrapper, data) {
     heartIcon.src = "/static/images/heart_gray.svg";
     heartIcon.alt = "Heart Icon";
     heartIcon.className = "heart-icon";
-    heartIcon.dataset.recd_id = data.rcmd_id
+    heartIcon.dataset.recd_id = data.recommend_id
     if (data.is_liked === true) {
         heartIcon.classList.add("active");
         heartIcon.src = "/static/images/heart_red.svg";

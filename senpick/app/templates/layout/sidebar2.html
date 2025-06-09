@@ -13,7 +13,7 @@
         </button>
         <div class="divider-line"></div>
     </div>
-    <div class="card-wrapper"></div>
+    <div class="card-wrapper" id="sidebar2-card-wrapper"></div>
 </div>
 <div class="floating-history" onclick="clickFloatingHistory()">
     <div>
@@ -44,11 +44,11 @@
         fetch("/recommends?chat_id="+chatForm.dataset.chatId)
             .then(response => response.json())
             .then(data => {
-                const cardWrapper = document.querySelector('.card-wrapper');
+                const cardWrapper = document.querySelector('#sidebar2-card-wrapper');
                 cardWrapper.innerHTML = ''; // 기존 카드 초기화
                 for (const product of data.products) {
                     createProductCard(cardWrapper, {
-                        rcmd_id: product.recommend_id,
+                        recommend_id: product.recommend_id,
                         imageUrl: product.image_url,
                         brand: product.brand,
                         title: product.title,

@@ -28,7 +28,7 @@ def index(request):
         if product:
             products.append({
                 "recommend_id": recommend.rcmd_id,
-                # "product_id": product.product_id,
+                "brand": product.brand,
                 "title": product.name,
                 "image_url": product.image_url,
                 "price": product.price,
