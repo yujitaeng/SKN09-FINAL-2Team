@@ -125,7 +125,6 @@ class PreferType(models.Model):
     def __str__(self):
         return f"{self.type} / {self.type_name}"
 
-
 class UserPrefer(models.Model):
     user = models.ForeignKey(
         User,

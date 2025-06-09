@@ -15,16 +15,18 @@ document.addEventListener("DOMContentLoaded", function () {
   emailInput.addEventListener("focus", () => {
     if (emailInput.value.trim() === "") {
       emailInput.classList.add("error");
-      emailError.textContent = "이메일을 입력해주세요.";
-      emailError.style.display = "block";
+      // emailError.textContent = "이메일을 입력해주세요.";
+      // emailError.style.display = "block";
+      emailError.style.visibility = "visible";
     }
   });
 
   pwInput.addEventListener("focus", () => {
     if (pwInput.value.trim() === "") {
       pwInput.classList.add("error");
-      pwError.textContent = "비밀번호를 입력해주세요.";
-      pwError.style.display = "block";
+      // pwError.textContent = "비밀번호를 입력해주세요.";
+      // pwError.style.display = "block";
+      pwError.style.visibility = "visible";
     }
   });
 
@@ -32,14 +34,16 @@ document.addEventListener("DOMContentLoaded", function () {
   emailInput.addEventListener("blur", () => {
     if (emailInput.value.trim() !== "") {
       emailInput.classList.remove("error");
-      emailError.style.display = "none";
+      emailError.textContent = ""; // 에러 메시지 초기화
+      emailError.style.visibility = "hidden";
     }
   });
 
   pwInput.addEventListener("blur", () => {
     if (pwInput.value.trim() !== "") {
       pwInput.classList.remove("error");
-      pwError.style.display = "none";
+      pwError.textContent = ""; // 에러 메시지 초기화
+      pwError.style.visibility = "hidden";
     }
   });
 
@@ -60,16 +64,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!email) {
       emailInput.classList.add("error");
-      emailError.textContent = "이메일을 입력해주세요.";
-      emailError.style.display = "block";
+      // emailError.textContent = "이메일을 입력해주세요.";
+      // emailError.style.display = "block";
+      // valid = false;
+      emailError.textContent = "이메일이 올바르지 않습니다.";
+      emailError.style.visibility = "visible";
       valid = false;
+    } else {
+      emailInput.classList.remove("error");
+      emailError.textContent = ""; // 에러 메시지 초기화
+      emailError.style.visibility = "hidden";
     }
 
     if (!password) {
       pwInput.classList.add("error");
-      pwError.textContent = "비밀번호를 입력해주세요.";
-      pwError.style.display = "block";
+      // pwError.textContent = "비밀번호를 입력해주세요.";
+      // pwError.style.display = "block";
+      // valid = false;
+      pwError.textContent = "비밀번호가 올바르지 않습니다.";
+      pwError.style.visibility = "visible";
       valid = false;
+    } else {
+      pwInput.classList.remove("error");
+      pwError.textContent = ""; // 에러 메시지 초기화
+      pwError.style.visibility = "hidden";
     }
 
     if (!valid) return;

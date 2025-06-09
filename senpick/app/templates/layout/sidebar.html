@@ -45,79 +45,94 @@
   </div>
 </div>
 <script>
-    const chatlist = [
-      "글자몇개를넣으면좋을까요",
-      "공백포함11글자가능하다",
-      "귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물"
-    ]      
-      
-  // 접힘/펼침 상태 관리
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('sidebar-toggle-btn');
-  const searchRow = document.getElementById('sidebar-search-row');
-  const chathistory = document.querySelector('.chat-list');
-  chathistory.append(...chatlist.map(chat => {
-    const li = document.createElement('li');
-    const span = document.createElement('span');
-    span.className = 'chat-title';
-    span.textContent = chat;
-    li.appendChild(span);
-    li.addEventListener('click', () => {
-      document.querySelector('.chat-list li.selected')?.classList.remove('selected');
-      li.classList.add('selected');
-    });
-    return li;
-  }));
+  document.addEventListener("DOMContentLoaded", function() {
+    // 요소 참조 변수 선언
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    const searchRow = document.getElementById('sidebar-search-row');
+    const chathistory = document.querySelector('.chat-list');
+    const logoImg = document.querySelector('.logo-img');
+    const brandLink = document.querySelector('.brand-link');
+    const brandBar = document.querySelector('.brand-bar');
 
-  chathistory.firstElementChild?.classList.add('selected');
+    let loginState = true; // 로그인 상태
 
-  function showToggleIfOpen() {
-    if (sidebar.classList.contains('mini')) {
-      toggleBtn.style.display = 'none';
-    } else {
-      toggleBtn.style.display = '';
+    // 접힘/펼침 상태에 따른 토글 버튼 표시
+    function showToggleIfOpen() {
+      toggleBtn.style.display = sidebar.classList.contains('mini') ? 'none' : '';
     }
-  }
-  showToggleIfOpen();
-  document.querySelector('.logo-img').addEventListener('click', function() {
-    if (sidebar.classList.contains('mini')) {
-      sidebar.classList.remove('mini');
-      showToggleIfOpen();
-    }
-  });
-  searchRow.addEventListener('click', function() {
-    if (sidebar.classList.contains('mini')) {
-      sidebar.classList.remove('mini');
-      sidebarSearch.focus();
-      showToggleIfOpen();
-    }
-  });
-  toggleBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    sidebar.classList.add('mini');
+
+    // 채팅 기록 불러오기 및 렌더링
+    fetch("/chat/history")
+      .then(res => res.ok ? res.json() : Promise.reject("채팅 기록을 가져오는 데 실패했습니다."))
+      .then(data => {
+        if (data && Array.isArray(data.chat_history)) {
+          const chatElements = data.chat_history.map(chat => {
+            const li = document.createElement('li');
+            const span = document.createElement('span');
+            span.className = 'chat-title';
+            span.textContent = chat.title;
+
+            li.appendChild(span);
+            li.addEventListener('click', () => {
+              document.querySelector('.chat-list li.selected')?.classList.remove('selected');
+              li.classList.add('selected');
+            });
+
+            return li;
+          });
+
+          chathistory.append(...chatElements);
+          chathistory.firstElementChild?.classList.add('selected');
+        }
+      })
+      .catch(error => console.error("채팅 기록을 가져오는 중 오류 발생:", error));
+
+    // 초기 상태 설정
     showToggleIfOpen();
-  });
-  const observer = new MutationObserver(showToggleIfOpen);
-  observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
 
-  let loginState = true; // 로그인 상태를 나타내는 변수
-  let brandLink = document.querySelector('.brand-link');
-  brandLink.addEventListener('click', function(e) {
-    // e.preventDefault();
-    let brandBar = document.querySelector('.brand-bar');
-    if (loginState) {
-      // 로그아웃 처리
-      loginState = false;
-      brandBar.getElementsByClassName('brand-label')[0].textContent = '로그인';
-      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo_white.svg' %}";
-    } else {
-      // 로그인 처리
-      loginState = true;
-      brandBar.getElementsByClassName('brand-label')[0].textContent = '유지니어스';
-      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo.svg' %}";
-    }
+    // 로고 클릭 시 sidebar 열기
+    logoImg.addEventListener('click', () => {
+      if (sidebar.classList.contains('mini')) {
+        sidebar.classList.remove('mini');
+        showToggleIfOpen();
+      }
+    });
+
+    // 검색 영역 클릭 시 sidebar 열기
+    searchRow.addEventListener('click', () => {
+      if (sidebar.classList.contains('mini')) {
+        sidebar.classList.remove('mini');
+        showToggleIfOpen();
+        // sidebarSearch.focus(); // 주석 처리된 부분 (sidebarSearch 변수 없음 주의)
+      }
+    });
+
+    // 토글 버튼 클릭 시 sidebar 접기
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebar.classList.add('mini');
+      showToggleIfOpen();
+    });
+
+    // sidebar 클래스 변경 감지
+    const observer = new MutationObserver(showToggleIfOpen);
+    observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+
+    // 브랜드 링크 클릭 시 로그인/로그아웃 토글
+    brandLink.addEventListener('click', (e) => {
+      // e.preventDefault(); // 필요 시 주석 해제
+      if (loginState) {
+        // 로그아웃 처리
+        loginState = false;
+        brandBar.querySelector('.brand-label').textContent = '로그인';
+        brandBar.querySelector('img').src = "{% static 'images/bottom_logo_white.svg' %}";
+      } else {
+        // 로그인 처리
+        loginState = true;
+        brandBar.querySelector('.brand-label').textContent = '유지니어스';
+        brandBar.querySelector('img').src = "{% static 'images/bottom_logo.svg' %}";
+      }
+    });
   });
 </script>

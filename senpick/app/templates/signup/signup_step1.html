@@ -21,16 +21,15 @@
       {% csrf_token %}
         <!-- 1) 로고 -->
         <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo" onclick="location.href=`{% url 'login' %}`">
+        <!-- 2) 스텝 인디케이터 -->
+        <div class="step-indicator">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
         <div class="signup-form-wrapper">
           <div class="signup-form">
-            <!-- 2) 스텝 인디케이터 -->
-            <div class="step-indicator">
-              <span class="dot active"></span>
-              <span class="dot"></span>
-              <span class="dot"></span>
-              <span class="dot"></span>
-            </div>
-
             <!-- 3) 회원가입 타이틀 -->
             <h2 class="signup-title">회원가입</h2>
 
@@ -44,7 +43,7 @@
             <!-- 5) 비밀번호 -->
             <label for="password" class="label-password">비밀번호</label>
             <input type="password" id="password" name="password" class="input-password"
-                  placeholder="비밀번호 입력" style="height: 50px;">
+                  placeholder="비밀번호 입력">
             <div id="password-error" class="error-message">{{ errors.password }}</div>
 
             <!-- 6) 닉네임 -->

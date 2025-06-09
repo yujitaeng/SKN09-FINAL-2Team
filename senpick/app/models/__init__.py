@@ -1,1 +1,2 @@
-from .user import User, UserPrefer, PreferType
+from .user import User, PreferType, UserPrefer
+from .chat import Chat, ChatMessage, Recipient

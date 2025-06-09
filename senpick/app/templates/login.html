@@ -62,12 +62,12 @@
             {% csrf_token %}
             <div class="input-group"  id="email-group">
               <input type="email" name="username" id="email" placeholder="이메일 입력" required>
-              <div class="error-message" id="email-error">이메일을 입력해주세요.</div>
+              <div class="error-message" id="email-error"></div>
             </div>
           
             <div class="input-group" id="password-group">
               <input type="password" name="password" id="password" placeholder="비밀번호 입력" required>
-              <div class="error-message" id="password-error">비밀번호를 입력해주세요.</div>
+              <div class="error-message" id="password-error"></div>
             </div>
           
             <button type="submit" class="login-btn">로그인</button>
@@ -75,7 +75,7 @@
       
           <div class="or-group">
             <div class="line-left"></div>
-            <div class="or-text">Or</div>
+            <div class="or-text">or</div>
             <div class="line-right"></div>
           </div>
       

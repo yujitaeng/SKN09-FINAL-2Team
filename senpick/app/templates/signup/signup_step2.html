@@ -19,19 +19,17 @@
       <div class="signup-form-area">
         <!-- 1) 로고 -->
         <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo" onclick="location.href=`{% url 'login' %}`">
+        <div class="step-indicator">
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
         <div class="signup-form-wrapper">
         <!-- 2) 스텝 인디케이터 -->
           <div class="signup-form">
-            <div class="step-indicator">
-              <span class="dot active"></span>
-              <span class="dot active"></span>
-              <span class="dot"></span>
-              <span class="dot"></span>
-            </div>
-
             <!-- 3) 타이틀 -->
             <h2 class="signup-title">이메일 인증</h2>
-
             <!-- 4) 설명문구 -->
             <p class="verify-description">
               이메일로 받은 인증번호 <strong>5자리</strong>를 입력해주세요.
@@ -47,7 +45,7 @@
             </div>
 
             <!-- 6) 에러 메시지 (기본 숨김; JS에서 .error 시 display:block 처리) -->
-            <p class="error-message">인증번호가 올바르지 않습니다.</p>
+            <p class="error-message"></p>
 
             <!-- 7) (선택) 인증코드 재전송 영역 -->
             <div class="resend-container">

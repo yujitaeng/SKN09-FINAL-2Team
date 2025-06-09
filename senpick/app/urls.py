@@ -19,7 +19,7 @@ from . import pswd_views
 from . import pswd_verif_views
 from . import pswd_gen_views
 from . import chat_views
-from . import views, birth_views, login_views, chat_views, mypage_views
+from . import views, birth_views, login_views, mypage_views
 # from app.views import user_views, chat_views, recommend_views
 
 urlpatterns = [
@@ -35,7 +35,9 @@ urlpatterns = [
     path("api/verify_code/", pswd_verif_views.verify_code, name="verify_code"),                          # 유효성 검사
     path("pswd/gen/", pswd_gen_views.home, name="pswd_gen"),                                             # 비밀번호 생성 
     path("api/set_password/", pswd_gen_views.set_new_password, name="set_password"),
+    path('birth/recommend-products/', birth_views.birth_recommend_products, name='birth_recommend_products'),  # 생일 추천 상품 페이지
     path('chat/', chat_views.chat, name='chat'),
+    path('chat/history/', chat_views.chat_history, name='chat_history'),
     path('mypage/', mypage_views.home, name='mypage'),
     path('mypage/profile/', mypage_views.profile_info, name='profile_info'),
     path('mypage/profile/password/', mypage_views.profile_password, name='profile_password'),

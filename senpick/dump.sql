@@ -116,3 +116,14 @@ INSERT INTO PREFER_TYPE (`TYPE`, `TYPE_NAME`) VALUES
 ('카테고리', '디지털·가전'),
 ('카테고리', '프리미엄 선물'),
 ('카테고리', '리빙·인테리어');
+
+-- product_like_summary view
+DROP VIEW IF EXISTS `product_like_summary`;
+CREATE VIEW `product_like_summary` AS
+SELECT
+    p.PRODUCT_ID,
+    p.NAME,
+    COUNT(r.RCMD_ID) AS LIKE_COUNT
+FROM PRODUCT p
+LEFT JOIN CHAT_RCMD r ON p.PRODUCT_ID = r.PRODUCT_ID AND r.IS_LIKED = TRUE
+GROUP BY p.PRODUCT_ID, p.NAME;
