@@ -261,6 +261,7 @@
           );
           chatHistory.scrollTop = chatHistory.scrollHeight;
           const chatForm = document.getElementById('chat-form');
+          startButton.disabled = true;
           chatForm.disabled = true
           fetch('/chat/start/', {
               method: 'POST',

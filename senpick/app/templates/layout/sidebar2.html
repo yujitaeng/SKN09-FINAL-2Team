@@ -13,7 +13,19 @@
         </button>
         <div class="divider-line"></div>
     </div>
+    {% if request.session.type != "guest" %}
     <div class="card-wrapper" id="sidebar2-card-wrapper"></div>
+    {% else %}
+    <div class="guest-message" >
+        <div><span>아직 저장된 선물 추천 기록이 없습니다.</span></div>
+        <p>대화가 길어질수록,<br>처음 추천받았던 선물들이 흐릿해질 때가 있어요.<br>마음이 갈렸던 선물들, 다시 비교하고 싶을 때도 있고요.</p>
+
+        <p>로그인하시면,<br> 오고 간 대화 속 모든 선물 추천을<br> 한눈에 다시 꺼내볼 수 있도록 정리해드릴게요.</p>
+
+        <p>언젠가 다시 꺼내보고 싶은 그 순간<br>선물과 함께 그 마음도 꺼내볼 수 있도록요.</p>
+        <button onclick="location.href=`{% url 'login' %}`">내 선물 기록 시작하기</button>
+    </div>
+    {% endif %}
 </div>
 <div class="floating-history" onclick="clickFloatingHistory()">
     <div>
