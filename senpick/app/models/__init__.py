@@ -1,2 +1,4 @@
-from .user import User, PreferType, UserPrefer
-from .chat import Chat, ChatMessage, Recipient
+from .user import User, UserPrefer, PreferType
+from .chat import Chat, ChatMessage, Recipient, Feedback
+from .product import Product
+from .recommend import ChatRecommend

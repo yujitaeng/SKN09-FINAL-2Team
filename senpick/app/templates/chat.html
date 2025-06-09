@@ -19,16 +19,18 @@
       <div class="chatbot-body">
         <div class="chat-window" id="chat-history">
           <div class="chatbot-header">
-            <h1>안녕하세요, {{ username }}님!</h1>
-            <p class="chatbot-subtitle">오늘은 누구를 위한 선물을 고민하고 계신가요?</p>
+            <h1>안녕하세요! {{request.session.nickname}}님</h1>
+            <p>오늘은 누구를 위한 선물을 고민하고 계신가요?</p>
           </div>
+          {% if is_birth_today %}
           <a href="{% url 'birth' %}">
-            <img src="{% static 'images/birth_message.svg' %}" alt="Birth-Card" class="birth-card" width="450">
+            <img src="{% static 'images/birth_message.svg' %}" alt="Birth-Card" class="birth-card" width="500">
           </a>
+          {% endif %}
           <!-- 질문/옵션 카드가 번갈아 추가됨 -->
         </div>
         <!-- 질문 다 끝나면 등장하는 채팅 입력창 -->
-        <form class="chat-input-form" id="chat-form" autocomplete="off" style="display:none;">
+        <form class="chat-input-form" id="chat-form" autocomplete="off">
           <div class="chat-input-wrap">
             <input type="text" id="user-input" placeholder="예: '친구 결혼 선물 5만원대 추천해줘'" />
           </div>
@@ -43,11 +45,12 @@
     {% include 'layout/sidebar2.html' %}
   </div>
   <script>
+    // 1. 스텝 카드 데이터
     const stepData = [
       {
         title: "1/5",
         question: "누구의 선물을 준비하고 계신가요?",
-        options: [ "부모", "형제", "친구", "연인/배우자", "직장 동료/상사", "지인", "스승/멘토", "아이/청소년", "기타"],
+        options: [ "가족", "친구", "연인·배우자", "직장 동료", "학교·멘토", "지인·이웃", "반려동물", "기타"],
         type: "checkbox"
       },
       {
@@ -64,15 +67,12 @@
       },
       {
         title: "4/5",
-        question:"어떤 기념일이나 특별한 날을 위한 선물인가요?",
-        options: ["생일",
-        "결혼/웨딩",
-        "승진/입사/퇴사",
-        "입학/졸업",
-        "감사/고마움",
-        "격려/응원",
-        "명절/연말/새해",
-        "그냥"],
+        question: "어떤 기념일이나 특별한 날을 위한 선물인가요?",
+        options: [
+          "생일", 
+          // "결혼/웨딩", "입학/졸업", "감사/고마움", "격려/응원", 
+          "연애기념일", "결혼·집들이", "출산·돌", "합격·응원", "승진/입사/퇴사", "건강·케어", "명절·기념일", "감사·고마움", "사과·미안함", "기타·기분전환"
+        ],
         type: "checkbox"
       },
       {
@@ -84,18 +84,19 @@
     let currentStep = 0;
     const answers = [];
 
+    // 2. 스텝 카드 렌더링 함수
     function renderStep() {
       const data = stepData[currentStep];
-
-      // 1. 질문(대사) talk-card (file 타입은 파란 테두리)
+      // 1) 질문 카드
       const talkCardClass = data.type === "file" ? "talk-card talk-card-accent" : "talk-card";
-      const talkHtml = `<div class="${talkCardClass}">
-        <div class="step-title">${data.title}</div>
-        <div class="step-question">${data.question}</div>
-      </div>`;
+      const talkHtml = `
+        <div class="${talkCardClass}">
+          <div class="step-title">${data.title}</div>
+          <div class="step-question">${data.question}</div>
+        </div>`;
       document.getElementById('chat-history').insertAdjacentHTML('beforeend', talkHtml);
 
-      // 2. step-card(옵션/파일) 추가
+      // 2) 파일 업로드 스텝
       if (data.type === "file") {
         const stepCard = document.createElement("div");
         stepCard.className = "step-card";
@@ -120,36 +121,28 @@
         // .file-drop-content
         const dropContent = document.createElement("div");
         dropContent.className = "file-drop-content";
-
-        // svg 아이콘
         dropContent.innerHTML = `
           <svg width="34" height="34" style="opacity:.3;margin-bottom:7px;" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M21.51 12.488l-9.078 9.077a2.61 2.61 0 0 0 3.691 3.693l7.7-7.7a5.22 5.22 0 0 0-7.383-7.384l-7.701 7.701a7.83 7.83 0 0 0 11.078 11.077l9.077-9.078" 
                   stroke="#888" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <div class="file-drop-text">대화내역 파일 첨부하기<br><span class="file-hint">(txt, json 파일, 1개만 첨부 가능)</span></div>
+          <div>대화내역 파일 첨부하기<br><span class="file-hint">(txt, json 파일, 1개만 첨부 가능)</span></div>
         `;
-
         labelDropzone.appendChild(inputFile);
         labelDropzone.appendChild(dropContent);
 
         // 오류 메시지 박스
         const errorBox = document.createElement("div");
         errorBox.className = "file-drop-error";
-        errorBox.style.cssText = "color:#EB1C24; font-size:12px; min-height:16px;";
+        errorBox.style.cssText = "color:#e53a3a; font-size:15px; margin:8px 0 0 0; min-height:22px;";
 
         // 건너뛰기 체크박스
         const skipLabel = document.createElement("label");
-        skipLabel.className = "step-option skip-option";
-        skipLabel.addEventListener('click', (e) => {
-          e.stopPropagation(); // 클릭 이벤트 전파 방지
-          document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
-        });
+        skipLabel.className = "step-option";
         skipLabel.innerHTML = `
           <input type="checkbox" id="skip-checkbox" style="margin-right:10px;">
           건너뛰기
         `;
-
 
         // 버튼
         const startButton = document.createElement("button");
@@ -165,32 +158,27 @@
         form.appendChild(startButton);
         stepCard.appendChild(form);
 
-        // 삽입
         document.getElementById("chat-history").appendChild(stepCard);
 
-
-        // 파일 첨부/파일명 표시
-        const fileInput = document.querySelector(`#step-card-${currentStep} input[type="file"]`);
-        const fileDropContent = document.querySelector(`#step-card-${currentStep} .file-drop-content`);
-        const fileDropzone = document.querySelector(`#step-card-${currentStep} .file-dropzone`);
-        // const errorBox = document.querySelector(`#step-card-${currentStep} .file-drop-error`);
+        // 파일 업로드 이벤트
+        const fileInput = stepCard.querySelector('input[type="file"]');
+        const fileDropContent = stepCard.querySelector('.file-drop-content');
+        const fileDropzone = stepCard.querySelector('.file-dropzone');
         const skipCheckbox = document.getElementById('skip-checkbox');
 
-        // 지원 확장자 검사 함수
         function isValidFile(file) {
           if (!file) return false;
           const name = file.name.toLowerCase();
           return name.endsWith('.txt') || name.endsWith('.json');
         }
 
-        // fileDropzone.onclick = function() { fileInput.click(); }; //
+        fileDropzone.onclick = () => fileInput.click();
 
-        fileInput.onchange = function(e) {
+        fileInput.onchange = function () {
           fileDropzone.classList.remove('error');
           errorBox.textContent = '';
           if (this.files.length > 0) {
             if (!isValidFile(this.files[0])) {
-              // 에러 처리
               fileDropzone.classList.add('error');
               errorBox.textContent = '지원하지 않는 파일형식 입니다.';
               fileInput.value = '';
@@ -198,7 +186,7 @@
               return;
             }
             fileDropContent.innerHTML = `<b>${this.files[0].name}</b> 업로드됨`;
-            skipCheckbox.checked = false; // 파일 첨부하면 건너뛰기 해제
+            skipCheckbox.checked = false;
           } else {
             fileDropContent.innerHTML = `대화내역 파일 첨부하기<br><span class="file-hint">(txt, json 파일, 1개만 첨부 가능)</span>`;
             fileDropzone.classList.remove('error');
@@ -206,194 +194,330 @@
           }
         };
 
-        // 건너뛰기 체크하면 파일 선택 해제(원하면!)
-        skipCheckbox.onchange = function() {
+        skipCheckbox.onchange = function () {
           if (skipCheckbox.checked && fileInput.files.length > 0) {
             fileInput.value = '';
             fileDropContent.innerHTML = `대화내역 파일 첨부하기<br><span class="file-hint">(txt, json 파일, 1개만 첨부 가능)</span>`;
-          };
-        }
+          }
+        };
 
-        // 메시지 출력 로직
-        document.getElementById('start-btn').onclick = function () {
+        startButton.onclick = function () {
           const skipChecked = skipCheckbox.checked;
           if (!skipChecked && fileInput.files.length === 0) {
             errorBox.textContent = '파일을 첨부하거나, 건너뛰기를 체크해주세요!';
             fileDropzone.classList.add('error');
             return;
           }
-        
-          // 사용자 공통 메시지 출력
-          const userMsg = "좋아! 선물 받는 사람에 대해 조금 더 얘기 해볼게 :)";
-          const userMsgHTML = `<div class="chat-msg user">${userMsg}</div>`;
-          const stepElement = document.getElementById(`step-card-${currentStep}`);
-          stepElement.insertAdjacentHTML('afterend', userMsgHTML);
-        
-          // 챗봇 자동 응답 출력
-          const botMsg = `
-            좋아요! 이제 진짜 본격적으로 선물 고민해봐요 😄<br>
-            혹시, 이번 선물에는 어떤 마음을 담고 싶으세요?<br>
-            예를 들면 “고마웠다”든가 “힘내라고 응원해주고 싶다”든가요.<br><br>
-            말씀해주신 그분이 어떤 걸 좋아하는지도 살짝 알려주시면 더 좋고요.<br>
-            평소 스타일이나 취향 같은 거요!<br>
-            그리고 예산은 어느 정도 생각하고 계신지도 편하게 말씀해주세요.
-          `;
-          const lastUserMsg = stepElement.nextElementSibling;
-          lastUserMsg.insertAdjacentHTML('afterend', `<div class="chat-msg">${botMsg}</div>`);
-        
-          // 입력창 보이기
+
+          // [카드 답변 → 백엔드 전달] 파일 첨부는 추후 FormData 적용
+          const payload = {
+            relation: answers[0],
+            age: answers[1],
+            gender: answers[2],
+            event: answers[3],
+            file_skip: skipChecked ? 1 : 0
+          };
+
+          fetch('/chat/start/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+          })
+          .then(res => {
+              const contentType = res.headers.get('Content-Type') || '';
+              console.log(contentType);
+
+              const chatHistory = document.getElementById('chat-history');
+              const loadingDiv = document.getElementById('chat-loading-spin');
+
+              if (contentType.includes('text/plain')) {
+                  if (loadingDiv) loadingDiv.remove();
+                  console.log("Streaming text/plain response");
+
+                  const reader = res.body.getReader();
+                  const decoder = new TextDecoder('utf-8');
+
+                  // 1️⃣ 빈 bot div 먼저 추가
+                  const botMsgDiv = document.createElement('div');
+                  botMsgDiv.className = 'chat-msg bot';
+                  botMsgDiv.innerHTML = ''; // 초기 빈 상태
+                  chatHistory.appendChild(botMsgDiv);
+
+                  function read() {
+                      reader.read().then(({ done, value }) => {
+                          if (done) {
+                              console.log('Stream complete');
+                              chatHistory.scrollTop = chatHistory.scrollHeight;
+                              return;
+                          }
+
+                          const chunk = decoder.decode(value, { stream: true });
+                          console.log('Received chunk:', chunk);
+
+                          botMsgDiv.innerHTML += chunk;
+                          chatHistory.scrollTop = chatHistory.scrollHeight;
+                          setTimeout(() => {
+                            read(); // 계속 읽기
+                          }, 50);
+                      });
+                  }
+
+                  read();
+              }
+              else if (contentType.includes('application/json')) {
+                  res.json().then(data => {
+                      console.log('Received JSON:', data);
+                      window.currentChatId = data.chat_id;
+
+                      if (loadingDiv) loadingDiv.remove();
+
+                      if (data.bot) {
+                          chatHistory.insertAdjacentHTML(
+                              'beforeend',
+                              `<div class="chat-msg bot">${data.bot}</div>`
+                          );
+                      }
+                      if (data.products) {
+                          const cardWrapper = document.createElement('div');
+                          cardWrapper.className = 'card-wrapper';
+                          chatHistory.appendChild(cardWrapper);
+                          for (const product of data.products) {
+                              createProductCard(cardWrapper, product);
+                          }
+                      } 
+
+                      document.getElementById('chat-form').style.display = 'flex';
+                      document.getElementById('chat-form').scrollIntoView({ behavior: 'smooth' });
+                      document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
+                  });
+              }
+              else {
+                  throw new Error(`Unsupported Content-Type: ${contentType}`);
+              }
+          })
+          .catch(error => {
+              console.error('Fetch error:', error);
+              const loadingDiv = document.getElementById('chat-loading-spin');
+              if (loadingDiv) loadingDiv.remove();
+              const chatHistory = document.getElementById('chat-history');
+              chatHistory.insertAdjacentHTML(
+                'beforeend',
+                `<div class="chat-msg bot">오류가 발생했습니다. 다시 시도해주세요.</div>`
+              );
+              chatHistory.scrollTop = chatHistory.scrollHeight;
+          });
+
           document.getElementById('chat-form').style.display = 'flex';
           document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
           setTimeout(() => {
             document.getElementById('chat-form').scrollIntoView({ behavior: 'smooth' });
           }, 200);
         };
-      
+
         setTimeout(() => {
           document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
         }, 50);
-      
+
         return;
       }
-    
-      // (기존 라디오/체크박스)
+
+      // 3) 일반 라디오/체크박스 스텝
       const stepCard = document.createElement('div');
       stepCard.className = 'step-card';
       stepCard.id = `step-card-${currentStep}`;
+
       const stepOptions = document.createElement('div');
       stepOptions.className = 'step-options';
-      data.options.forEach((opt, i) => {
-        const label = document.createElement('label')
+      data.options.forEach(opt => {
+        const label = document.createElement('label');
         label.className = 'step-option';
         label.innerHTML = `
           <input type="${data.type}" name="step-option-${currentStep}" value="${opt}">
           ${opt}
         `;
         stepOptions.appendChild(label);
-        stepCard.appendChild(stepOptions);
       });
+      stepCard.appendChild(stepOptions);
+
       const nextBtn = document.createElement('button');
       nextBtn.className = 'step-next-btn';
       nextBtn.type = 'button';
       nextBtn.textContent = '다음';
-      nextBtn.onclick = function() {
+      nextBtn.onclick = function () {
         nextStep(currentStep);
       };
       stepCard.appendChild(nextBtn);
-      // document.getElementById('chat-history').insertAdjacentHTML('beforeend', html);
+
       document.getElementById('chat-history').appendChild(stepCard);
 
       // 선택 스타일
       stepCard.querySelectorAll('.step-option input').forEach(input => {
-        input.addEventListener('change', function() {
+        input.addEventListener('change', function () {
           if (input.type === 'checkbox') {
             stepCard.querySelectorAll('.step-option input').forEach(checkbox => checkbox.checked = false);
-            input.checked = true; // 첫번째 질문은 하나만 선택
+            input.checked = true;
             if (input.checked) {
               stepCard.querySelectorAll('.step-option').forEach(label => label.classList.remove('selected'));
               input.parentElement.classList.add('selected');
             }
           } else {
             stepCard.querySelectorAll('.step-option').forEach(label => label.classList.remove('selected'));
-            if(this.checked) this.parentElement.classList.add('selected');
+            if (this.checked) this.parentElement.classList.add('selected');
           }
           document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
         });
       });
 
-      if (currentStep != 0) {
+      if (currentStep !== 0) {
         setTimeout(() => {
           document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
         }, 50);
       }
     }
 
+    // 3. 스텝 카드 진행 함수
     function nextStep(stepIdx) {
       const stepCard = document.getElementById(`step-card-${stepIdx}`);
       const inputs = stepCard.querySelectorAll(`input[name="step-option-${stepIdx}"]:checked`);
-      if(inputs.length === 0) { alert('선택해주세요!'); return; }
+      if (inputs.length === 0) { alert('선택해주세요!'); return; }
       const selected = Array.from(inputs).map(i => i.value).join(', ');
       stepCard.insertAdjacentHTML('afterend', `<div class="chat-msg user">${selected}</div>`);
-      answers[stepIdx] = Array.from(inputs).map(i => i.value);
+      answers[stepIdx] = selected
       currentStep++;
       renderStep();
     }
 
+    // 5. 챗봇 대화 입력
     function chatInit() {
       const chatForm = document.getElementById('chat-form');
       const chatHistory = document.getElementById('chat-history');
-      chatForm.onsubmit = function(e) {
+      chatForm.onsubmit = function (e) {
         e.preventDefault();
         const input = document.getElementById('user-input');
-        if (input.value.trim() !== "") {
+        const msg = input.value.trim();
+        if (msg !== "") {
           chatHistory.insertAdjacentHTML(
             'beforeend',
-            `<div class="chat-msg user">${input.value}</div>`
+            `<div class="chat-msg user">${msg}</div>`
           );
           chatHistory.scrollTop = chatHistory.scrollHeight;
-          // 👇 로딩 스피너 & 메시지 (SVG 사용)
-    chatHistory.insertAdjacentHTML(
-      'beforeend',
-      `<div class="chat-loading" id="chat-loading-spin" style="display:flex;align-items:center;gap:8px;margin:12px 0 12px 0;">
-        <span style="display:inline-block;">
-        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M19.0108 11.3956C19.5375 11.5617 19.8299 12.1233 19.6638 12.65L19.4146 13.4405L19.0807 14.2466L18.6778 15.0204L18.209 15.7563L17.6779 16.4485L17.0885 17.0917L16.4452 17.6811L15.753 18.2123L15.0172 18.681L14.282 19.0637C13.7922 19.3188 13.1883 19.1284 12.9333 18.6385C12.6783 18.1486 12.8687 17.5447 13.3585 17.2897L14.0163 16.9473L14.6048 16.5724L15.1584 16.1476L15.6729 15.6761L16.1444 15.1617L16.5692 14.608L16.9441 14.0195L17.2663 13.4005L17.5334 12.7558L17.7563 12.0486C17.9224 11.5219 18.484 11.2295 19.0108 11.3956Z" fill="#2E2E2E"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M19.0966 9.43368C18.5574 9.55321 18.0234 9.21301 17.9039 8.67382L17.7434 7.94991L17.5336 7.28438L17.2665 6.63967L16.9443 6.02069L16.5694 5.43215L16.1445 4.87853L15.6731 4.36404L15.1586 3.89259L14.605 3.46778L14.0164 3.09284L13.3975 2.77062L12.7528 2.50357L12.0872 2.29373L11.4059 2.14269L10.7141 2.05161L10.0169 2.02117L9.31976 2.05161L8.62791 2.14269L7.94662 2.29373L7.28109 2.50357L6.63638 2.77062L6.0174 3.09283L5.42886 3.46778L4.87523 3.89259L4.36074 4.36403L3.8893 4.87853L3.46449 5.43215L3.08955 6.02069L2.76732 6.63967L2.50028 7.28437L2.29044 7.94992L2.1394 8.6312L2.04832 9.32305L2.01788 10.0202L2.04831 10.7174L2.1394 11.4092L2.29044 12.0905L2.50028 12.756L2.76732 13.4008L3.08955 14.0197L3.46449 14.6083L3.8893 15.1619L4.36075 15.6764L4.87524 16.1478L5.42885 16.5726L6.01741 16.9476L6.63638 17.2698L7.28107 17.5369L7.94662 17.7467L8.6279 17.8977L9.31975 17.9888L10.0605 18.0212C10.6123 18.0453 11.0401 18.5121 11.016 19.0638C10.9919 19.6156 10.5251 20.0434 9.9733 20.0193L9.14528 19.9831L8.28028 19.8692L7.42849 19.6804L6.5964 19.418L5.79034 19.0842L5.01645 18.6813L4.28061 18.2125L3.58844 17.6814L2.94518 17.092L2.35575 16.4487L1.82462 15.7565L1.35584 15.0207L0.952983 14.2468L0.619104 13.4407L0.356747 12.6087L0.167908 11.7569L0.0540273 10.8919L0.0159709 10.0202L0.0540295 9.14857L0.167909 8.28357L0.356747 7.43178L0.619102 6.59969L0.952982 5.79363L1.35584 5.01974L1.82462 4.2839L2.35575 3.59173L2.94518 2.94847L3.58843 2.35904L4.28061 1.82791L5.01645 1.35914L5.79034 0.956275L6.5964 0.622394L7.42849 0.360038L8.28028 0.1712L9.14528 0.0573195L10.0169 0.0192628L10.8886 0.0573193L11.7536 0.1712L12.6054 0.360037L13.4374 0.622394L14.2435 0.956274L15.0174 1.35914L15.7532 1.82791L16.4454 2.35904L17.0887 2.94847L17.6781 3.59173L18.2092 4.2839L18.678 5.01974L19.0809 5.79363L19.4147 6.59969L19.6771 7.43178L19.8565 8.24094C19.976 8.78014 19.6358 9.31414 19.0966 9.43368Z" fill="#E0E0E0"/>
-        </svg>
-        </span>
-        <span style="color: #666666;">챗봇의 응답을 기다리는 중....</span>
-      </div>`
-    );
+
+          // 로딩 표시
+          chatHistory.insertAdjacentHTML(
+            'beforeend',
+            `<div class="chat-loading" id="chat-loading-spin" style="display:flex;align-items:center;gap:8px;margin:12px 0 12px 0;">
+              <span style="display:inline-block;">
+                <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg" style="animation: spin 1s linear infinite;">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M19.0108 11.3956C19.5375 11.5617 19.8299 12.1233 19.6638 12.65L19.4146 13.4405L19.0807 14.2466L18.6778 15.0204L18.209 15.7563L17.6779 16.4485L17.0885 17.0917L16.4452 17.6811L15.753 18.2123L15.0172 18.681L14.282 19.0637C13.7922 19.3188 13.1883 19.1284 12.9333 18.6385C12.6783 18.1486 12.8687 17.5447 13.3585 17.2897L14.0163 16.9473L14.6048 16.5724L15.1584 16.1476L15.6729 15.6761L16.1444 15.1617L16.5692 14.608L16.9441 14.0195L17.2663 13.4005L17.5334 12.7558L17.7563 12.0486C17.9224 11.5219 18.484 11.2295 19.0108 11.3956Z" fill="#2E2E2E"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M19.0966 9.43368C18.5574 9.55321 18.0234 9.21301 17.9039 8.67382L17.7434 7.94991L17.5336 7.28438L17.2665 6.63967L16.9443 6.02069L16.5694 5.43215L16.1445 4.87853L15.6731 4.36404L15.1586 3.89259L14.605 3.46778L14.0164 3.09284L13.3975 2.77062L12.7528 2.50357L12.0872 2.29373L11.4059 2.14269L10.7141 2.05161L10.0169 2.02117L9.31976 2.05161L8.62791 2.14269L7.94662 2.29373L7.28109 2.50357L6.63638 2.77062L6.0174 3.09283L5.42886 3.46778L4.87523 3.89259L4.36074 4.36403L3.8893 4.87853L3.46449 5.43215L3.08955 6.02069L2.76732 6.63967L2.50028 7.28437L2.29044 7.94992L2.1394 8.6312L2.04832 9.32305L2.01788 10.0202L2.04831 10.7174L2.1394 11.4092L2.29044 12.0905L2.50028 12.756L2.76732 13.4008L3.08955 14.0197L3.46449 14.6083L3.8893 15.1619L4.36075 15.6764L4.87524 16.1478L5.42885 16.5726L6.01741 16.9476L6.63638 17.2698L7.28107 17.5369L7.94662 17.7467L8.6279 17.8977L9.31975 17.9888L10.0605 18.0212C10.6123 18.0453 11.0401 18.5121 11.016 19.0638C10.9919 19.6156 10.5251 20.0434 9.9733 20.0193L9.14528 19.9831L8.28028 19.8692L7.42849 19.6804L6.5964 19.418L5.79034 19.0842L5.01645 18.6813L4.28061 18.2125L3.58844 17.6814L2.94518 17.092L2.35575 16.4487L1.82462 15.7565L1.35584 15.0207L0.952983 14.2468L0.619104 13.4407L0.356747 12.6087L0.167908 11.7569L0.0540273 10.8919L0.0159709 10.0202L0.0540295 9.14857L0.167909 8.28357L0.356747 7.43178L0.619102 6.59969L0.952982 5.79363L1.35584 5.01974L1.82462 4.2839L2.35575 3.59173L2.94518 2.94847L3.58843 2.35904L4.28061 1.82791L5.01645 1.35914L5.79034 0.956275L6.5964 0.622394L7.42849 0.360038L8.28028 0.1712L9.14528 0.0573195L10.0169 0.0192628L10.8886 0.0573193L11.7536 0.1712L12.6054 0.360037L13.4374 0.622394L14.2435 0.956274L15.0174 1.35914L15.7532 1.82791L16.4454 2.35904L17.0887 2.94847L17.6781 3.59173L18.2092 4.2839L18.678 5.01974L19.0809 5.79363L19.4147 6.59969L19.6771 7.43178L19.8565 8.24094C19.976 8.78014 19.6358 9.31414 19.0966 9.43368Z" fill="#E0E0E0"/>
+                </svg>
+              </span>
+              <span style="color: #616161;">챗봇의 응답을 기다리는 중....</span>
+            </div>`
+          );
           chatHistory.scrollTop = chatHistory.scrollHeight;
-          setTimeout(() => {
-            const loadingDiv = document.getElementById('chat-loading-spin');
-            
-            if (loadingDiv) loadingDiv.remove();
-            chatHistory.insertAdjacentHTML(
-              'beforeend',
-              `<div class="chat-msg">아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :) 아직 백엔드 연결 전입니다 :)</div>
-               <div class="card-wrapper" style="margin-top: 12px"></div>`
-            );
-            const cardWrapper = document.querySelector(".card-wrapper:last-child");
-            for (let i = 0; i < 4; i++){
-                // 예시 카드 생성
-              createProductCard(cardWrapper, {
-                imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
-                brand: '브랜드명',
-                title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...',
-                reason: '추천 이유: 이 제품은 휴대성이 뛰어나고, 캠핑이나 피크닉에 적합한 무선 스피커입니다. JBL의 품질을 믿을 수 있어요.',
-              });
-            }
-            const buttons = [
-              "다른 상품 추천해줘",
-              "더 고급스러운 상품 추천해줘"
-            ]
-            const recommendDiv = document.createElement('div');
-            recommendDiv.className = 'recommend';
-            buttons.forEach(btn => {
-              const button = document.createElement('button');
-              button.className = 'recommend-btn';
-              button.textContent = btn;
-              button.onclick = () => {
-                const input = document.getElementById('user-input');
-                input.value = btn;  // 버튼 텍스트를 입력창에 넣기
-                chatForm.dispatchEvent(new Event('submit'));
-                chatHistory.scrollTop = chatHistory.scrollHeight;
+
+          // === 실제 백엔드 연결 ===
+          fetch('/chat/message/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ message: msg, chat_id: window.currentChatId })
+          })
+          .then(res => {
+              const contentType = res.headers.get('Content-Type') || '';
+              console.log(contentType)
+              const loadingDiv = document.getElementById('chat-loading-spin');
+              if (contentType.includes('text/plain')) {
+                  if (loadingDiv) loadingDiv.remove();
+                  console.log("streaming text/plain response");
+                  // 스트리밍 처리 - ReadableStream으로 처리
+                  const reader = res.body.getReader();
+                  const decoder = new TextDecoder('utf-8');
+                  const chatHistory = document.getElementById('chat-history');  // 가정
+
+                  // 1️⃣ 빈 bot div 먼저 추가
+                  const botMsgDiv = document.createElement('div');
+                  botMsgDiv.className = 'chat-msg bot';
+                  botMsgDiv.innerHTML = ''; // 초기 빈 상태
+                  chatHistory.appendChild(botMsgDiv);
+
+                  function read() {
+                      reader.read().then(({ done, value }) => {
+                          if (done) {
+                              console.log('Stream complete');
+                              const loadingDiv = document.getElementById('chat-loading-spin');
+                              return;
+                          }
+
+                          const chunk = decoder.decode(value, { stream: true });
+                          console.log('Received chunk:', chunk);
+
+                          // 화면에 실시간 추가
+                          botMsgDiv.innerHTML += chunk;
+
+                          chatHistory.scrollTop = chatHistory.scrollHeight;
+                          setTimeout(() => {
+                            read(); // 계속 읽기
+                          }, 50);
+                      });
+                  }
+
+                  read();
               }
-              recommendDiv.appendChild(button);
-            });
-            chatHistory.appendChild(recommendDiv);
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-          }, 2000);
+              else if (contentType.includes('application/json')) {
+                  // 기존 JSON 처리
+                  return res.json().then(data => {
+                      const loadingDiv = document.getElementById('chat-loading-spin');
+                      if (loadingDiv) loadingDiv.remove();
+
+                      const chatHistory = document.getElementById('chat-history');  // 가정
+
+                      if (data.bot) {
+                          chatHistory.insertAdjacentHTML(
+                              'beforeend',
+                              `<div class="chat-msg bot">${data.bot}</div>`
+                          );
+                      }
+                      if (data.products) {
+                          const cardWrapper = document.createElement('div');
+                          cardWrapper.className = 'card-wrapper';
+                          chatHistory.appendChild(cardWrapper);
+                          for (const product of data.products) {
+                              product.brand = product.brand || "";
+                              createProductCard(cardWrapper, product);
+                          }
+                      }
+
+                      chatHistory.scrollTop = chatHistory.scrollHeight;
+                  });
+              }
+              else {
+                  throw new Error(`Unsupported Content-Type: ${contentType}`);
+              }
+          })
+          .catch(error => {
+              console.error('Fetch error:', error);
+              const loadingDiv = document.getElementById('chat-loading-spin');
+              if (loadingDiv) loadingDiv.remove();
+              const chatHistory = document.getElementById('chat-history');
+              chatHistory.insertAdjacentHTML(
+                'beforeend',
+                `<div class="chat-msg bot">오류가 발생했습니다. 다시 시도해주세요.</div>`
+              );
+              chatHistory.scrollTop = chatHistory.scrollHeight;
+          });
+
           input.value = "";
         }
       }
     }
 
-    window.onload = function() {
+    // 6. 초기 실행
+    window.onload = function () {
       renderStep();
       chatInit();
     };
   </script>
 </body>
 </html>
+

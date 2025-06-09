@@ -3,49 +3,71 @@ from django.db import models
 class Chat(models.Model):
     chat_id = models.AutoField(
         primary_key=True,
-        db_column='chat_id'
+        db_column='CHAT_ID'
     )
     user_id = models.CharField(
         max_length=32,
-        db_column='user_id'
+        db_column='USER_ID'
     )
     title = models.CharField(
         max_length=100,
-        db_column='title'
+        db_column='TITLE'
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
-        db_column='created_at'
+        db_column='CREATED_AT'
     )
     is_deleted = models.BooleanField(
         default=False,
-        db_column='is_deleted'
+        db_column='IS_DELETED'
     )
 
     class Meta:
         db_table = 'chat'
-        managed = False
 
+    def __str__(self):
+        return f"Chat {self.chat_id} by User {self.user_id}"
+    
+class ChatMessage(models.Model):
+    msg_id = models.AutoField(
+        primary_key=True,
+        db_column='MSG_ID'
+    )
+    chat_id = models.ForeignKey(
+        Chat,
+        on_delete=models.CASCADE,
+        db_column='CHAT_ID'
+    )
+    sender = models.CharField(
+        max_length=20,
+        db_column='SENDER'
+    )
+    message = models.TextField(
+        db_column='MESSAGE'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        db_column='CREATED_AT'
+    )
+
+    class Meta:
+        db_table = 'chat_msg'
+    
 class Recipient(models.Model):
     chat_id = models.OneToOneField(
         Chat,
         on_delete=models.CASCADE,
-        db_column='chat_id',
         primary_key=True,
-        related_name='recipient'
+        db_column='CHAT_ID'
     )
     
     gender = models.CharField(
         max_length=8,
-        db_column="gender",
-        null=True,
-        blank=True
+        db_column="gender"
     )
     age_group = models.CharField(
         max_length=20,
-        db_column="age_group",
-        null=True,
-        blank=True
+        db_column="age_group"
     )
     relation = models.CharField(
         max_length=20,
@@ -66,34 +88,29 @@ class Recipient(models.Model):
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
-        db_column='created_at'
+        db_column='CREATED_AT'
     )
     class Meta:
         db_table = 'recipient'
-        managed = False
-
-class ChatMessage(models.Model):
-    msg_id = models.AutoField(
-        primary_key=True,
-        db_column='msg_id'
-    )
-    chat_id = models.ForeignKey(
-        Chat,
+        
+class Feedback(models.Model):
+    msg_id = models.OneToOneField(
+        ChatMessage,
         on_delete=models.CASCADE,
-        db_column='chat_id',
-        related_name='messages'
+        primary_key=True,
+        db_column='MSG_ID'
     )
-    sender = models.CharField(
-        max_length=20,
-        db_column='sender'
-    )
-    message = models.TextField(
-        db_column='message'
+    feedback = models.BooleanField(
+        db_column='FEEDBACK'
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
-        db_column='created_at'
+        db_column='CREATED_AT'
     )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        db_column='UPDATED_AT'
+    )
+
     class Meta:
-        db_table = 'chat_msg'
-        managed = False
+        db_table = 'feedback'

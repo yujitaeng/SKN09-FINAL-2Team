@@ -15,7 +15,7 @@
     </div>
     <div class="card-wrapper"></div>
 </div>
-<div class="floating-history">
+<div class="floating-history" onclick="clickFloatingHistory()">
     <div>
         <button class="sidebar-history menu-btn tooltip" title="선물 추천 히스토리 열기">
             <span class="tooltip-text">선물 추천 히스토리 열기</span>
@@ -38,16 +38,27 @@
         sidebarRight.classList.add("collapsed");
     });
 
-    const floatingHistory = document.querySelector(".floating-history");
-    floatingHistory.addEventListener("click", () => {
+    function clickFloatingHistory() {
         sidebarRight.classList.remove("collapsed");
-    });
-    const cardWrapper = document.querySelector('.card-wrapper');
-    for (let i = 0; i < 20; i++) {
-        createProductCard(cardWrapper, {
-            imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
-            brand: '브랜드명',
-            title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...',
-        });
+        const chatForm = document.getElementById('chat-form');
+        fetch("/recommends?chat_id="+chatForm.dataset.chatId)
+            .then(response => response.json())
+            .then(data => {
+                const cardWrapper = document.querySelector('.card-wrapper');
+                cardWrapper.innerHTML = ''; // 기존 카드 초기화
+                for (const product of data.products) {
+                    createProductCard(cardWrapper, {
+                        rcmd_id: product.recommend_id,
+                        imageUrl: product.image_url,
+                        brand: product.brand,
+                        title: product.title,
+                        link: product.product_url,
+                        is_liked: product.is_liked,
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching chat history:", error);
+            });
     }
 </script>

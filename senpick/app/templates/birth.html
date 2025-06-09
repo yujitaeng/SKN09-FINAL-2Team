@@ -14,7 +14,7 @@
     <div class="birth-container">
         <div class="birth-inner-container snap-container font-a">
             <section class="snap-section animate-on-scroll">
-                <h1>생일 축하해요, 유지니어스님!<img src="{% static 'images/pops.svg' %}" width="90" height="60"></h1> 
+                <h1>생일 축하해요, {{request.session.nickname}}님!<img src="{% static 'images/pops.svg' %}" width="90" height="60"></h1> 
                 <p>오늘 하루, 당신만을 위한 선물을 준비했어요 :)</p>
                 <p><span class="font-b">Senpick</span>이 마음을 담아, 당신만을 위한 선물을 준비했는데, 한번 보실래요?</p>
                 <div class="img-wrapper">
@@ -22,7 +22,7 @@
                 </div>
             </section>
             <section class="snap-section animate-on-scroll">
-                <h2>유지니어스님의 생일, &nbsp;<span class="font-b">Senpick</span>이 함께 축하드려요.</h2>
+                <h2>{{request.session.nickname}}님의 생일, &nbsp;<span class="font-b">Senpick</span>이 함께 축하드려요.</h2>
                 <p><span class="font-b">Senpick</span>이 마음을 담아, 당신만을 위한 선물을 준비했어요.</p>
                 <div class="card-wrapper" style="margin: 60px auto;"></div>
             </section>

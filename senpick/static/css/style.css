@@ -65,7 +65,6 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  
   overflow-y: auto;
   flex-shrink: 0;
   /* Adjust height based on header */
@@ -81,6 +80,7 @@ button {
   font-family: sans-serif;
   background: #FFFFFF;
   padding: 12px;
+  height: fit-content;
 }
 
 .product-card:hover {
