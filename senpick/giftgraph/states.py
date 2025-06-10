@@ -117,6 +117,8 @@ compare_prompt = PromptTemplate(
 [선물 비교 - compare]
 사용자가 추천된 상품을 비교해달라고 요청하면 친절하게 비교 응답을 하세요. 
 (사용자 선물 비교 요청 예시: 뭐가 더 좋은지 비교해줘 / A랑 B 중에 뭐가 더 좋을 것 같아? / ~를 생각하면 C가 더 좋겠지? 등)
+마크다운 문법을 사용하지 마세요.
+사용자가 읽기 편하게 적절하게 줄바꿈하세요.
 최종 결정은 사용자에게 맡기고, 사용자 정보에 따른 비교 사유를 생성하는 데에 집중하세요. 
 
 [입력 내용]
@@ -197,7 +199,7 @@ def extract_situation(state, llm=None, prompt_template=None) -> dict:
             extracted = {}
         for k in state["situation_info"]:
             if extracted.get(k):
-                state["situation_info"][k] = extracted[k]
+                state["situation_info"][k] = extracted[k].strip()
         print("==== extract_situation 종료 ====\n")
         return state
     except Exception as e:
@@ -276,18 +278,44 @@ def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
             "output": "추천 처리 중 에러가 발생했습니다."
         }
 
-def final_response(state) -> dict:
+# def final_response(state) -> dict:
+#     print("[DEBUG] final_response 진입 / 타입 =", type(state))
+#     try:
+#         return {
+#             **state,
+#             "output": state.get("output")
+#         }
+#     except Exception as e:
+#         print(f"[final_response 에러]: {e}")
+#         return {
+#             **state,
+#             "output": "최종 응답 생성 중 에러가 발생했습니다."
+#         }
+def final_response(state):
     try:
+        if isinstance(state, str):
+            print("[⚠️ 경고] final_response에 문자열이 넘어옴. dict로 감쌈.")
+            return {
+                "chat_history": [],
+                "situation_info": {},
+                "recipient_info": {},
+                "output": state  # 문자열 그대로 출력
+            }
+
         return {
             **state,
-            "output": state.get("output")
+            "output": state.get("output", "")
         }
+
     except Exception as e:
         print(f"[final_response 에러]: {e}")
         return {
-            **state,
+            "chat_history": [],
+            "situation_info": {},
+            "recipient_info": {},
             "output": "최종 응답 생성 중 에러가 발생했습니다."
         }
+
 
 # ===================== 🔹 공통 출력 노드 (stream 기반) 🔹 =====================
 
@@ -316,7 +344,6 @@ def final_response(state) -> dict:
 #             "output": "출력 중 오류가 발생했습니다."
 #         }
 
-from langchain_core.messages import AIMessage
 
 # def stream_output(state, llm: ChatOpenAI, prompt_template):
 #     print("\n==== stream_output 진입 ====")
@@ -362,6 +389,50 @@ from langchain_core.messages import AIMessage
 #             **state,
 #             "output": "출력 중 오류가 발생했습니다."
 #         }
+# def stream_output(state, llm: ChatOpenAI, prompt_template):
+#     print("\n==== stream_output 진입 ====")
+#     try:
+#         chat_history = state.get("chat_history", [])
+#         recipient_info = state.get("recipient_info", {})
+#         situation_info = state.get("situation_info", {})
+
+#         input_vars = set(prompt_template.input_variables)
+
+#         if "user_input" in input_vars:
+#             if not chat_history:
+#                 raise ValueError("[stream_output] chat_history가 비어 있음")
+#             user_input = chat_history[-1]
+#             prompt = prompt_template.format(user_input=user_input)
+#         else:
+#             prompt = prompt_template.format(
+#                 chat_history="\n".join(chat_history[-10:]),
+#                 recipient_info=recipient_info,
+#                 situation_info=situation_info
+#             )
+
+#         output = ""
+#         for chunk in llm.stream(prompt):
+#             token = getattr(chunk, "content", "")
+#             output += token
+#             yield token  # ✅ 반드시 str로 yield (dict X)
+
+#         # 🟡 추가적인 상태 처리는 외부에서 handle
+#         # LangGraph에서는 stream 종료 후 자동으로 다음 상태로 넘어감
+#         # ✅ 최종 상태는 return으로 반환!
+#         print("[stream_output] 🔚 최종 상태 반환 직전")
+#         return {
+#             **state,
+#             "output": output,
+#             "chat_history": chat_history + [output]
+#         }
+
+#     except Exception as e:
+#         print(f"[stream_output 예외]: {e}")
+#         yield "출력 중 오류가 발생했습니다."
+#         return {
+#             **state,
+#             "output": "출력 중 오류가 발생했습니다."
+#         }
 def stream_output(state, llm: ChatOpenAI, prompt_template):
     print("\n==== stream_output 진입 ====")
     try:
@@ -371,10 +442,19 @@ def stream_output(state, llm: ChatOpenAI, prompt_template):
 
         input_vars = set(prompt_template.input_variables)
 
-        if "user_input" in input_vars:
+        # ✅ input_variables에 따라 다르게 format 처리
+        if {"user_input", "chat_history", "situation_info", "recipient_info"}.issubset(input_vars):
             if not chat_history:
                 raise ValueError("[stream_output] chat_history가 비어 있음")
             user_input = chat_history[-1]
+            prompt = prompt_template.format(
+                user_input=user_input,
+                chat_history="\n".join(chat_history[-10:]),
+                recipient_info=recipient_info,
+                situation_info=situation_info
+            )
+        elif {"user_input"}.issubset(input_vars):
+            user_input = chat_history[-1] if chat_history else ""
             prompt = prompt_template.format(user_input=user_input)
         else:
             prompt = prompt_template.format(
@@ -383,15 +463,15 @@ def stream_output(state, llm: ChatOpenAI, prompt_template):
                 situation_info=situation_info
             )
 
+        print("\n[stream_output] 📤 최종 prompt:\n", prompt)
 
         output = ""
         for chunk in llm.stream(prompt):
             token = getattr(chunk, "content", "")
             output += token
-            # ✅ 여기를 없애거나 로그로만 처리
-            print(token, end="", flush=True)
+            yield token
 
-        # 마지막에 상태 반환 (dict로!)
+        print("[stream_output] 🔚 최종 상태 반환 직전")
         yield {
             **state,
             "output": output,
