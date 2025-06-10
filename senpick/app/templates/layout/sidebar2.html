@@ -45,6 +45,7 @@
     // 사이드바 토글 기능
     const sidebarRight = document.getElementById("sidebar-right");
     const sidebarHistory = document.querySelector(".sidebar-history");
+    const cardWrapper = document.querySelector('#sidebar2-card-wrapper');
 
     sidebarHistory.addEventListener("click", () => {
         sidebarRight.classList.add("collapsed");
@@ -53,24 +54,26 @@
     function clickFloatingHistory() {
         sidebarRight.classList.remove("collapsed");
         const chatForm = document.getElementById('chat-form');
-        fetch("/recommends?chat_id="+chatForm.dataset.chatId)
-            .then(response => response.json())
-            .then(data => {
-                const cardWrapper = document.querySelector('#sidebar2-card-wrapper');
-                cardWrapper.innerHTML = ''; // 기존 카드 초기화
-                for (const product of data.products) {
-                    createProductCard(cardWrapper, {
-                        recommend_id: product.recommend_id,
-                        imageUrl: product.image_url,
-                        brand: product.brand,
-                        title: product.title,
-                        link: product.product_url,
-                        is_liked: product.is_liked,
-                    });
-                }
-            })
-            .catch(error => {
-                console.error("Error fetching chat history:", error);
-            });
+        if (cardWrapper){
+            fetch("/recommends?chat_id="+chatForm.dataset.chatId)
+                .then(response => response.json())
+                .then(data => {
+                    
+                    cardWrapper.innerHTML = ''; // 기존 카드 초기화
+                    for (const product of data.products) {
+                        createProductCard(cardWrapper, {
+                            recommend_id: product.recommend_id,
+                            imageUrl: product.image_url,
+                            brand: product.brand,
+                            title: product.title,
+                            link: product.product_url,
+                            is_liked: product.is_liked,
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching chat history:", error);
+                });
+        }
     }
 </script>

@@ -62,6 +62,7 @@ urlpatterns = [
     path('chat/message/', chat_views.chat_message, name='chat_message'),
     path('chat/history/', chat_views.chat_history, name='chat_history'),
     path('chat/upload/', chat_views.chat_upload, name='chat_upload'),
+    path('chat/feedback/<int:msg_id>', chat_views.chat_feedback, name='chat_feedback'),
     
     path('recommends', recommend_views.index, name='recommends'),  # 추천 상품 조회
     path('recommends/<int:recommend_id>/like', recommend_views.like, name='recommend_like'),  # 추천 상품 좋아요
