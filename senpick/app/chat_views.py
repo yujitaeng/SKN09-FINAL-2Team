@@ -221,7 +221,7 @@ def chat_message(request):
             state = res
             situation_info = state.get("situation_info", {})
             output = state.get("output", "")
-            ChatMessage.objects.create(
+            chatMsg = ChatMessage.objects.create(
                 chat_id=chat_obj,
                 sender="bot",
                 message=output
@@ -281,7 +281,16 @@ def chat_message(request):
             return StreamingHttpResponse(stream(), content_type='text/plain')
 
         save_state(request, state if isinstance(res, dict) else state)
-        return JsonResponse({"bot": output, "products": recommend_produsts})
+        #TODO: 추천 질문 내용 생성
+        recommend_inputs = [
+            "다른상품 추천해줘", "더 고급스런 상품 추천해줘"
+        ]
+        return JsonResponse({
+                "msg_id":chatMsg.msg_id, 
+                "bot": output, 
+                "products": recommend_produsts,
+                "recommend_inputs": recommend_inputs,
+        })
     return JsonResponse({"error": "POST only"})
 
 def chat_history(request):
@@ -419,7 +428,7 @@ def chat_upload(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
     
-def chat_guest_start(request):
+def chat_guest_start(request): 
     if request.method == "POST":
         if request.session.get("user_id") is not None:
             return redirect('chat')
@@ -447,3 +456,32 @@ def chat_guest_start(request):
         request.session["type"] = "guest"  # guest 타입으로 설정
 
         return redirect('chat')
+    
+@csrf_exempt
+def chat_feedback(request, msg_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        feedback = data.get("feedback")
+        is_like = feedback == "like"
+
+        if not msg_id or not feedback:
+            return JsonResponse({"error": "chat_id and feedback are required"}, status=400)
+
+        # 피드백 저장 로직 (예: DB에 저장)
+        # 예시로 ChatFeedback 모델을 사용한다고 가정
+        from app.models import Feedback, ChatMessage  # 네 모델명에 맞게 import
+        chat_msg = ChatMessage.objects.filter(msg_id=msg_id).first()
+        feedback_qs = Feedback.objects.filter(msg_id=chat_msg)
+        if feedback_qs.exists():
+            feedback_obj = feedback_qs.first()
+            feedback_obj.feedback = is_like
+            feedback_obj.save()
+        else:
+            Feedback.objects.create(
+                msg_id=chat_msg,
+                feedback=is_like
+            )
+
+        return JsonResponse({"message": "Feedback submitted successfully"})
+    
+    return JsonResponse({"error": "POST only"}, status=405)  # POST 요청만 허용
