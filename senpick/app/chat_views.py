@@ -113,7 +113,7 @@ def extract_products_from_response(data):
             r'-\s*\*?\s*\*?\s*링크\s*\*?\s*\*?\s*:\s*(?:\[.*?\]\(\s*(.*?)\s*\)|(\S+))',
             block
         )
-        link = link_match.group(1) or link_match.group(2) if link_match else None
+        product_url = link_match.group(1) or link_match.group(2) if link_match else None
 
         reason = re.search(r'-\s*\*?\s*\*?\s*추천\s*이유\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
 
@@ -123,7 +123,7 @@ def extract_products_from_response(data):
             "title": name,
             "price": price,
             "imageUrl": image,
-            "link": link,
+            "product_url": product_url,
             "reason": reason
         })
 
@@ -239,7 +239,7 @@ def chat_message(request):
                         "brand": product["brand"],
                         "price": int(product["price"].replace(",", "").replace("₩", "").strip()),
                         "image_url": product["imageUrl"],
-                        "product_url": product["link"],
+                        "product_url": product["product_url"],
                     }
                 )
                 recommend = ChatRecommend.objects.create(
@@ -307,12 +307,36 @@ def chat_detail(request, chat_id):
     if not chat:
         return JsonResponse({"error": "Chat not found"}, status=404)
     
-    messages = ChatMessage.objects.filter(chat_id=chat).order_by('created_at').values('sender', 'message', 'created_at')
+    messages = ChatMessage.objects.filter(chat_id=chat).order_by('created_at')
     recipient = Recipient.objects.filter(chat_id=chat).first()
+    
+    # 메시지와 상품 정보를 담을 리스트
+    formatted_messages = []
+    
+    for msg in messages:
+        message_data = {
+            'sender': msg.sender,
+            'message': msg.message,
+            'created_at': msg.created_at,
+            'products': None
+        }
+        
+        # bot 메시지이고 Final Answer가 포함된 경우 상품 정보 추출
+        if msg.sender == 'bot' and 'Final Answer' in msg.message:
+            try:
+                output, products = extract_products_from_response(msg.message)
+                # Final Answer 이후의 텍스트만 표시
+                message_data['message'] = output.split("Final Answer:")[1].strip() if "Final Answer:" in output else output
+                message_data['products'] = products
+            except Exception as e:
+                print(f"Error extracting products: {e}")
+                message_data['products'] = None
+        
+        formatted_messages.append(message_data)
     
     return render(request, 'chat_detail.html', {
         'chat': chat,
-        'messages': list(messages),
+        'messages': formatted_messages,
         'recipient_info': recipient,
     })
     

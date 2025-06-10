@@ -11,6 +11,112 @@
   <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
   <link rel="stylesheet" href="{% static 'css/sidebar2.css' %}">
   <script src="{% static 'js/script.js' %}"></script>
+  <style>
+    /* 카드 래퍼 스타일 */
+    .card-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      overflow-y: auto;
+      flex-shrink: 0;
+      margin: 8px 0;
+    }
+
+    /* 카드 기본 스타일 */
+    .product-card {
+      width: 156px !important;
+      border-radius: 12px;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+      text-align: left;
+      font-family: sans-serif;
+      background: #FFFFFF;
+      padding: 12px;
+      height: fit-content;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .product-card:hover {
+      background-color: #F5F5F8;
+    }
+
+    /* 이미지 영역 */
+    .image-wrapper {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #f6f6f6;
+      aspect-ratio: 1;
+    }
+
+    .image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 상품 정보 영역 */
+    .product-info {
+      margin-top: 8px;
+    }
+
+    .brand {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 2px;
+    }
+
+    .title {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: #222;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 2.8em;
+    }
+
+    .reason {
+      font-size: 14px;
+      color: #999;
+      margin-top: 15px;
+      margin-bottom: 2px;
+      white-space: normal;
+      word-break: keep-all;
+      line-height: 1.4;
+    }
+
+    .heart {
+      margin: 8px 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .heart-icon {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .heart-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .heart-icon.active {
+      animation: like 0.5s ease;
+    }
+
+    @keyframes like {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+  </style>
 </head>
 <body>
   <div class="app-layout">
@@ -26,6 +132,30 @@
               <div class="chat-msg user">{{ msg.message }}</div>
             {% else %}
               <div class="chat-msg bot">{{ msg.message }}</div>
+              {% if msg.products %}
+                <div class="card-wrapper">
+                  {% for product in msg.products %}
+                    <div class="product-card">
+                      <a href="{{ product.product_url }}" target="_blank">
+                        <div class="image-wrapper">
+                          <img src="{{ product.imageUrl }}" alt="{{ product.title }}">
+                        </div>
+                        <div class="product-info">
+                          <div class="brand">{{ product.brand }}</div>
+                          <div class="title">{{ product.title }}</div>
+                        </div>
+                      </a>
+                      <div class="heart">
+                        <img src="{% if product.is_liked %}/static/images/heart_red.svg{% else %}/static/images/heart_gray.svg{% endif %}" 
+                             alt="Heart Icon" 
+                             class="heart-icon {% if product.is_liked %}active{% endif %}"
+                             data-recd_id="{{ product.recommend_id }}">
+                      </div>
+                      <div class="reason">{{ product.reason }}</div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
             {% endif %}
           {% endfor %}
         </div>
@@ -45,6 +175,104 @@
     {% include 'layout/sidebar2.html' %}
   </div>
   <script>
+    // 상품 카드 생성 함수
+    function createProductCard(wrapper, product) {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      
+      const link = document.createElement('a');
+      link.href = product.product_url;
+      link.target = '_blank';
+      
+      const imageWrapper = document.createElement('div');
+      imageWrapper.className = 'image-wrapper';
+      imageWrapper.innerHTML = `<img src="${product.imageUrl}" alt="${product.title}">`;
+      
+      const productInfo = document.createElement('div');
+      productInfo.className = 'product-info';
+      
+      const brand = document.createElement('div');
+      brand.className = 'brand';
+      brand.textContent = product.brand;
+      
+      const title = document.createElement('div');
+      title.className = 'title';
+      title.textContent = product.title;
+
+      const heartDiv = document.createElement('div');
+      heartDiv.className = 'heart';
+
+      const heartIcon = document.createElement('img');
+      heartIcon.src = product.is_liked ? '/static/images/heart_red.svg' : '/static/images/heart_gray.svg';
+      heartIcon.alt = 'Heart Icon';
+      heartIcon.className = 'heart-icon' + (product.is_liked ? ' active' : '');
+      heartIcon.dataset.recd_id = product.recommend_id;
+
+      const reason = document.createElement('div');
+      reason.className = 'reason';
+      reason.textContent = product.reason;
+
+      attachHeartEvents(heartIcon);
+
+      heartDiv.appendChild(heartIcon);
+      productInfo.appendChild(brand);
+      productInfo.appendChild(title);
+      
+      link.appendChild(imageWrapper);
+      link.appendChild(productInfo);
+      card.appendChild(link);
+      card.appendChild(heartDiv);
+      card.appendChild(reason);
+      wrapper.appendChild(card);
+    }
+
+    // 하트 아이콘 이벤트 연결 함수
+    function attachHeartEvents(heartIcon) {
+      heartIcon.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        heartIcon.classList.toggle('active');
+        heartIcon.src = heartIcon.classList.contains('active')
+          ? '/static/images/heart_red.svg'
+          : '/static/images/heart_gray.svg';
+        
+        fetch(`/recommends/${heartIcon.dataset.recd_id}/like`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            is_liked: heartIcon.classList.contains('active')
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        });
+      });
+
+      heartIcon.addEventListener('mouseenter', () => {
+        if (!heartIcon.classList.contains('active')) {
+          heartIcon.src = '/static/images/heart_red.svg';
+        }
+      });
+
+      heartIcon.addEventListener('mouseleave', () => {
+        if (!heartIcon.classList.contains('active')) {
+          heartIcon.src = '/static/images/heart_gray.svg';
+        }
+      });
+    }
+
+    // 페이지 로드 시 기존 하트 아이콘에 이벤트 연결
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.heart-icon').forEach(heartIcon => {
+        attachHeartEvents(heartIcon);
+      });
+    });
+
     // 5. 챗봇 대화 입력
     function chatInit() {
       const chatForm = document.getElementById('chat-form');
@@ -174,7 +402,7 @@
     // 6. 초기 실행
     window.onload = function () {
       chatInit();
-      window.currentChatId = chatForm.dataset.chatId; // 현재 채팅 ID 저장
+      window.currentChatId = document.getElementById('chat-form').dataset.chatId; // 현재 채팅 ID 저장
     };
   </script>
 </body>
