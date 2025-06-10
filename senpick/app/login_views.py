@@ -41,6 +41,8 @@ def login_view(request):
         request.session["user_id"] = user.user_id
         request.session["nickname"] = user.nickname
         request.session["birth"] = user.birth
+        request.session["profile_image"] = user.profile_image or ""
+        
         return JsonResponse({"success": True})
 
     return JsonResponse({"success": False, "email_error": "잘못된 접근입니다."})

@@ -161,7 +161,7 @@
   margin-bottom: 32px;
 }
 
-.profile-img {
+.profile-image {
   position: relative;
   width: 120px;
   height: 120px;
@@ -174,7 +174,7 @@
   justify-content: center;
 }
 
-.profile-img > img {
+.profile-image > img {
   width: 100%;
   height: 100%;
   object-fit: cover;

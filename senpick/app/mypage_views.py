@@ -86,6 +86,10 @@ def profile_info(request):
         user.birth = birth
         user.job = job
         user.save()
+        
+        request.session["nickname"] = user.nickname
+        request.session["birth"] = user.birth
+        request.session["profile_image"] = user.profile_image or ""
 
         # 선호 태그 갱신
         UserPrefer.objects.filter(user=user).delete()

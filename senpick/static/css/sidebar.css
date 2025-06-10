@@ -65,7 +65,7 @@
 
 /* === 로고/버튼 === */
 .logo-img,
-.brand-logo,
+.profile-img,
 .brand-link,
 .menu-btn {
   display: flex;
@@ -79,18 +79,9 @@
 }
 
 .logo-img,
-.brand-logo{
+.profile-img{
   width: 40px;
   height: 40px;
-}
-
-.logo-img img,
-.brand-logo img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;
 }
 
 .brand-link img, 
@@ -102,12 +93,6 @@
   margin: 0 auto;
 }
 
-/* .sidebar.mini .logo-img,
-.sidebar.mini .menu-btn,
-.sidebar.mini .brand-logo {
-  width: 44px !important;
-  height: 44px !important;
-} */
 
 /* === 메인 컨테이너 === */
 .sidebar-main {

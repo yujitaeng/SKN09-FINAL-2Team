@@ -23,7 +23,7 @@
         <div class="profile-main">
           <div class="profile-form">
             <div class="profile-image-section">
-              <div class="profile-img">
+              <div class="profile-image">
                 {% if user.profile_image %}
                   <img src="{{ user.profile_image }}" alt="프로필 이미지">
                 {% else %}
@@ -33,7 +33,7 @@
               <div class="profile-image-buttons">
                 <div class="image-button-row">
                   <label style="cursor:pointer; margin:0 !important;">
-                    <input type="file" name="profile_image" accept="image/*" style="display:none;" form="profile-form">
+                    <input type="file" name="profile_image" accept="image/*" style="display:none;" form="profile-form" id="profileImage">
                     <button type="button" id="changeImage">사진 바꾸기</button>
                   </label>
                   <button class="delete-btn" type="submit" form="profile-form" name="delete_image" value="1">사진 삭제</button>
@@ -153,9 +153,22 @@
     });
     const changeImage = document.getElementById("changeImage");
     changeImage.addEventListener("click", function() {
-      const input = document.querySelector('input[name="profile_image"]');
-      input.click();
+      profileImage.click();
     });
+    // 프로필 이미지 변경 시 파일 이름 표시
+    profileImage.addEventListener("change", function() {
+      const filename = document.querySelector(".profile-img-note add");
+      if (filename) {
+        filename.textContent = profileImage.files[0] ? "업로드 이미지 : " + profileImage.files[0].name : "선택된 파일 없음";
+      } else {
+        const newFilename = document.createElement("p");
+        newFilename.className = "profile-img-note add";
+        newFilename.textContent = profileImage.files[0] ? "업로드 이미지 : " + profileImage.files[0].name : "선택된 파일 없음";
+        const profileImageButtons = document.querySelector(".profile-image-buttons");
+        profileImageButtons.appendChild(newFilename);
+      }
+    });
+    
   </script>
 </body>
 </html>

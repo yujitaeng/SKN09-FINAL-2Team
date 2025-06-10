@@ -36,7 +36,11 @@
     <div class="divider-line"></div>
     <div class="brand-bar">
       <a href="{% url 'mypage' %}" style="display: flex; align-items: center; text-decoration: none;">
-        <img src="{% static 'images/bottom_logo.svg' %}" alt="Brand" class="brand-logo">
+        {% if request.session.profile_image %}
+          <img src="{{ request.session.profile_image }}" alt="프로필 이미지" class="profile-img">
+        {% else %}
+          <img src="{% static 'images/bottom_logo.svg' %}" alt="프로필" class="profile-img">
+        {% endif %}
         <span class="brand-label">{{request.session.nickname}}</span>
       </a>
       <a href="{% url 'logout' %}" class="brand-link tooltip" title="로그아웃">
