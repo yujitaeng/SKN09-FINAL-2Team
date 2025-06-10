@@ -34,7 +34,7 @@
                 <div class="image-button-row">
                   <label style="cursor:pointer; margin:0 !important;">
                     <input type="file" name="profile_image" accept="image/*" style="display:none;" form="profile-form">
-                    <button type="button">사진 바꾸기</button>
+                    <button type="button" id="changeImage">사진 바꾸기</button>
                   </label>
                   <button class="delete-btn" type="submit" form="profile-form" name="delete_image" value="1">사진 삭제</button>
                 </div>
@@ -44,7 +44,7 @@
 
             <div class="divider-line"></div>
 
-            <form method="POST" action="" enctype="multipart/form-data" id="profile-form" novalidate>
+            <form method="POST" action="/mypage/profile/" enctype="multipart/form-data" id="profile-form" novalidate>
               {% csrf_token %}
 
               {% comment %} {% if error %}
@@ -65,9 +65,8 @@
 
               <label>성별</label>
               <div class="gender-toggle">
-                <button type="button" class="gender {% if user.gender == 'male' %}active{% endif %}" data-value="male">남자</button>
-                <button type="button" class="gender {% if user.gender == 'female' %}active{% endif %}" data-value="female">여자</button>
-                <input type="hidden" name="gender" id="gender-input" value="{{ user.gender }}">
+                <button type="button" class="gender {% if user.gender == 'male' %}active{% endif %}" data-value="male" disabled>남자</button>
+                <button type="button" class="gender {% if user.gender == 'female' %}active{% endif %}" data-value="female" disabled>여자</button>
               </div>
 
               <label for="job">직업</label>
@@ -151,6 +150,11 @@
         input.value = btn.dataset.id;
         container.appendChild(input);
       });
+    });
+    const changeImage = document.getElementById("changeImage");
+    changeImage.addEventListener("click", function() {
+      const input = document.querySelector('input[name="profile_image"]');
+      input.click();
     });
   </script>
 </body>
