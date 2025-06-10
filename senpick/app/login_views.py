@@ -11,41 +11,35 @@ import json
 def home(request):
     return render(request, 'login.html')
 
-@csrf_exempt
 def login_view(request):
     if request.method == "GET":
         return render(request, "login.html")
 
     if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return JsonResponse({"success": False, "email_error": "허용되지 않은 요청입니다."})
-
-        email = data.get("username")
-        password = data.get("password")
+        email = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
 
         if not email:
-            return JsonResponse({"success": False, "email_error": "이메일을 입력해주세요."})
+            return render(request, "login.html", {"email_error": "이메일이 올바르지 않습니다."})
         if not password:
-            return JsonResponse({"success": False, "password_error": "비밀번호를 입력해주세요."})
+            return render(request, "login.html", {"password_error": "이메일 또는 비밀번호가 올바르지 않습니다."})
 
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return JsonResponse({"success": False, "email_error": "이메일이 올바르지 않습니다."})
+            return render(request, "login.html", {"email_error": "이메일이 올바르지 않습니다."})
 
         if not check_password(password, user.password):
-            return JsonResponse({"success": False, "password_error": "비밀번호가 올바르지 않습니다."})
+            return render(request, "login.html", {"password_error": "이메일 또는 비밀번호가 올바르지 않습니다."})
 
         request.session["user_id"] = user.user_id
         request.session["nickname"] = user.nickname
         request.session["birth"] = user.birth
         request.session["profile_image"] = user.profile_image or ""
         
-        return JsonResponse({"success": True})
+        return redirect("chat")
 
-    return JsonResponse({"success": False, "email_error": "잘못된 접근입니다."})
+    return render(request, "login.html", {"password_error": "잘못된 접근입니다."})
 
 def logout_view(request):
     request.session.flush()  # 세션 초기화

@@ -1,12 +1,10 @@
 from django.shortcuts import render, redirect
 from app.models import User, UserPrefer, PreferType
-from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth.hashers import check_password
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.contrib.auth.hashers import make_password, check_password
 from django.conf import settings
 import os
 from uuid import uuid4
-
-import uuid
 
 from django.utils import timezone
 from django.http import JsonResponse
@@ -31,7 +29,6 @@ def home(request):
         'prefer_tags': prefer_tags,
         'history_data': history_data,
     })
-
 
 @csrf_protect
 def profile_info(request):
@@ -108,8 +105,56 @@ def profile_info(request):
 
         return redirect("mypage")
 
+@csrf_exempt
 def profile_password(request):
+    if request.method == "POST":
+        current_password = request.POST.get("current_password", "").strip()
+        new_password = request.POST.get("new_password", "").strip()
+        confirm_password = request.POST.get("confirm_password", "").strip()
+        user_id = request.session.get("user_id")
+        if not user_id:
+            return redirect("login")
+
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return redirect("login")
+
+        if not check_password(current_password, user.password):
+            return render(request, 'profile/profile_password.html', {
+                'error': '현재 비밀번호가 올바르지 않습니다.'
+            })
+
+        if new_password != confirm_password:
+            return render(request, 'profile/profile_password.html', {
+                'error': '새 비밀번호와 확인 비밀번호가 일치하지 않습니다.'
+            })
+        user.password = make_password(new_password)
+        user.save()
+        
+        # 비밀번호 변경 후 세션 초기화
+        request.session.flush()
+        
+        return redirect('profile_password_confirm')
     return render(request, 'profile/profile_password.html')
+
+@csrf_exempt
+def password_check(request):
+    if request.method == "POST":
+        data = json.loads(request.body)  # JSON 데이터 파싱
+        current_password = data.get("password", "").strip()
+        user_id = request.session.get("user_id")
+        if not user_id:
+            return redirect("login")
+
+        try:
+            user = User.objects.get(user_id=user_id)
+        except User.DoesNotExist:
+            return redirect("login")
+
+        if not check_password(current_password, user.password):
+            return JsonResponse({"success": False, "message": "현재 비밀번호가 올바르지 않습니다."}, status=400)
+        return JsonResponse({"success": True, "message": "비밀번호가 확인되었습니다."})
 
 def profile_password_confirm(request):
     return render(request, 'profile/profile_password_confirm.html')
@@ -120,7 +165,7 @@ def profile_delete(request):
 def profile_delete_confirm(request):
     return render(request, 'profile/profile_delete_confirm.html')
 
-@csrf_protect
+@csrf_exempt
 def delete_user_account(request):
     if request.method != "POST":
         return JsonResponse({"success": False, "message": "잘못된 요청입니다."}, status=400)
@@ -143,14 +188,14 @@ def delete_user_account(request):
         # 사용자 정보 수정
         user.reason = reason
         user.deleted_at = timezone.now()
-        # user.email = f"deleted_{uuid.uuid4().hex}@deleted.com"
-        user.email = f"deleted_{user.email}"
+
+        user.email = f"deleted_{user_id}_{user.email}"
         user.save()
 
         # 세션 삭제 = 로그아웃 처리
         request.session.flush()
 
         # 성공 응답 + 리디렉트 경로 전달
-        return JsonResponse({"success": True, "redirect_url": "/mypage/profile/delete/confirm/"})
+        return JsonResponse({"success": True, "message": "계정이 성공적으로 삭제되었습니다."}, status=200)
     except Exception as e:
-        return JsonResponse({"success": False, "message": str(e)}, status=500)
+        return JsonResponse({"success": False, "message": str(e)}, status=400)

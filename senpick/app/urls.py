@@ -37,6 +37,7 @@ urlpatterns = [
     path("api/verify_code/", pswd_verif_views.verify_code, name="verify_code"),                          # 유효성 검사
     path("pswd/gen/", pswd_gen_views.home, name="pswd_gen"),                                             # 비밀번호 생성 
     path("api/set_password/", pswd_gen_views.set_new_password, name="set_password"),
+    path("api/check_password/", mypage_views.password_check, name="check_password"),
     path('birth/recommend-products/', birth_views.birth_recommend_products, name='birth_recommend_products'),  # 생일 추천 상품 페이지
     path('chat/', chat_views.chat, name='chat'),
     path('chat/<int:chat_id>/', chat_views.chat, name='chat_detail'),  # 채팅 상세 페이지

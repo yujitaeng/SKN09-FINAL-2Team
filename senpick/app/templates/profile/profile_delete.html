@@ -79,7 +79,7 @@
             
               <div class="modal-buttons">
                 <button class="think-again-btn" onclick="window.location.href='/mypage'">다시 생각해볼게!</button>
-                <button class="text-withdraw-btn" id="withdraw-submit-btn" onclick="goToStep(3)">탈퇴 하기</button>
+                <button class="text-withdraw-btn" id="withdraw-submit-btn">탈퇴 하기</button>
               </div>
             </div>
           </div>
@@ -210,8 +210,7 @@
           });
         
           if (response.ok) {
-            const data = await response.json();
-            window.location.href = data.redirect_url;  // <- 이 경로로 이동
+            goToStep(3);
           } else {
             const data = await response.json();
             alert(data.message || "탈퇴 실패");
