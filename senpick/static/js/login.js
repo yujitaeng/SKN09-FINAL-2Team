@@ -5,6 +5,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const pwError = document.getElementById("password-error");
   const loginForm = document.querySelector(".login-form");
 
+  if (emailError.textContent.trim() !== "") {
+    emailError.style.visibility = "visible";
+  }
+  if (pwError.textContent.trim() !== "") {
+    pwError.style.visibility = "visible";
+  }
+
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -49,8 +56,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ✅ [3] 제출 시: 유효성 검사 + 서버 응답 처리
   loginForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-
     const email = emailInput.value.trim();
     const password = pwInput.value.trim();
 
@@ -90,39 +95,42 @@ document.addEventListener("DOMContentLoaded", function () {
       pwError.style.visibility = "hidden";
     }
 
-    if (!valid) return;
+    if (!valid) {
+      e.preventDefault();
+      return;
+    };
 
     // 서버로 AJAX 요청
-    fetch("/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken")
-      },
-      body: JSON.stringify({
-        username: email,
-        password: password
-      })
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          window.location.href = "/chat";
-        } else {
-          if (data.email_error) {
-            emailInput.classList.add("error");
-            emailError.textContent = data.email_error;
-            emailError.style.display = "block";
-          }
-          if (data.password_error) {
-            pwInput.classList.add("error");
-            pwError.textContent = data.password_error;
-            pwError.style.display = "block";
-          }
-        }
-      })
-      .catch(err => {
-        console.error("로그인 요청 실패", err);
-      });
+    // fetch("/login/", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     "X-CSRFToken": getCookie("csrftoken")
+    //   },
+    //   body: JSON.stringify({
+    //     username: email,
+    //     password: password
+    //   })
+    // })
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     if (data.success) {
+    //       window.location.href = "/chat";
+    //     } else {
+    //       if (data.email_error) {
+    //         emailInput.classList.add("error");
+    //         emailError.textContent = data.email_error;
+    //         emailError.style.display = "block";
+    //       }
+    //       if (data.password_error) {
+    //         pwInput.classList.add("error");
+    //         pwError.textContent = data.password_error;
+    //         pwError.style.display = "block";
+    //       }
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.error("로그인 요청 실패", err);
+    //   });
   });
 });

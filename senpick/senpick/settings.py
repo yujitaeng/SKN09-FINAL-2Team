@@ -161,3 +161,8 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 # 7. 기본 발신자 주소
 #    └– send_mail() 호출 시, “From” 에 기본으로 들어갈 이메일/문자열
 DEFAULT_FROM_EMAIL = 'Senpick <no-reply@senpick.com>'
+
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

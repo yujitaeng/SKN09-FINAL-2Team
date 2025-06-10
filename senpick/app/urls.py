@@ -20,6 +20,8 @@ from . import pswd_verif_views
 from . import pswd_gen_views
 from . import views, birth_views, login_views, chat_views, mypage_views, recommend_views
 # from app.views import user_views, chat_views, recommend_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', chat_views.chat, name='chat'),
@@ -34,6 +36,7 @@ urlpatterns = [
     path("api/verify_code/", pswd_verif_views.verify_code, name="verify_code"),                          # 유효성 검사
     path("pswd/gen/", pswd_gen_views.home, name="pswd_gen"),                                             # 비밀번호 생성 
     path("api/set_password/", pswd_gen_views.set_new_password, name="set_password"),
+    path("api/check_password/", mypage_views.password_check, name="check_password"),
     
     path('birth/', birth_views.birth, name='birth'),  # 생일 페이지
     path('birth/recommend-products/', birth_views.birth_recommend_products, name='birth_recommend_products'),  # 생일 추천 상품 페이지
@@ -47,6 +50,8 @@ urlpatterns = [
     path('mypage/profile/password/', mypage_views.profile_password, name='profile_password'),
     path('mypage/profile/password/confirm', mypage_views.profile_password_confirm, name='profile_password_confirm'),
     path('mypage/profile/delete/', mypage_views.profile_delete, name='profile_delete'),
+    path('mypage/profile/delete/confirm/', mypage_views.profile_delete_confirm, name='profile_delete_confirm'),
+    path("api/profile/delete/", mypage_views.delete_user_account, name="delete_user_account"),
     path('mypage/profile/delete/confirm', mypage_views.profile_delete_confirm, name='profile_delete_confirm'),
     
     path('signup/step1/', views.signup_step1, name='signup_step1'),
@@ -66,4 +71,4 @@ urlpatterns = [
     
     path('recommends', recommend_views.index, name='recommends'),  # 추천 상품 조회
     path('recommends/<int:recommend_id>/like', recommend_views.like, name='recommend_like'),  # 추천 상품 좋아요
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

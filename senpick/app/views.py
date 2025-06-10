@@ -84,6 +84,7 @@ def signup_step1(request):
         # 3) 인증 코드 생성 및 세션에 저장
         code = str(random.randint(10000, 99999))
         request.session["email_verification_code"] = code
+        print(code)
 
         # 4) 이메일 발송 (Django send_mail 사용)
         subject = "[Senpick] 이메일 인증 코드 안내"
