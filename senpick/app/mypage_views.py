@@ -6,6 +6,12 @@ from django.conf import settings
 import os
 from uuid import uuid4
 
+import uuid
+
+from django.utils import timezone
+from django.http import JsonResponse
+import json
+
 def home(request):
     user_id = request.session.get("user_id")
     if not user_id:
@@ -113,3 +119,38 @@ def profile_delete(request):
 
 def profile_delete_confirm(request):
     return render(request, 'profile/profile_delete_confirm.html')
+
+@csrf_protect
+def delete_user_account(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "message": "잘못된 요청입니다."}, status=400)
+
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return JsonResponse({"success": False, "message": "로그인이 필요합니다."}, status=401)
+
+    try:
+        user = User.objects.get(user_id=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({"success": False, "message": "사용자 없음"}, status=404)
+
+    try:
+        data = json.loads(request.body)
+        reason = data.get("reason", "").strip()
+        if not reason:
+            return JsonResponse({"success": False, "message": "탈퇴 사유가 필요합니다."}, status=400)
+
+        # 사용자 정보 수정
+        user.reason = reason
+        user.deleted_at = timezone.now()
+        # user.email = f"deleted_{uuid.uuid4().hex}@deleted.com"
+        user.email = f"deleted_{user.email}"
+        user.save()
+
+        # 세션 삭제 = 로그아웃 처리
+        request.session.flush()
+
+        # 성공 응답 + 리디렉트 경로 전달
+        return JsonResponse({"success": True, "redirect_url": "/mypage/profile/delete/confirm/"})
+    except Exception as e:
+        return JsonResponse({"success": False, "message": str(e)}, status=500)
