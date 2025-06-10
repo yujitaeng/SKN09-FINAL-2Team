@@ -89,6 +89,10 @@ class User(models.Model):
         db_column='UPDATED_AT'
     )
 
+    reason = models.TextField(null=True, blank=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+
+
     class Meta:
         db_table = 'user'
 

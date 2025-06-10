@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const pw1Msg = document.getElementById("new-password-message");
   const pw2Msg = document.getElementById("confirm-password-message");
 
-  const pwRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{8,15}$/;
+  const pwRegex = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$^*()_\+\-=\[\]{}])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
 
     // 로고 클릭 → 로그인 이동
   logoBtn.addEventListener("click", () => window.location.href = "/login");

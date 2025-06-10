@@ -85,7 +85,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const birth = form.querySelector("#birth");
 
   form.addEventListener("submit", function (e) {
-    e.preventDefault();
     let isValid = true;
 
     const genderSelected = document.querySelector(".gender-toggle .active");
@@ -128,19 +127,18 @@ document.addEventListener("DOMContentLoaded", function () {
       isValid = false;
     }
 
-    if (selectedStyleTags.length < 3) {
+    if (selectedStyleTags.length < 1) {
       alert("선호 스타일을 선택해주세요. 최대 3개 선택 가능.");
       isValid = false;
     }
 
-    if (selectedCategoryTags.length < 3) {
+    if (selectedCategoryTags.length < 1) {
       alert("선호 카테고리를 선택해주세요. 최대 3개 선택 가능.");
       isValid = false;
     }
 
-    if (isValid) {
-      alert("프로필 정보가 성공적으로 업데이트되었습니다.");
-      window.location.href = "/mypage";
+    if (!isValid) {
+      e.preventDefault(); // Prevent form submission if validation fails
     }
   });
 

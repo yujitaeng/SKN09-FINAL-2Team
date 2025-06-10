@@ -48,7 +48,11 @@
         {% if request.session.type == "guest" %}
         <img src="{% static 'images/bottom_logo_white.svg' %}" alt="Brand" class="brand-logo">
         {% else %}
-        <img src="{% static 'images/bottom_logo.svg' %}" alt="Brand" class="brand-logo">
+          {% if request.session.profile_image %}
+            <img src="{{ request.session.profile_image }}" alt="프로필 이미지" class="profile-img">
+          {% else %}
+            <img src="{% static 'images/bottom_logo.svg' %}" alt="프로필" class="profile-img">
+          {% endif %}
         {% endif %}
         <span class="brand-label">{{request.session.nickname}}</span>
       </a>
@@ -110,6 +114,7 @@
       chatHistoryEl.firstElementChild?.classList.add('selected');
     }
 
+    chatHistoryEl.firstElementChild?.classList.add('selected');
 
     // 접힘/펼침 상태에 따른 토글 버튼 표시
     function showToggleIfOpen() {

@@ -20,9 +20,7 @@
   <div class="background">
     <!-- 왼쪽 카드 -->
     <div class="left-card">
-      <!-- 절대 위치 요소들 -->
       <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
-      <!-- 기존 위치 -->
       <div class="outer-wrapper" style="align-items: center;">
         <div class="login-wrapper">
           <div>
@@ -33,12 +31,20 @@
             {% csrf_token %}
             <div class="input-group"  id="email-group">
               <input type="email" name="username" id="email" placeholder="이메일 입력" required>
+              {% if email_error %}
+              <div class="error-message" id="email-error">{{ email_error }}</div>
+              {% else %}
               <div class="error-message" id="email-error"></div>
+              {% endif %}
             </div>
           
             <div class="input-group" id="password-group">
               <input type="password" name="password" id="password" placeholder="비밀번호 입력" required>
+              {% if password_error %}
+              <div class="error-message" id="password-error">{{password_error}}</div>
+              {% else %}
               <div class="error-message" id="password-error"></div>
+              {% endif %}
             </div>
           
             <button type="submit" class="login-btn">로그인</button>
