@@ -74,7 +74,7 @@ rds_tool = MySQLQueryTool(
     name="rds_tool",  # 반드시 rds_tool로!
     host="localhost",
     user="root",
-    password="1234",
+    password="root",
     database="senpick_db"
 )
 __all__ = ["rds_tool"]

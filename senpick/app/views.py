@@ -91,7 +91,7 @@ def signup_step1(request):
         message = f"Senpick 회원가입 인증 번호는 [{code}] 입니다.\n\n해당 번호를 인증번호 입력란에 입력해 주세요.\n\n발신 전용 이메일입니다."
         from_email = settings.DEFAULT_FROM_EMAIL
         recipient_list = [email]
-
+        
         try:
             send_mail(subject, message, from_email, recipient_list, fail_silently=False)
         except Exception as e:
@@ -192,19 +192,34 @@ def signup_step4(request):
     pref_ids = [pid for pid in pref_ids_str.split(",") if pid.isdigit()]
 
     # (2-c) User 객체 생성 및 저장
-    user = User(
-        email=email,
-        password=make_password(password),
-        nickname=nickname,
-        birth=birth,
-        gender=gender,
-        job=job
-    )
-    user.save()  # 이 순간 user.user_id와 user.created_at이 DB에 채워집니다.
+    guest_user_id = request.session.get("user_id", None)  # 세션에 user_id가 있으면 가져옴
 
-    # (2-d) 생성된 User의 ID와 Created 날짜 가져오기
-    new_user_id     = user.user_id
-    user_created_at = user.created_at  # 만약 UserPrefer에 동일 타임스탬프를 쓰려면 사용
+    user_qs = User.objects.filter(user_id=guest_user_id) if guest_user_id else None
+
+    if user_qs and user_qs.exists():
+        # 기존 guest user → 업데이트
+        user = user_qs.first()
+        user.email    = email
+        user.password = make_password(password)
+        user.nickname = nickname
+        user.birth    = birth
+        user.gender   = gender
+        user.job      = job
+        user.type     = "member"  # guest → member 전환
+    else:
+        # 새 user 생성 (guest_user_id 유지 필요)
+        user = User(
+            email=email,
+            password=make_password(password),
+            nickname=nickname,
+            birth=birth,
+            gender=gender,
+            job=job,
+            type="member",  # 명확하게 넣기
+        )
+
+    # 최종 저장
+    user.save()
 
     # (2-e) 하나씩 UserPrefer 레코드 생성
     for pid in pref_ids:

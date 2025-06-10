@@ -11,10 +11,10 @@ from django.http import JsonResponse
 import json
 
 def home(request):
-    user_id = request.session.get("user_id")
-    if not user_id:
+    if not request.session.get('user_id') or request.session.get('type') == 'guest':
         return redirect('login')
-
+    
+    user_id = request.session.get('user_id')
     try:
         profile = User.objects.get(user_id=user_id)
     except User.DoesNotExist:
