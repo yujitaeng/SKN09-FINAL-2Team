@@ -53,24 +53,44 @@
                 <div class="like-card" onclick="toggleLikeBlock(this)">
                   <div class="like-row">
                     <div class="left">
-                      <p class="like-title-text">{{ chat.TITLE }}</p>
+                      <p class="like-title-text">{{ chat.title }}</p>
                       <div class="like-tags">
                         {% if recipient %}
-                          {% if recipient.RELATION %}<span>{{ recipient.RELATION }}</span>{% endif %}
-                          {% if recipient.AGE_GROUP %}<span>{{ recipient.AGE_GROUP }}</span>{% endif %}
-                          {% if recipient.GENDER %}<span>{{ recipient.GENDER }}</span>{% endif %}
-                          {% if recipient.ANNIVERSARY %}<span>{{ recipient.ANNIVERSARY }}</span>{% endif %}
+                          {% if recipient.relation %}<span>{{ recipient.relation }}</span>{% endif %}
+                          {% if recipient.age_group %}<span>{{ recipient.age_group }}</span>{% endif %}
+                          {% if recipient.gender %}<span>{{ recipient.gender }}</span>{% endif %}
+                          {% if recipient.anniversary %}<span>{{ recipient.anniversary }}</span>{% endif %}
                         {% endif %}
                       </div>
                     </div>
                     <div class="right">
                       <div class="like-count">💛 {{ products|length }}</div>
-                      <div class="like-meta">{{ chat.CREATED_AT|date:"n월 j일의 고민" }}</div>
+                      <div class="like-meta">{{ chat.created|date:"n월 j일의 고민" }}</div>
                     </div>
                   </div>
                 </div>
                 <div class="product-scroll-wrapper hidden">
-                  <div class="card-wrapper"></div>
+                  <div class="card-wrapper">
+                      {% for product in products %}
+                      <div class="product-card">
+                          <a href="{{ product.link }}" target="_blank" rel="noopener noreferrer">
+                              <div class="image-wrapper">
+                                  <img src="{{ product.imageUrl }}" alt="상품 이미지">
+                              </div>
+                              <div class="product-info">
+                                  <div class="brand">{{ product.brand }}</div>
+                                  <div class="title">{{ product.title }}</div>
+                              </div>
+                          </a>
+                          <div class="heart">
+                              <img src="{% if product.is_liked %}/static/images/heart_red.svg{% else %}/static/images/heart_gray.svg{% endif %}" 
+                                  alt="Heart Icon" 
+                                  class="heart-icon {% if product.is_liked %}active{% endif %}" 
+                                  data-recd_id="{{ product.rcmd_id }}" onclick="attachHeartEvents(this)">
+                          </div>
+                      </div>
+                      {% endfor %}
+                  </div>
                 </div>
               </div>
             {% endfor %}
@@ -78,31 +98,9 @@
             <p class="no-history-text">아직 좋아요한 선물이 없습니다.</p>
           {% endif %}
         </section>
-
       </div>
     </div>
   </div>
-
-  <!-- JS용 product 데이터 정의 -->
-  <script>
-    window.productMap = {
-      {% for chat, recipient, products in history_data %}
-        "{{ chat.CHAT_ID }}": [
-          {% for product in products %}
-            {
-              imageUrl: "{{ product.thumbnail_url }}",
-              brand: "{{ product.brand_name }}",
-              title: "{{ product.product_name }}",
-              link: "{{ product.product_url }}",
-              rcmd_id: "{{ product.product_id }}",
-              is_liked: true,
-              reason: "{{ product.reason|default:'' }}"
-            }{% if not forloop.last %},{% endif %}
-          {% endfor %}
-        ]{% if not forloop.last %},{% endif %}
-      {% endfor %}
-    };
-  </script>
   <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>
