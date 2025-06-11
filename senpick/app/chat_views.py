@@ -4,11 +4,12 @@ from django.http import JsonResponse, StreamingHttpResponse
 import json, re
 from datetime import datetime
 from giftgraph.graph import gift_fsm 
-from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend
+from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend, Feedback
 from django.utils import timezone
 from collections import defaultdict
 from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
+from django.db.models import Prefetch
 
 # Initialize the OpenAI model
 llm = ChatOpenAI(
@@ -244,6 +245,7 @@ def chat_message(request):
                 )
                 recommend = ChatRecommend.objects.create(
                     chat_id=chat_obj,
+                    msg_id=chatMsg,
                     product_id=product_obj,
                 )
                 recommend_produsts.append({
@@ -307,37 +309,57 @@ def chat_detail(request, chat_id):
     if not chat:
         return JsonResponse({"error": "Chat not found"}, status=404)
     
-    messages = ChatMessage.objects.filter(chat_id=chat).order_by('created_at')
-    recipient = Recipient.objects.filter(chat_id=chat).first()
+    # 1. ChatRecommend + Product 조인 설정
+    recommend_qs = ChatRecommend.objects.select_related('product_id')
+    messages = ChatMessage.objects.filter(chat_id=chat)\
+    .select_related('feedback')\
+    .prefetch_related(
+        Prefetch('chatrecommend_set', queryset=recommend_qs, to_attr='recommends')
+    ).order_by('created_at')
     
-    # 메시지와 상품 정보를 담을 리스트
     formatted_messages = []
-    
+
     for msg in messages:
         message_data = {
+            'msg_id': msg.msg_id,
             'sender': msg.sender,
             'message': msg.message,
             'created_at': msg.created_at,
-            'products': None
+            'products': [],
+            'feedback': None,
         }
+
+        # 추천 상품
+        for rec in getattr(msg, 'recommends', []):
+            if rec.product_id:  # product_id는 Product 객체
+                message_data['products'].append({
+                    'recommend_id': rec.rcmd_id,
+                    'brand': rec.product_id.brand,
+                    'title': rec.product_id.name,
+                    'imageUrl': rec.product_id.image_url,
+                    'link': rec.product_id.product_url,
+                    'is_liked': rec.is_liked,
+                })
+
+        # 피드백
+        if getattr(msg, 'feedback', []):
+            feedback_obj = msg.feedback
+            message_data['feedback'] = feedback_obj
         
         # bot 메시지이고 Final Answer가 포함된 경우 상품 정보 추출
-        if msg.sender == 'bot' and 'Final Answer' in msg.message:
+        if msg.sender == 'bot' and 'Final Answer: ' in msg.message:
             try:
                 output, products = extract_products_from_response(msg.message)
                 # Final Answer 이후의 텍스트만 표시
-                message_data['message'] = output.split("Final Answer:")[1].strip() if "Final Answer:" in output else output
-                message_data['products'] = products
+                message_data['message'] = output.split("Final Answer: ")[1].strip().replace("bot: ", "") if "Final Answer:" in output else output
             except Exception as e:
                 print(f"Error extracting products: {e}")
-                message_data['products'] = None
-        
         formatted_messages.append(message_data)
     
     return render(request, 'chat_detail.html', {
         'chat': chat,
         'messages': formatted_messages,
-        'recipient_info': recipient,
+        'recipient_info': Recipient.objects.filter(chat_id=chat).first()
     })
     
 def decode_utf8_escaped(s):
