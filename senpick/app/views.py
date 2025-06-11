@@ -161,8 +161,8 @@ def signup_step4(request):
     # 1) GET 요청: 선호 옵션(스타일/카테고리)을 조회해서 템플릿에 넘김
     # ──────────────────────────────────────────────────────────────────────────────────
     if request.method == "GET":
-        style_options    = PreferType.objects.filter(type="스타일")
-        category_options = PreferType.objects.filter(type="카테고리")
+        style_options    = PreferType.objects.filter(type="S")
+        category_options = PreferType.objects.filter(type="C")
         return render(request, "signup/signup_step4.html", {
             "style_options": style_options,
             "category_options": category_options,

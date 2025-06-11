@@ -11,112 +11,6 @@
   <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
   <link rel="stylesheet" href="{% static 'css/sidebar2.css' %}">
   <script src="{% static 'js/script.js' %}"></script>
-  <style>
-    /* 카드 래퍼 스타일 */
-    .card-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      overflow-y: auto;
-      flex-shrink: 0;
-      margin: 8px 0;
-    }
-
-    /* 카드 기본 스타일 */
-    .product-card {
-      width: 156px !important;
-      border-radius: 12px;
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-      text-align: left;
-      font-family: sans-serif;
-      background: #FFFFFF;
-      padding: 12px;
-      height: fit-content;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .product-card:hover {
-      background-color: #F5F5F8;
-    }
-
-    /* 이미지 영역 */
-    .image-wrapper {
-      position: relative;
-      border-radius: 8px;
-      overflow: hidden;
-      background-color: #f6f6f6;
-      aspect-ratio: 1;
-    }
-
-    .image-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* 상품 정보 영역 */
-    .product-info {
-      margin-top: 8px;
-    }
-
-    .brand {
-      font-size: 14px;
-      color: #999;
-      margin-bottom: 2px;
-    }
-
-    .title {
-      font-size: 14px;
-      font-weight: 500;
-      line-height: 1.4;
-      color: #222;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      min-height: 2.8em;
-    }
-
-    .reason {
-      font-size: 14px;
-      color: #999;
-      margin-top: 15px;
-      margin-bottom: 2px;
-      white-space: normal;
-      word-break: keep-all;
-      line-height: 1.4;
-    }
-
-    .heart {
-      margin: 8px 0;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-    }
-
-    .heart-icon {
-      width: 20px;
-      height: 20px;
-      transition: transform 0.2s ease;
-    }
-
-    .heart-icon:hover {
-      transform: scale(1.1);
-    }
-
-    .heart-icon.active {
-      animation: like 0.5s ease;
-    }
-
-    @keyframes like {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-      100% { transform: scale(1); }
-    }
-  </style>
 </head>
 <body>
   <div class="app-layout">
@@ -155,6 +49,20 @@
                     </div>
                   {% endfor %}
                 </div>
+                <div class="feedback-input">
+                  {% if msg.feedback %}
+                    {% if msg.feedback.feedback %}
+                      <img src="/static/images/thumbs_up_selected.svg" alt="좋아요" class="thumbs-up-icon" data-feedback-target="{{ msg.msg_id }}" data-feedback-type="like" onclick="sendFeedback('{{ msg.msg_id }}', 'like', this)">
+                      <img src="/static/images/thumbs_down.svg" alt="싫어요" class="thumbs-down-icon" data-feedback-target="{{ msg.msg_id }}" data-feedback-type="dislike" onclick="sendFeedback('{{ msg.msg_id }}', 'dislike', this)">
+                    {% else %}
+                      <img src="/static/images/thumbs_up.svg" alt="좋아요" class="thumbs-up-icon" data-feedback-target="{{ msg.msg_id }}" data-feedback-type="like" onclick="sendFeedback('{{ msg.msg_id }}', 'like', this)">
+                      <img src="/static/images/thumbs_down_selected.svg" alt="싫어요" class="thumbs-down-icon" data-feedback-target="{{ msg.msg_id }}" data-feedback-type="dislike" onclick="sendFeedback('{{ msg.msg_id }}', 'dislike', this)">
+                    {% endif %}
+                  {% else %}
+                    <img src="/static/images/thumbs_up.svg" alt="좋아요" class="thumbs-up-icon" data-feedback-target="{{ msg.msg_id }}" data-feedback-type="like" onclick="sendFeedback('{{ msg.msg_id }}', 'like', this)">
+                    <img src="/static/images/thumbs_down.svg" alt="싫어요" class="thumbs-down-icon" data-feedback-target="{{ msg.msg_id }}" data-feedback-type="dislike" onclick="sendFeedback('{{ msg.msg_id }}', 'dislike', this)">
+                  {% endif %}
+                </div>
               {% endif %}
             {% endif %}
           {% endfor %}
@@ -175,57 +83,6 @@
     {% include 'layout/sidebar2.html' %}
   </div>
   <script>
-    // 상품 카드 생성 함수
-    function createProductCard(wrapper, product) {
-      const card = document.createElement('div');
-      card.className = 'product-card';
-      
-      const link = document.createElement('a');
-      link.href = product.product_url;
-      link.target = '_blank';
-      
-      const imageWrapper = document.createElement('div');
-      imageWrapper.className = 'image-wrapper';
-      imageWrapper.innerHTML = `<img src="${product.imageUrl}" alt="${product.title}">`;
-      
-      const productInfo = document.createElement('div');
-      productInfo.className = 'product-info';
-      
-      const brand = document.createElement('div');
-      brand.className = 'brand';
-      brand.textContent = product.brand;
-      
-      const title = document.createElement('div');
-      title.className = 'title';
-      title.textContent = product.title;
-
-      const heartDiv = document.createElement('div');
-      heartDiv.className = 'heart';
-
-      const heartIcon = document.createElement('img');
-      heartIcon.src = product.is_liked ? '/static/images/heart_red.svg' : '/static/images/heart_gray.svg';
-      heartIcon.alt = 'Heart Icon';
-      heartIcon.className = 'heart-icon' + (product.is_liked ? ' active' : '');
-      heartIcon.dataset.recd_id = product.recommend_id;
-
-      const reason = document.createElement('div');
-      reason.className = 'reason';
-      reason.textContent = product.reason;
-
-      attachHeartEvents(heartIcon);
-
-      heartDiv.appendChild(heartIcon);
-      productInfo.appendChild(brand);
-      productInfo.appendChild(title);
-      
-      link.appendChild(imageWrapper);
-      link.appendChild(productInfo);
-      card.appendChild(link);
-      card.appendChild(heartDiv);
-      card.appendChild(reason);
-      wrapper.appendChild(card);
-    }
-
     // 하트 아이콘 이벤트 연결 함수
     function attachHeartEvents(heartIcon) {
       heartIcon.addEventListener('click', (e) => {
@@ -266,22 +123,15 @@
       });
     }
 
-    // 페이지 로드 시 기존 하트 아이콘에 이벤트 연결
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.heart-icon').forEach(heartIcon => {
-        attachHeartEvents(heartIcon);
-      });
-    });
-
     // 5. 챗봇 대화 입력
     function chatInit() {
       const chatForm = document.getElementById('chat-form');
-      chatForm.style.display = 'flex'; // 채팅 입력창 보이기
+      const userInput = document.getElementById('user-input');
       const chatHistory = document.getElementById('chat-history');
       chatForm.onsubmit = function (e) {
         e.preventDefault();
-        const input = document.getElementById('user-input');
-        const msg = input.value.trim();
+        const userInput = document.getElementById('user-input');
+        const msg = userInput.value.trim();
         if (msg !== "") {
           chatHistory.insertAdjacentHTML(
             'beforeend',
@@ -303,12 +153,13 @@
             </div>`
           );
           chatHistory.scrollTop = chatHistory.scrollHeight;
-
+          const chatForm = document.getElementById("chat-form");
+          userInput.disabled = true;
           // === 실제 백엔드 연결 ===
           fetch('/chat/message/', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ message: msg, chat_id: chatForm.dataset.chatId  })
+              body: JSON.stringify({ message: msg, chat_id: window.currentChatId })
           })
           .then(res => {
               const contentType = res.headers.get('Content-Type') || '';
@@ -316,6 +167,7 @@
               const loadingDiv = document.getElementById('chat-loading-spin');
               if (contentType.includes('text/plain')) {
                   if (loadingDiv) loadingDiv.remove();
+                  chatForm.disabled = false
                   console.log("streaming text/plain response");
                   // 스트리밍 처리 - ReadableStream으로 처리
                   const reader = res.body.getReader();
@@ -354,28 +206,102 @@
               else if (contentType.includes('application/json')) {
                   // 기존 JSON 처리
                   return res.json().then(data => {
-                      const loadingDiv = document.getElementById('chat-loading-spin');
-                      if (loadingDiv) loadingDiv.remove();
+                    const loadingDiv = document.getElementById('chat-loading-spin');
+                    if (loadingDiv) loadingDiv.remove();
+                    chatForm.disabled = false;
 
-                      const chatHistory = document.getElementById('chat-history');  // 가정
+                    const chatHistory = document.getElementById('chat-history');
 
-                      if (data.bot) {
-                          chatHistory.insertAdjacentHTML(
-                              'beforeend',
-                              `<div class="chat-msg bot">${data.bot}</div>`
-                          );
-                      }
-                      if (data.products) {
-                          const cardWrapper = document.createElement('div');
-                          cardWrapper.className = 'card-wrapper';
-                          chatHistory.appendChild(cardWrapper);
-                          for (const product of data.products) {
-                              product.brand = product.brand || "";
-                              createProductCard(cardWrapper, product);
-                          }
-                      }
+                    // bot 응답 출력
+                    if (data.bot) {
+                        chatHistory.insertAdjacentHTML(
+                            'beforeend',
+                            `<div class="chat-msg bot">${data.bot}</div>`
+                        );
+                    }
 
-                      chatHistory.scrollTop = chatHistory.scrollHeight;
+                    // products 출력
+                    if (data.products) {
+                        const cardWrapper = document.createElement('div');
+                        cardWrapper.className = 'card-wrapper';
+                        cardWrapper.style.marginTop = '8px';
+                        chatHistory.appendChild(cardWrapper);
+                        for (const product of data.products) {
+                            product.brand = product.brand || "";
+                            createProductCard(cardWrapper, product);
+                        }
+                    }
+
+                    // 기존 recommend 중복 제거
+                    document.querySelectorAll('.recommend').forEach(el => el.remove());
+
+                    // recommend 버튼 추가
+                    const recommend = document.createElement('div');
+                    recommend.className = 'recommend';
+
+                    for (const recommend_input of data.recommend_inputs) {
+                      const recommendBtn = document.createElement('button');
+                      recommendBtn.textContent = recommend_input;
+                      recommendBtn.onclick = function () {
+                          document.getElementById('user-input').value = '다른 상품 추천해줘';
+                          document.getElementById('chat-form').dispatchEvent(new Event('submit'));
+                      };
+
+                      recommend.appendChild(recommendBtn);
+                    }
+                    chatHistory.appendChild(recommend);
+
+                    // feedback 버튼 추가
+                    const feedbackInput = document.createElement('div');
+                    feedbackInput.className = 'feedback-input';
+
+                    const thumbsUp = document.createElement('img');
+                    thumbsUp.src = '/static/images/thumbs_up.svg';
+                    thumbsUp.alt = '좋아요';
+
+                    const thumbsDown = document.createElement('img');
+                    thumbsDown.src = '/static/images/thumbs_down.svg';
+                    thumbsDown.alt = '싫어요';
+
+                    feedbackInput.appendChild(thumbsUp);
+                    feedbackInput.appendChild(thumbsDown);
+                    chatHistory.appendChild(feedbackInput);
+
+                    // thumbsUp 클릭 처리
+                    thumbsUp.onclick = function () {
+                        fetch(`/chat/feedback/${data.msg_id}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ feedback: 'like' })
+                        }).then(response => {
+                            if (response.ok) {
+                                thumbsUp.src = '/static/images/thumbs_up_selected.svg';
+                                thumbsDown.src = '/static/images/thumbs_down.svg'; // 초기화
+                            } else {
+                                console.error('Feedback failed');
+                            }
+                        }).catch(error => {
+                            console.error('Network error', error);
+                        });
+                    };
+
+                    // thumbsDown 클릭 처리
+                    thumbsDown.onclick = function () {
+                        fetch(`/chat/feedback/${data.msg_id}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ feedback: 'dislike' })
+                        }).then(response => {
+                            if (response.ok) {
+                                thumbsDown.src = '/static/images/thumbs_down_selected.svg';
+                                thumbsUp.src = '/static/images/thumbs_up.svg'; // 초기화
+                            } else {
+                                console.error('Feedback failed');
+                            }
+                        }).catch(error => {
+                            console.error('Network error', error);
+                        });
+                    };
                   });
               }
               else {
@@ -392,16 +318,53 @@
                 `<div class="chat-msg bot">오류가 발생했습니다. 다시 시도해주세요.</div>`
               );
               chatHistory.scrollTop = chatHistory.scrollHeight;
+          })
+          .finally(() => {
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            userInput.disabled = false;
+            userInput.focus();
           });
-
-          input.value = "";
         }
+        userInput.value = '';
       }
+    }
+
+    function sendFeedback(msgId, feedback) {
+      fetch(`/chat/feedback/${msgId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feedback: feedback })
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log(`Feedback ${feedback} sent for message ID ${msgId}`);
+          // 1️⃣ 같은 message의 모든 thumbs 아이콘 찾기
+          const thumbsUp = document.querySelector(`img[data-feedback-target="${msgId}"][data-feedback-type="like"]`);
+          const thumbsDown = document.querySelector(`img[data-feedback-target="${msgId}"][data-feedback-type="dislike"]`);
+
+          // 2️⃣ src 업데이트
+          if (feedback === 'like') {
+            thumbsUp.src = '/static/images/thumbs_up_selected.svg';
+            thumbsDown.src = '/static/images/thumbs_down.svg';
+          } else if (feedback === 'dislike') {
+            thumbsUp.src = '/static/images/thumbs_up.svg';
+            thumbsDown.src = '/static/images/thumbs_down_selected.svg';
+          }
+        } else {
+          console.error('Feedback submission failed');
+        }
+      })
+      .catch(error => {
+        console.error('Network error', error);
+      });
     }
 
     // 6. 초기 실행
     window.onload = function () {
       chatInit();
+      document.querySelectorAll('.heart-icon').forEach(heartIcon => {
+        attachHeartEvents(heartIcon);
+      });
       window.currentChatId = document.getElementById('chat-form').dataset.chatId; // 현재 채팅 ID 저장
     };
   </script>
