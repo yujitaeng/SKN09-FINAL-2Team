@@ -45,14 +45,14 @@ def naver_shop_search(user_input: str) -> str:
 
     params = {
         "query": search_query,
-        "display": 5,    # 상품 5개 가져옴
+        "display": 5,
         "start": 1,
         "sort": "sim"
     }
 
     url = "https://openapi.naver.com/v1/search/shop.json"
     response = requests.get(url, headers=headers, params=params)
-    
+
     if response.status_code != 200:
         return "\n상품 검색 중 오류가 발생했습니다.\n"
 
@@ -61,14 +61,23 @@ def naver_shop_search(user_input: str) -> str:
         return "\n검색 결과가 없습니다.\n"
 
     result = f"\n🔍 검색어: {search_query}\n\n"
-    for item in items:
-        title = re.sub(r'<.*?>', '', item['title'])
+    for idx, item in items:
+        title = re.sub(r'<.*?>', '', item['title']).strip()
         price = item['lprice']
+        brand = item.get('brand', '브랜드 정보 없음')
         link = item['link']
-        image = item['image'] 
-        result += f"📌 {title} - {price}원\n🔗 {link}\n🖼️ 이미지: {image}\n\n"
+        image = item['image']
+        result += (
+            f"{idx}.\n"
+            f"- 브랜드: {brand}\n"
+            f"- 상품명: {title}\n"
+            f"- 가격: ₩{price}\n"
+            f"- 이미지: {image}\n"
+            f"- 링크: {link}\n\n"
+        )
 
     return result.strip()
+
 naver_tool = Tool(
     name="naver_search",
     func=naver_shop_search,

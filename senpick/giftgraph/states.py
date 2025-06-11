@@ -294,6 +294,118 @@ def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
 #             **state,
 #             "output": "최종 응답 생성 중 에러가 발생했습니다."
 #         }
+
+# def call_agent(state, agent_executor: AgentExecutor = None):
+#     print("\n==== call_agent 진입 ====")
+#     try:
+#         chat_history = state.get("chat_history", [])
+#         history_str = "\n".join(chat_history[-10:])
+#         situation = state.get("situation_info", {})
+#         recipient_info = state.get("recipient_info", {})
+
+#         user_intent = (
+#             f"[추출된 조건]\n감정: {situation.get('emotion', '')}, \n"
+#             f"스타일: {situation.get('preferred_style', '')}, \n"
+#             f"예산: {situation.get('price_range', '')}원\n"
+#             f"친밀도: {situation.get('closeness', '')}\n"
+#             f"[수령인 정보]\n{recipient_info}\n"
+#             f"[대화 맥락]\n{history_str}"
+#         )
+
+#         print("[call_agent] 👉 최종 전달 user_intent:")
+#         print(user_intent)
+
+#         stream_result = ""
+
+#         if agent_executor:
+#             for chunk in agent_executor.stream({
+#                 "input": user_intent,
+#                 "chat_history": chat_history
+#             }):
+#                 # LangChain의 streaming chunk
+#                 value = chunk.get("output", "") if isinstance(chunk, dict) else str(chunk)
+#                 if value:
+#                     print(value, end="", flush=True)
+#                     stream_result += value
+#                     yield value  # ✅ 실시간으로 스트림 전송
+#         else:
+#             yield "에이전트가 없습니다."
+#             stream_result = "에이전트가 없습니다."
+
+#         # ✅ LangGraph 최종 상태 반환
+#         yield {
+#             **state,
+#             "output": stream_result,
+#             "chat_history": chat_history + [stream_result]
+#         }
+
+#     except Exception as e:
+#         print(f"[call_agent 에러]: {e}")
+#         yield {
+#             **state,
+#             "output": "추천 처리 중 에러가 발생했습니다."
+#         }
+
+# def call_agent(state, agent_executor: AgentExecutor = None):
+#     print("\n==== call_agent 진입 ====")
+#     try:
+#         chat_history = state.get("chat_history", [])
+#         situation = state.get("situation_info", {})
+#         recipient_info = state.get("recipient_info", {})
+
+#         # 사용자 입력 요약
+#         user_intent = (
+#             f"[추출된 조건]\n"
+#             f"감정: {situation.get('emotion', '')}, \n"
+#             f"스타일: {situation.get('preferred_style', '')}, \n"
+#             f"예산: {situation.get('price_range', '')}원\n"
+#             f"친밀도: {situation.get('closeness', '')}\n"
+#             f"[수령인 정보]\n{recipient_info}\n"
+#             f"[대화 맥락]\n" + "\n".join(chat_history[-10:])
+#         )
+
+#         print("[call_agent] 👉 user_intent:\n", user_intent)
+
+#         stream_gen = agent_executor.stream({
+#             "input": user_intent,
+#             "chat_history": chat_history
+#         })
+
+#         buffer = ""
+
+#         for chunk in stream_gen:
+#             # 🎯 FSM용 상태 반환 (마지막 dict)
+#             if isinstance(chunk, dict):
+#                 print("\n✅ 최종 상태 dict 반환됨")
+#                 yield {
+#                     **state,
+#                     "output": buffer,
+#                     "chat_history": chat_history + [buffer]
+#                 }
+#                 return  # 종료
+
+#             # 🔄 실시간 응답 스트리밍 처리
+#             value = getattr(chunk, "content", str(chunk))
+#             print(value, end="", flush=True)
+#             buffer += value
+#             yield value  # Django에 실시간 전송
+
+#         # 만일 dict 반환이 없을 경우 대비해서 안전하게 마무리
+#         print("\n⚠️ [call_agent] dict 상태 없이 종료됨 → 수동 반환")
+#         yield {
+#             **state,
+#             "output": buffer,
+#             "chat_history": chat_history + [buffer]
+#         }
+
+#     except Exception as e:
+#         print(f"[call_agent 에러]: {e}")
+#         yield {
+#             **state,
+#             "output": "추천 처리 중 오류가 발생했습니다."
+#         }
+
+
 def final_response(state):
     try:
         if isinstance(state, str):
