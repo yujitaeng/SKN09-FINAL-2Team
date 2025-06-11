@@ -72,7 +72,7 @@
     // 채팅 리스트 렌더링 함수
     function renderChatList(chatList) {
       chatHistoryEl.innerHTML = '';  // 기존 목록 초기화
-
+      window.currentChatId = document.getElementById('chat-form').dataset.chatId
       chatList.forEach(chat => {
         const li = document.createElement('li');
         const span = document.createElement('span');
@@ -81,6 +81,9 @@
 
         // chat_id 를 dataset 으로 저장 (클릭 시 사용 가능)
         li.dataset.chatId = chat.chat_id;
+        if (li.dataset.chatId === window.currentChatId) {
+          li.classList.add('selected'); // 현재 선택된 채팅에 selected 클래스 추가
+        }
 
         li.appendChild(span);
 
@@ -133,10 +136,6 @@
             span.textContent = chat.title;
 
             li.appendChild(span);
-            li.addEventListener('click', () => {
-              document.querySelector('.chat-list li.selected')?.classList.remove('selected');
-              li.classList.add('selected');
-            });
 
             return li;
           });

@@ -43,10 +43,10 @@ def profile_info(request):
     if request.method == "GET":
         # GET 요청 시 사용자 정보, 선호 태그 불러오기
         preferences = UserPrefer.objects.filter(user=user).select_related("prefer_type")
-        style_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "스타일"]
-        category_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "카테고리"]
-        style_options = PreferType.objects.filter(type="스타일")
-        category_options = PreferType.objects.filter(type="카테고리")
+        style_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "S"]
+        category_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "C"]
+        style_options = PreferType.objects.filter(type="S")
+        category_options = PreferType.objects.filter(type="S")
 
         return render(request, "profile/profile_info.html", {
             "user": user,

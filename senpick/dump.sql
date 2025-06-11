@@ -78,11 +78,13 @@ DROP TABLE IF EXISTS `chat_rcmd`;
 CREATE TABLE `chat_rcmd` (
     `RCMD_ID` INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `CHAT_ID` INT UNSIGNED NOT NULL,
+    `MSG_ID` INT UNSIGNED NOT NULL,
     `PRODUCT_ID` INT UNSIGNED NOT NULL,
     `IS_LIKED` BOOLEAN NOT NULL DEFAULT FALSE,
     `CREATED_AT` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`RCMD_ID`),
     CONSTRAINT `FK_RCMD_CHAT_ID` FOREIGN KEY (`CHAT_ID`) REFERENCES `chat` (`CHAT_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `FK_RCMD_MSG_ID` FOREIGN KEY (`MSG_ID`) REFERENCES `chat_msg` (`MSG_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `FK_RCMD_PRODUCT_ID` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `product` (`PRODUCT_ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -115,25 +117,25 @@ CREATE TABLE `feedback` (
 
 -- 선호 스타일
 INSERT INTO prefer_type (`TYPE`, `TYPE_NAME`) VALUES
-('스타일', '감성적'),
-('스타일', '실용적'),
-('스타일', '트렌디'),
-('스타일', '미니멀'),
-('스타일', '럭셔리'),
-('스타일', '유니크'),
-('스타일', '자연친화'),
-('스타일', '클래식');
+('S', '감성적'),
+('S', '실용적'),
+('S', '트렌디'),
+('S', '미니멀'),
+('S', '럭셔리'),
+('S', '유니크'),
+('S', '자연친화'),
+('S', '클래식');
 
 -- 선호 카테고리
 INSERT INTO prefer_type (`TYPE`, `TYPE_NAME`) VALUES
-('카테고리', '식품'),
-('카테고리', '뷰티'),
-('카테고리', '패션'),
-('카테고리', '반려동물'),
-('카테고리', '교환권'),
-('카테고리', '건강·케어'),
-('카테고리', '아기·어린이'),
-('카테고리', '레저·자동차'),
-('카테고리', '디지털·가전'),
-('카테고리', '프리미엄 선물'),
-('카테고리', '리빙·인테리어');
+('C', '식품'),
+('C', '뷰티'),
+('C', '패션'),
+('C', '반려동물'),
+('C', '교환권'),
+('C', '건강·케어'),
+('C', '아기·어린이'),
+('C', '레저·자동차'),
+('C', '디지털·가전'),
+('C', '프리미엄 선물'),
+('C', '리빙·인테리어');
