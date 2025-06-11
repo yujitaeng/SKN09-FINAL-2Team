@@ -46,7 +46,7 @@ def profile_info(request):
         style_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "S"]
         category_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "C"]
         style_options = PreferType.objects.filter(type="S")
-        category_options = PreferType.objects.filter(type="S")
+        category_options = PreferType.objects.filter(type="C")
 
         return render(request, "profile/profile_info.html", {
             "user": user,
