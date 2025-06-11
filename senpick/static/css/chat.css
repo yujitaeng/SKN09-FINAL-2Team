@@ -271,30 +271,6 @@ body {
   background-color: #E6E6E6;
 }
 
-/* 채팅창 토글 버튼 */
-.chat-toggle-btn {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  background: #111;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(60,60,60,0.10);
-  z-index: 1000;
-  transition: background 0.18s;
-}
-
-.chat-toggle-btn:hover {
-  background: #444;
-}
-
 .chat-readonly-notice {
   background: #f0f0f0;
   padding: 16px;
