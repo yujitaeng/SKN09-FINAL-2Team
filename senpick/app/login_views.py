@@ -31,7 +31,8 @@ def login_view(request):
 
         if not check_password(password, user.password):
             return render(request, "login.html", {"password_error": "이메일 또는 비밀번호가 올바르지 않습니다."})
-
+        
+        request.session.flush()
         request.session["user_id"] = user.user_id
         request.session["nickname"] = user.nickname
         request.session["birth"] = user.birth
