@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 이메일, 비밀번호, 닉네임 정규식
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordPattern = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$^*()_\+\-=\[\]{}])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[0-9])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
     const nicknamePattern = /^[가-힣]{2,8}$/;
 
     nextBtn.addEventListener("click", async e => {
