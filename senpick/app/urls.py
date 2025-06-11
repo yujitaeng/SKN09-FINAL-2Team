@@ -14,13 +14,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
+from django.urls import path, include
 from . import pswd_views
 from . import pswd_verif_views
 from . import pswd_gen_views
 from . import chat_views
 from . import views, birth_views, login_views, chat_views, mypage_views
 # from app.views import user_views, chat_views, recommend_views
+from app.views import social_redirect_view
 
 urlpatterns = [
     # path('', views.home, name='home'),  # 기본 URL
@@ -45,5 +46,7 @@ urlpatterns = [
     path('signup/step5/', views.signup_step5, name='signup_step5'),
     path('signup/send-code/', views.send_verification_code, name='send_verification_code'),
     path('signup/verify-code/', views.verify_code, name='verify_code'),
-     path('signup/check-dup/', views.check_duplicate, name='check_duplicate'),
+    path('signup/check-dup/', views.check_duplicate, name='check_duplicate'),
+    path('accounts/', include('allauth.urls')),
+    path('social/redirect/', social_redirect_view, name='social_redirect'),
 ]

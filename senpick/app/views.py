@@ -9,6 +9,19 @@ from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
 from .models import User, PreferType, UserPrefer
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.decorators import login_required
+import uuid
+from app.models import User
+
+@login_required
+def social_redirect_view(request):
+    user = request.user
+    if user.type == "social" and not user.is_email_verified:
+        return redirect("signup_step4")
+    return redirect("chat")
+
+def is_social_incomplete(user):
+    return user.is_authenticated and user.type == "social" and not user.is_email_verified
 
 def home(request):
     return render(request, 'index.html')
@@ -156,9 +169,6 @@ def signup_step3(request):
     return redirect("signup_step4")
 
 def signup_step4(request):
-    # ──────────────────────────────────────────────────────────────────────────────────
-    # 1) GET 요청: 선호 옵션(스타일/카테고리)을 조회해서 템플릿에 넘김
-    # ──────────────────────────────────────────────────────────────────────────────────
     if request.method == "GET":
         style_options    = PreferType.objects.filter(type="스타일")
         category_options = PreferType.objects.filter(type="카테고리")
@@ -166,14 +176,36 @@ def signup_step4(request):
             "style_options": style_options,
             "category_options": category_options,
         })
+    preference_ids_str = request.POST.get("preference_ids", "")
+    preference_ids = preference_ids_str.split(",") if preference_ids_str else []
 
-    # ──────────────────────────────────────────────────────────────────────────────────
-    # 2) POST 요청: “회원가입 완료” 버튼 클릭 시
-    #    (a) 세션에서 Step1/3 정보를 가져오고
-    #    (b) POST로 넘어온 preference_ids를 파싱하여 UserPrefer 객체들을 생성하고
-    #    (c) User 객체를 생성/저장 후 UserPrefer 저장 → Step5로 redirect
-    # ──────────────────────────────────────────────────────────────────────────────────
-    # (2-a) 세션에서 이전 단계(1,3)의 정보 꺼내기
+    # ✅ 디버깅: user_id 출력 및 DB 존재 여부 확인
+    print("🟡 [DEBUG] request.user =", request.user)
+    print("🟡 [DEBUG] request.user.id =", getattr(request.user, "id", None))
+
+    db_user = User.objects.filter(user_id=request.user.id).first()
+    if db_user:
+        print("🟢 [DEBUG] DB에서 조회된 유저:", db_user.email)
+    else:
+        print("❌ [DEBUG] DB에 해당 유저 없음! → 외래키 오류 발생 가능")
+    # ✅ 소셜가입자 처리
+    if is_social_incomplete(request.user):
+        user = request.user
+        user.is_email_verified = True
+        user.save()
+
+        for pid in preference_ids:
+            try:
+                prefer_obj = PreferType.objects.get(prefer_id=int(pid))
+                UserPrefer.objects.create(user=user, prefer_type=prefer_obj)
+            except PreferType.DoesNotExist:
+                continue
+
+        for key in ["signup_birth", "signup_gender", "signup_job"]:
+            request.session.pop(key, None)
+
+        return redirect("signup_step5")
+    
     email    = request.session.get("signup_email")
     password = request.session.get("signup_password")
     nickname = request.session.get("signup_nickname")
@@ -185,28 +217,19 @@ def signup_step4(request):
     if not (email and password and nickname and birth and gender and job):
         return redirect("signup_step1")
 
-    # (2-b) POST로 넘어온 “preference_ids” (예: "1,3,7,13,15")
-    pref_ids_str = request.POST.get("preference_ids", "").strip()
-    # 콤마로 분리 → 숫자로만 이루어진 ID 리스트
-    pref_ids = [pid for pid in pref_ids_str.split(",") if pid.isdigit()]
-
-    # (2-c) User 객체 생성 및 저장
     user = User(
         email=email,
         password=make_password(password),
         nickname=nickname,
         birth=birth,
         gender=gender,
-        job=job
+        job=job,
+        type="member",
+        is_email_verified=False
     )
     user.save()  # 이 순간 user.user_id와 user.created_at이 DB에 채워집니다.
 
-    # (2-d) 생성된 User의 ID와 Created 날짜 가져오기
-    new_user_id     = user.user_id
-    user_created_at = user.created_at  # 만약 UserPrefer에 동일 타임스탬프를 쓰려면 사용
-
-    # (2-e) 하나씩 UserPrefer 레코드 생성
-    for pid in pref_ids:
+    for pid in preference_ids:
         try:
             prefer_obj = PreferType.objects.get(prefer_id=int(pid))
         except PreferType.DoesNotExist:
