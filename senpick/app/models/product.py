@@ -54,7 +54,7 @@ class Product(models.Model):
     )
     is_recommended = models.BooleanField(
         default=False,
-        db_column='IS_RECOMMENDED'
+        db_column='IS_RECOMMENDED',
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
