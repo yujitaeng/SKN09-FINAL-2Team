@@ -197,6 +197,9 @@ def extract_situation(state, llm=None, prompt_template=None) -> dict:
         if not isinstance(extracted, dict):
             print(f"[extract_situation] dict 아님! extracted={extracted}")
             extracted = {}
+        if not extracted:
+            print("⚠️ 추출된 정보 없음 — 기존 situation_info 유지")
+            return state  # 아무 것도 수정하지 않고 종료
         for k in state["situation_info"]:
             if extracted.get(k):
                 state["situation_info"][k] = extracted[k].strip()
