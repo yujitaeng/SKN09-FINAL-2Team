@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from app.models import User, UserPrefer, PreferType
+from app.models import User, UserPrefer, PreferType, Chat, ChatRecommend, Recipient
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
 from django.conf import settings
@@ -22,8 +22,29 @@ def home(request):
 
     preferences = UserPrefer.objects.filter(user=profile).select_related('prefer_type')
     prefer_tags = [p.prefer_type.type_name for p in preferences]
+    
     history_data = []  
+    chats = Chat.objects.filter(user_id=profile).select_related('recipient').order_by('-created_at')
 
+    for chat in chats:
+        # recipient 정보
+        recipient = Recipient.objects.filter(chat_id=chat).first()
+
+        # 추천 상품 목록
+        recommends = ChatRecommend.objects.filter(chat_id=chat, product_id__isnull=False, is_liked=True).select_related('product_id')
+        products = []
+        for rec in recommends:
+            if rec.product_id:  # product_id는 Product 객체
+                products.append({
+                    'rcmd_id': rec.rcmd_id,                    # 키 이름을 맞춰야 JS에서 인식 가능
+                    'brand': rec.product_id.brand,
+                    'title': rec.product_id.name,
+                    'imageUrl': rec.product_id.image_url,
+                    'link': rec.product_id.product_url,
+                    'is_liked': rec.is_liked,
+                })
+        if products:
+            history_data.append((chat, recipient, products))
     return render(request, 'mypage.html', {
         'profile': profile,
         'prefer_tags': prefer_tags,

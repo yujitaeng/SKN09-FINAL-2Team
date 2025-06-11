@@ -1,13 +1,15 @@
 from django.db import models
 from .product import Product
+from .user import User
 
 class Chat(models.Model):
     chat_id = models.AutoField(
         primary_key=True,
         db_column='CHAT_ID'
     )
-    user_id = models.CharField(
-        max_length=32,
+    user_id = models.ForeignKey(
+        User,  # Assuming User model is defined in the same app
+        on_delete=models.CASCADE,
         db_column='USER_ID'
     )
     title = models.CharField(
@@ -117,6 +119,12 @@ class ChatRecommend(models.Model):
     is_liked = models.BooleanField(
         default=False,
         db_column='IS_LIKED'
+    )
+    reason = models.CharField(
+        max_length=255,
+        db_column='REASON',
+        null=True,
+        blank=True
     )
     created_at = models.DateTimeField(
         auto_now_add=True,

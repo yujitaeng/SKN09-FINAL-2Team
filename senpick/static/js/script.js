@@ -101,6 +101,46 @@ function createProductCard(wrapper, data) {
     wrapper.appendChild(card);
 }
 
+// 하트 아이콘 이벤트 연결 함수
+function attachHeartEvents(heartIcon) {
+    heartIcon.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    heartIcon.classList.toggle('active');
+    heartIcon.src = heartIcon.classList.contains('active')
+        ? '/static/images/heart_red.svg'
+        : '/static/images/heart_gray.svg';
+    
+    fetch(`/recommends/${heartIcon.dataset.recd_id}/like`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+        is_liked: heartIcon.classList.contains('active')
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+        throw new Error('Network response was not ok');
+        }
+        return response.json();
+    });
+    });
+
+    heartIcon.addEventListener('mouseenter', () => {
+    if (!heartIcon.classList.contains('active')) {
+        heartIcon.src = '/static/images/heart_red.svg';
+    }
+    });
+
+    heartIcon.addEventListener('mouseleave', () => {
+    if (!heartIcon.classList.contains('active')) {
+        heartIcon.src = '/static/images/heart_gray.svg';
+    }
+    });
+}
+
 function toggleLikeBlock(cardEl) {
     const likeBlock = cardEl.closest('.like-block');
     const scrollWrapper = likeBlock.querySelector('.product-scroll-wrapper');

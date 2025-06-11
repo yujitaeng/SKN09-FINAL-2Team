@@ -4,7 +4,7 @@ from django.http import JsonResponse, StreamingHttpResponse
 import json, re
 from datetime import datetime
 from giftgraph.graph import gift_fsm 
-from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend, Feedback
+from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend
 from django.utils import timezone
 from collections import defaultdict
 from langchain_openai import ChatOpenAI
@@ -153,7 +153,7 @@ def chat_start(request):
         messager_analysis = data.get("messager_analysis")
         # insert recipient_info into db recipient table
         chat_obj = Chat.objects.create(
-            user_id=request.session.get("user_id", None),
+            user_id_id=request.session.get("user_id", None),
             title=f"{recipient_info['relation']}를 위한 선물",
         )  # 채팅 시작 시 새로운 Chat 객체 생성
         recipient = Recipient.objects.create(
@@ -247,6 +247,7 @@ def chat_message(request):
                     chat_id=chat_obj,
                     msg_id=chatMsg,
                     product_id=product_obj,
+                    reason=product["reason"],
                 )
                 recommend_produsts.append({
                     "recommend_id": recommend.rcmd_id,
@@ -296,7 +297,7 @@ def chat_message(request):
     return JsonResponse({"error": "POST only"})
 
 def chat_history(request):
-    chats = Chat.objects.filter(user_id=request.session.get("user_id", None)) \
+    chats = Chat.objects.filter(user_id_id=request.session.get("user_id", None)) \
                         .order_by('-created_at') \
                         .values('chat_id', 'title', 'created_at')
     return JsonResponse({"chatlist": list(chats)})
@@ -339,6 +340,7 @@ def chat_detail(request, chat_id):
                     'imageUrl': rec.product_id.image_url,
                     'link': rec.product_id.product_url,
                     'is_liked': rec.is_liked,
+                    'reason': rec.reason,
                 })
 
         # 피드백
