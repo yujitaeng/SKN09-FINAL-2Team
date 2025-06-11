@@ -52,10 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True, db_column='CREATED_AT')
     # INSERT 당시엔 NULL, 이후 UPDATE 시 MySQL이 자동으로 채워 주도록 둠.
     updated_at = models.DateTimeField(null=True, blank=True, db_column='UPDATED_AT')
-    is_deleted = models.BooleanField(
-        default=False,
-        db_column='IS_DELETED'
-    )
+    deleted_at = models.DateTimeField(null=True, blank=True, db_column='DELETED_AT')
 
     objects = UserManager()
 
