@@ -17,17 +17,16 @@
       <div class="signup-form-area">
         <!-- 로고 -->
         <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo" onclick="location.href=`{% url 'login' %}`">
+        <!-- 스텝 인디케이터 -->
+        <div class="step-indicator">
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot"></span>
+        </div>
         <div class="signup-form-wrapper">
           <form method="post" class="signup-form profile-form signup-form-area step3">
             {% csrf_token %}
-            <!-- 스텝 인디케이터 -->
-            <div class="step-indicator">
-              <span class="dot active"></span>
-              <span class="dot active"></span>
-              <span class="dot active"></span>
-              <span class="dot"></span>
-            </div>
-
             <!-- 타이틀 -->
             <h2 class="signup-title">당신을 알아갈수록,<br>더 센스있는 선물을 고를 수 있어요.</h2>
 
@@ -80,7 +79,8 @@
         e.stopPropagation();
         jobInput.value = job;
         jobDropdown.style.display = "none";
-        jobError.style.display = "none"; // Hide error message on selection
+        jobError.textContent = ""; // Clear error message
+        jobError.style.visibility = "hidden"; // Hide error message
         jobInput.classList.remove("error"); // Remove error class
       });
       jobDropdown.appendChild(li);
@@ -101,6 +101,12 @@
       if (!document.querySelector(".job-input").contains(e.target)) {
         jobDropdown.style.display = "none";
       }
+    });
+    birth.addEventListener("input", function() {
+      const birthError = document.getElementById("birth-error");
+      birthError.textContent = "";
+      birthError.style.visibility = "hidden";
+      birth.classList.remove("error");
     });
   </script>
 </body>

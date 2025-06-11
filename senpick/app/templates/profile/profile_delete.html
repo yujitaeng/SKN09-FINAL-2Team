@@ -16,7 +16,7 @@
 </head>
 <body>
   <div style="display: flex;" class="layout">
-    {% include "sidebar.html" %}
+    {% include "layout/sidebar.html" %}
 
     <div class="layout">
       <div class="sidebar-wrapper">
@@ -79,7 +79,7 @@
             
               <div class="modal-buttons">
                 <button class="think-again-btn" onclick="window.location.href='/mypage'">다시 생각해볼게!</button>
-                <button class="text-withdraw-btn" onclick="goToStep(3)">탈퇴 하기</button>
+                <button class="text-withdraw-btn" id="withdraw-submit-btn">탈퇴 하기</button>
               </div>
             </div>
           </div>
@@ -130,6 +130,8 @@
       const otherInputWrapper = document.getElementById('other-input-wrapper');
       const otherInput = document.getElementById('other-input');
       const charCount = document.getElementById('char-count');
+
+      const withdrawBtn = document.getElementById("withdraw-submit-btn");
     
       // 공통 체크박스 동작
       stepOptions.forEach(option => {
@@ -176,6 +178,58 @@
       otherInput.addEventListener('input', () => {
         charCount.textContent = otherInput.value.length;
       });
+
+      withdrawBtn.addEventListener("click", async () => {
+        const checked = document.querySelector('input[name="reason"]:checked');
+        let reasonText = "";
+
+        if (!checked) {
+          alert("탈퇴 사유를 선택해주세요.");
+          return;
+        }
+      
+        const otherInput = document.getElementById("other-input");
+        if (checked.parentElement.textContent.includes("기타")) {
+          reasonText = otherInput.value.trim();
+          if (!reasonText) {
+            alert("기타 사유를 입력해주세요.");
+            return;
+          }
+        } else {
+          reasonText = checked.parentElement.textContent.trim();
+        }
+      
+        try {
+          const response = await fetch("/api/profile/delete/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCSRFToken(),
+            },
+            body: JSON.stringify({ reason: reasonText }),
+          });
+        
+          if (response.ok) {
+            goToStep(3);
+          } else {
+            const data = await response.json();
+            alert(data.message || "탈퇴 실패");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("네트워크 오류로 탈퇴에 실패했습니다.");
+        }
+      });
+    
+      function getCSRFToken() {
+        const name = "csrftoken";
+        const cookies = document.cookie.split("; ");
+        for (const cookie of cookies) {
+          const [key, value] = cookie.split("=");
+          if (key === name) return decodeURIComponent(value);
+        }
+        return "";
+      }
     });    
   </script>
 </body>

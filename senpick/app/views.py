@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
-from .models import User, PreferType, UserPrefer
+from app.models import User, PreferType, UserPrefer
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
 import uuid
@@ -97,13 +97,14 @@ def signup_step1(request):
         # 3) 인증 코드 생성 및 세션에 저장
         code = str(random.randint(10000, 99999))
         request.session["email_verification_code"] = code
+        print(code)
 
         # 4) 이메일 발송 (Django send_mail 사용)
         subject = "[Senpick] 이메일 인증 코드 안내"
         message = f"Senpick 회원가입 인증 번호는 [{code}] 입니다.\n\n해당 번호를 인증번호 입력란에 입력해 주세요.\n\n발신 전용 이메일입니다."
         from_email = settings.DEFAULT_FROM_EMAIL
         recipient_list = [email]
-
+        
         try:
             send_mail(subject, message, from_email, recipient_list, fail_silently=False)
         except Exception as e:
@@ -170,8 +171,8 @@ def signup_step3(request):
 
 def signup_step4(request):
     if request.method == "GET":
-        style_options    = PreferType.objects.filter(type="스타일")
-        category_options = PreferType.objects.filter(type="카테고리")
+        style_options    = PreferType.objects.filter(type="S")
+        category_options = PreferType.objects.filter(type="C")
         return render(request, "signup/signup_step4.html", {
             "style_options": style_options,
             "category_options": category_options,
@@ -217,19 +218,46 @@ def signup_step4(request):
     if not (email and password and nickname and birth and gender and job):
         return redirect("signup_step1")
 
-    user = User(
-        email=email,
-        password=make_password(password),
-        nickname=nickname,
-        birth=birth,
-        gender=gender,
-        job=job,
-        type="member",
-        is_email_verified=False
-    )
-    user.save()  # 이 순간 user.user_id와 user.created_at이 DB에 채워집니다.
-
     for pid in preference_ids:
+        # (2-b) POST로 넘어온 “preference_ids” (예: "1,3,7,13,15")
+        pref_ids_str = request.POST.get("preference_ids", "").strip()
+        # 콤마로 분리 → 숫자로만 이루어진 ID 리스트
+        pref_ids = [pid for pid in pref_ids_str.split(",") if pid.isdigit()]
+
+        # (2-c) User 객체 생성 및 저장
+        guest_user_id = request.session.get("user_id", None)  # 세션에 user_id가 있으면 가져옴
+
+        user_qs = User.objects.filter(user_id=guest_user_id) if guest_user_id else None
+
+        if user_qs and user_qs.exists():
+            # 기존 guest user → 업데이트
+            user = user_qs.first()
+            user.email    = email
+            user.password = make_password(password)
+            user.nickname = nickname
+            user.birth    = birth
+            user.gender   = gender
+            user.job      = job
+            user.type     = "member"  # guest → member 전환
+            user.is_email_verified=False
+        else:
+            # 새 user 생성 (guest_user_id 유지 필요)
+            user = User(
+                email=email,
+                password=make_password(password),
+                nickname=nickname,
+                birth=birth,
+                gender=gender,
+                job=job,
+                type="member",  # 명확하게 넣기
+                is_email_verified=False
+            )
+
+    # 최종 저장
+    user.save()
+
+    # (2-e) 하나씩 UserPrefer 레코드 생성
+    for pid in pref_ids:
         try:
             prefer_obj = PreferType.objects.get(prefer_id=int(pid))
         except PreferType.DoesNotExist:

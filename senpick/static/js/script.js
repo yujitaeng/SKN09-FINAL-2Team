@@ -1,13 +1,14 @@
 
-console.log("자바스크립트 테스트")
+console.log("load script.js");
 
 function createProductCard(wrapper, data) {
     const card = document.createElement("div");
     card.className = "product-card";
 
-    // 카드 전체를 감싸는 링크
     const link = document.createElement("a");
-    link.href = "#";
+    link.href = data.link || "#"; // 링크가 없으면 기본적으로 #로 설정
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
 
     // 이미지 영역
     const imageWrapper = document.createElement("div");
@@ -45,15 +46,35 @@ function createProductCard(wrapper, data) {
     heartIcon.src = "/static/images/heart_gray.svg";
     heartIcon.alt = "Heart Icon";
     heartIcon.className = "heart-icon";
+    heartIcon.dataset.recd_id = data.recommend_id
+    if (data.is_liked === true) {
+        heartIcon.classList.add("active");
+        heartIcon.src = "/static/images/heart_red.svg";
+    }
 
     heartDiv.appendChild(heartIcon);
 
-    heartIcon.addEventListener("click", (event) => {
-        event.stopPropagation();
+    heartIcon.addEventListener("click", (e) => {
+        e.stopPropagation();
         heartIcon.classList.toggle("active");
         heartIcon.src = heartIcon.classList.contains("active")
             ? "/static/images/heart_red.svg"
             : "/static/images/heart_gray.svg";
+        fetch(`/recommends/${heartIcon.dataset.recd_id}/like`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                is_liked: heartIcon.classList.contains("active")
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
     });
 
     heartIcon.addEventListener("mouseenter", () => {
@@ -74,10 +95,50 @@ function createProductCard(wrapper, data) {
     if (data.reason){
         const reason = document.createElement("div");
         reason.className = "reason";
-        reason.textContent = data.reason;
+        reason.textContent = "추천 이유 : " + data.reason;
         card.appendChild(reason);
     }
     wrapper.appendChild(card);
+}
+
+// 하트 아이콘 이벤트 연결 함수
+function attachHeartEvents(heartIcon) {
+    heartIcon.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    heartIcon.classList.toggle('active');
+    heartIcon.src = heartIcon.classList.contains('active')
+        ? '/static/images/heart_red.svg'
+        : '/static/images/heart_gray.svg';
+    
+    fetch(`/recommends/${heartIcon.dataset.recd_id}/like`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+        is_liked: heartIcon.classList.contains('active')
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+        throw new Error('Network response was not ok');
+        }
+        return response.json();
+    });
+    });
+
+    heartIcon.addEventListener('mouseenter', () => {
+    if (!heartIcon.classList.contains('active')) {
+        heartIcon.src = '/static/images/heart_red.svg';
+    }
+    });
+
+    heartIcon.addEventListener('mouseleave', () => {
+    if (!heartIcon.classList.contains('active')) {
+        heartIcon.src = '/static/images/heart_gray.svg';
+    }
+    });
 }
 
 function toggleLikeBlock(cardEl) {
@@ -87,7 +148,6 @@ function toggleLikeBlock(cardEl) {
     const likeCount = likeBlock.querySelector('.like-count');
 
     const isOpen = likeBlock.classList.contains('active');
-
     if (isOpen) {
         scrollWrapper.classList.add('hidden');
         likeBlock.classList.remove('active');
@@ -96,14 +156,11 @@ function toggleLikeBlock(cardEl) {
         likeBlock.classList.add('active');
 
         if (cardWrapper.children.length === 0) {
-            for (let i = 0; i < 7; i++) {
-                createProductCard(cardWrapper, {
-                    imageUrl: 'https://shop-phinf.pstatic.net/20250317_133/1742177290390KwLPy_JPEG/6979889503620148_1772200239.jpg?type=m510',
-                    brand: '브랜드명',
-                    title: '삼성공식파트너 JBL FLIP6 휴대용 캠핑 피크닉 무선...'
-                });
-            }
-            likeCount.innerText = `💛 ${cardWrapper.children.length}`;
+            const chatId = likeBlock.dataset.chat_id;
+            const products = window.productMap?.[chatId] || [];
+
+            products.forEach(product => createProductCard(cardWrapper, product));
+            likeCount.innerText = `💛 ${products.length}`;
         }
     }
 }

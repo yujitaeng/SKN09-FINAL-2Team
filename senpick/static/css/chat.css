@@ -2,6 +2,7 @@ body {
   background: #F5F5F8;
   margin: 0;
   font-family: 'Spoqa Han Sans Neo', 'sans-serif';
+  height: 100%;
 }
 .app-layout {
   display: flex;
@@ -47,14 +48,22 @@ body {
 .chatbot-body {
   width: 816px;
   height: 100vh;
+  max-height: 100vh;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  transition: transform 0.3s ease-in-out;
 }
+
+.chatbot-body.hidden {
+  transform: translateX(-100%);
+}
+
 .chat-window {
   min-height: 320px;
   height: 100vh;
+  max-height: 100vh;
   background: #F5F5F8;
   border-radius: 22px;
   padding: 32px;
@@ -75,7 +84,7 @@ body {
 /* 공통 챗 메시지 스타일 */
 .chat-msg {
   display: inline-block;
-  max-width: 68%;
+  max-width: 80%;
   margin: 40px auto 0 0;  
   padding: 20px;
 
@@ -193,5 +202,83 @@ body {
   color: #333;
 }
 
+.guest-message {
+  padding: 14px;
+}
 
+.sidebar-right .guest-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: calc(100vh - 57px);
+}
 
+.guest-message span {
+  color: #666;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.sidebar-right .guest-message span {
+  font-size: 20px;
+}
+
+.guest-message p {
+  color: #666;
+  font-size: 14px;
+}
+
+.sidebar-right .guest-message p {
+  font-size: 16px;
+}
+
+.sidebar.mini .guest-message {
+  display: none;
+}
+
+.guest-message button {
+  background-color: #F5F5F8;
+  color: #666;
+  border: none;
+  border-radius: 10px;
+  width: fit-content;
+  display: inline-block;
+  padding: 14px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.feedback-input {
+  display: flex;
+  gap: 8px;
+  margin: 8px
+}
+
+.feedback-input img {
+  padding: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.18s;
+}
+
+.feedback-input img:hover {
+  background-color: #E6E6E6;
+}
+
+.chat-readonly-notice {
+  background: #f0f0f0;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin: 20px auto;
+  max-width: 500px;
+  line-height: 1.5;
+}

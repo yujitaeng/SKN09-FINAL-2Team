@@ -108,20 +108,12 @@ WSGI_APPLICATION = 'senpick.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# 데이터베이스 설정 (기본은 SQLite)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'senpick_db',  # 데이터베이스 이름
         'USER': 'root',        # MySQL 사용자
-        'PASSWORD': '3333', # MySQL 비밀번호
+        'PASSWORD': os.getenv('DB_PASSWORD'), # MySQL 비밀번호
         'HOST': '127.0.0.1',   # 로컬 호스트
         'PORT': '3306',        # MySQL 포트
     }
@@ -200,3 +192,8 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 # 7. 기본 발신자 주소
 #    └– send_mail() 호출 시, “From” 에 기본으로 들어갈 이메일/문자열
 DEFAULT_FROM_EMAIL = 'Senpick <no-reply@senpick.com>'
+
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -2,130 +2,173 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
-    <link rel="stylesheet" href="{% static 'css/profile_info.css' %}">
-    <link rel="stylesheet" href="{% static 'css/sidebar_profile.css' %}">
-    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Spoqa+Han+Sans+Neo:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cafe24+Supermagic&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
+  <link rel="stylesheet" href="{% static 'css/profile_info.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sidebar_profile.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Spoqa+Han+Sans+Neo:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cafe24+Supermagic&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div style="display: flex;" class="layout">
-        {% include "sidebar.html" %}
-        <div class="layout">
-          <!-- 좌측 서브 사이드바 -->
-          <div class="sidebar-wrapper">
-            {% include "profile/sidebar_profile.html" with active_tab="info" %}
-          </div>
-          <!-- 우측 프로필 수정 메인 영역 -->
-          <div class="profile-main-wrapper">
-            <div class="profile-main">
-              <div class="profile-form">
-                <div class="profile-image-section">
-                  <div class="profile-img">
-                    <img src="{% static 'images/member_default_image.png' %}" alt="프로필 이미지">
-                    <div class="camera-icon">
-                      <img src="{% static 'images/camera.svg' %}" alt="카메라 아이콘">
-                    </div>
-                  </div>
-                  <div class="profile-image-buttons">
-                    <div class="image-button-row">
-                      <button>사진 바꾸기</button>
-                      <button class="delete-btn">사진 삭제</button>
-                    </div>
-                    <p class="profile-img-note">※ 5MB 이내의 jpg, png 형식 파일만 가능합니다.</p>
-                  </div>
+  <div style="display: flex;" class="layout">
+    {% include "layout/sidebar.html" %}
+    <div class="layout">
+      <div class="sidebar-wrapper">
+        {% include "profile/sidebar_profile.html" with active_tab="info" %}
+      </div>
+      <div class="profile-main-wrapper">
+        <div class="profile-main">
+          <div class="profile-form">
+            <div class="profile-image-section">
+              <div class="profile-image">
+                {% if user.profile_image %}
+                  <img src="{{ user.profile_image }}" alt="프로필 이미지">
+                {% else %}
+                  <img src="{% static 'images/member_default_image.png' %}" alt="기본 프로필 이미지">
+                {% endif %}
+              </div>
+              <div class="profile-image-buttons">
+                <div class="image-button-row">
+                  <label style="cursor:pointer; margin:0 !important;">
+                    <input type="file" name="profile_image" accept="image/*" style="display:none;" form="profile-form" id="profileImage">
+                    <button type="button" id="changeImage">사진 바꾸기</button>
+                  </label>
+                  <button class="delete-btn" type="submit" form="profile-form" name="delete_image" value="1">사진 삭제</button>
                 </div>
-                <div class="divider-line "></div>
-                <form method="POST" action="">
-                  {% csrf_token %}
-
-                  <label for="email">이메일</label>
-                  <input id="email" type="email" value="yoojenius@senpick.com" readonly>
-
-                  <label for="password">비밀번호 확인</label>
-                  <input id="password" type="password" placeholder="비밀번호 입력">
-
-                  <label for="nickname">닉네임</label>
-                  <input id="nickname" type="text" value="유지니어스">
-
-                  <label for="birth">생년월일</label>
-                  <input id="birth" type="text" value="19990101">
-
-                  <label>성별</label>
-                  <div class="gender-toggle">
-                    <button type="button" class="gender">남자</button>
-                    <button type="button" class="gender active">여자</button>
-                  </div>
-
-                  <label for="job">직업</label>
-                  <div class="job-input">
-                    <input id="job" type="text" value="학생/취준생" spellcheck="false">
-                    <img src="{% static 'images/bottom_arrow.svg' %}" alt="드롭다운 화살표">
-                  </div>
-
-                  <label>선호 스타일 <span class="hint">(최대 3개 선택)</span></label>
-                  <div class="preference-tags style-tags">
-                    <button type="button" class="tag active">감성적</button>
-                    <button type="button" class="tag">실용적</button>
-                    <button type="button" class="tag">트렌디</button>
-                    <button type="button" class="tag">미니멀</button>
-                    <button type="button" class="tag">럭셔리</button>
-                    <button type="button" class="tag active">유니크</button>
-                    <button type="button" class="tag">자연친화</button>
-                    <button type="button" class="tag active">클래식</button>
-                  </div>
-
-                  <label>선호 카테고리 <span class="hint">(최대 3개 선택)</span></label>
-                  <div class="preference-tags category-tags">
-                    <button type="button" class="tag active">식품</button>
-                    <button type="button" class="tag">뷰티</button>
-                    <button type="button" class="tag">패션</button>
-                    <button type="button" class="tag">반려동물</button>
-                    <button type="button" class="tag">건강 · 케어</button>
-                    <button type="button" class="tag">아기 · 어린이</button>
-                    <button type="button" class="tag">레저 · 자동차</button>
-                    <button type="button" class="tag">디지털 · 가전</button>
-                    <button type="button" class="tag">프리미엄 선물</button>
-                    <button type="button" class="tag active">리빙 · 인테리어</button>
-                    <button type="button" class="tag active">교환권</button>
-                  </div>
-
-                  <div class="submit-button">
-                    <button type="submit">프로필 수정 완료</button>
-                  </div>
-                </form>
+                <p class="profile-img-note">※ 5MB 이내의 jpg, png 형식 파일만 가능합니다.</p>
               </div>
             </div>
+
+            <div class="divider-line"></div>
+
+            <form method="POST" action="/mypage/profile/" enctype="multipart/form-data" id="profile-form" novalidate>
+              {% csrf_token %}
+
+              {% comment %} {% if error %}
+                <p style="color: #EB1C24; margin-bottom:10px;">{{ error }}</p>
+              {% endif %} {% endcomment %}
+
+              <label for="email">이메일</label>
+              <input id="email" type="email" name="email" value="{{ user.email }}" readonly>
+
+              <label for="password">비밀번호 확인</label>
+              <input id="password" type="password" name="password" placeholder="비밀번호 입력" required>
+
+              <label for="nickname">닉네임</label>
+              <input id="nickname" type="text" name="nickname" value="{{ user.nickname }}">
+
+              <label for="birth">생년월일</label>
+              <input id="birth" type="text" name="birth" value="{{ user.birth }}">
+
+              <label>성별</label>
+              <div class="gender-toggle">
+                <button type="button" class="gender {% if user.gender == 'male' %}active{% endif %}" data-value="male" disabled>남자</button>
+                <button type="button" class="gender {% if user.gender == 'female' %}active{% endif %}" data-value="female" disabled>여자</button>
+              </div>
+
+              <label for="job">직업</label>
+              <div class="job-input">
+                <input id="job" type="text" name="job" value="{{ user.job }}" spellcheck="false">
+                <img src="{% static 'images/bottom_arrow.svg' %}" alt="드롭다운 화살표">
+              </div>
+
+              <label>선호 스타일 <span class="hint">(최대 3개 선택)</span></label>
+              <div class="preference-tags style-tags">
+                {% for style in style_options %}
+                  <button type="button" class="tag {% if style.prefer_id in style_ids %}active{% endif %}" data-id="{{ style.prefer_id }}">{{ style.type_name }}</button>
+                {% endfor %}
+              </div>
+
+              <label>선호 카테고리 <span class="hint">(최대 3개 선택)</span></label>
+              <div class="preference-tags category-tags">
+                {% for category in category_options %}
+                  <button type="button" class="tag {% if category.prefer_id in category_ids %}active{% endif %}" data-id="{{ category.prefer_id }}">{{ category.type_name }}</button>
+                {% endfor %}
+              </div>
+
+              <div id="selected-preferences"></div>
+
+              <div class="submit-button">
+                <button type="submit">프로필 수정 완료</button>
+              </div>
+            </form>
           </div>
         </div>
+      </div>
     </div>
-    <script src="{% static 'js/profile_info.js' %}"></script>
-    <script>
-      document.querySelectorAll('.preference-tags').forEach(tagGroup => {
-        tagGroup.addEventListener('click', function (e) {
-          const isTag = e.target.classList.contains('tag');
-          if (!isTag) return;
-
-          const selectedTags = tagGroup.querySelectorAll('.tag.active');
-          const isActive = e.target.classList.contains('active');
-
-          // 선택 해제는 언제나 허용
-          if (isActive) {
-            e.target.classList.remove('active');
-          } else {
-            // 이미 3개 선택되어 있다면 더 선택 못함
-            if (selectedTags.length >= 3) {
-              alert('최대 3개까지 선택할 수 있습니다.');
-              return;
-            }
-            e.target.classList.add('active');
-          }
-        });
+  </div>
+  <script src="{% static 'js/profile_info.js' %}"></script>
+  <script>
+    // 성별 선택
+    document.querySelectorAll(".gender").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".gender").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("gender-input").value = btn.dataset.value;
       });
-    </script>
+    });
+
+    // 스타일/카테고리 최대 3개 선택
+    document.querySelectorAll('.preference-tags').forEach(tagGroup => {
+      tagGroup.addEventListener('click', function (e) {
+        if (!e.target.classList.contains('tag')) return;
+
+        const isActive = e.target.classList.contains('active');
+        const selected = tagGroup.querySelectorAll('.tag.active');
+        if (isActive) {
+          e.target.classList.remove('active');
+        } else {
+          if (selected.length >= 3) {
+            alert('최대 3개까지 선택할 수 있습니다.');
+            return;
+          }
+          e.target.classList.add('active');
+        }
+      });
+    });
+
+    // form 전송 시 hidden input 생성
+    document.getElementById("profile-form").addEventListener("submit", function (e) {
+      const container = document.getElementById("selected-preferences");
+      container.innerHTML = "";
+
+      document.querySelectorAll(".style-tags .tag.active").forEach(btn => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "style";
+        input.value = btn.dataset.id;
+        container.appendChild(input);
+      });
+
+      document.querySelectorAll(".category-tags .tag.active").forEach(btn => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "category";
+        input.value = btn.dataset.id;
+        container.appendChild(input);
+      });
+    });
+    const changeImage = document.getElementById("changeImage");
+    changeImage.addEventListener("click", function() {
+      profileImage.click();
+    });
+    // 프로필 이미지 변경 시 파일 이름 표시
+    profileImage.addEventListener("change", function() {
+      const filename = document.querySelector(".profile-img-note add");
+      if (filename) {
+        filename.textContent = profileImage.files[0] ? "업로드 이미지 : " + profileImage.files[0].name : "선택된 파일 없음";
+      } else {
+        const newFilename = document.createElement("p");
+        newFilename.className = "profile-img-note add";
+        newFilename.textContent = profileImage.files[0] ? "업로드 이미지 : " + profileImage.files[0].name : "선택된 파일 없음";
+        const profileImageButtons = document.querySelector(".profile-image-buttons");
+        profileImageButtons.appendChild(newFilename);
+      }
+    });
+    
+  </script>
 </body>
 </html>

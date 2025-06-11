@@ -2,7 +2,7 @@
   --card-bg: #FFFDE7;
   /* --card-bg: #FFF4D6; */
   --white: #FFFFFF;
-  --gray-light: #F4F4F4;
+  --gray-light: #F5F5F8;
   --gray-medium: #CCCCCC;
   --gray-dark: #666666;
   --text: #2E2E2E;
@@ -39,7 +39,7 @@ body {
 
 .signup-form-area {
   width: 100%;
-  min-width: 700px;
+  min-width: 800px;
   height: calc(100vh - 52px);
   background: var(--white);
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -48,25 +48,34 @@ body {
 }
 
 .step-indicator {
-  width: 114px;
+  width: 78px;
   height: 15px;
+  position: relative;
   display: flex;
-  justify-content: flex-start; /* ✅ 왼쪽 정렬 */
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px 0;
   gap: 10px; /* 원하는 만큼 간격 */
+  margin-left: 150px;
 }
+
 .step-indicator::before {
-  content: '';
-  height: 1px;
-  background: var(--gray-light);
-  transform: translateY(-50%);
-  z-index: 1;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--soft-gray); /* 회색 선 */
+  z-index: 1; /* dot보다 뒤에 와야 함 */
 }
+
 .step-indicator .dot {
   width: 12px;
   height: 12px;
-  border: 1px solid var(--gray-medium);
+  /* border: 1px solid var(--gray-medium); */
   border-radius: 50%;
-  background: var(--white);
+  background: var(--gray-light);
   z-index: 2;
 }
 .step-indicator .dot.active {
@@ -77,10 +86,11 @@ body {
 .signup-title {
   font-size: 32px;
   font-weight: bold;
+  margin-bottom: 0;
 }
 
 /* 입력 라벨 */
-.label-email, .label-password, .label-nickname {
+.label-email, .label-password, .label-nickname, .label-terms {
   font-size: 20px;
   font-weight: bold;
 }
@@ -88,12 +98,12 @@ body {
 /* 입력창 위치 */
 .input-email, .input-password, .input-nickname {
   width: 100%;
-  height: 50px;
+  /* height: 50px; */
 }
 
 /* 📌 공통 input 스타일 */
 input[type="email"], input[type="password"], input[type="text"] {
-  padding: 0 12px;
+  padding: 14px;
   /* font-size: 14px; */
   border: 1px solid var(--soft-gray);
   border-radius: 8px;
@@ -110,22 +120,8 @@ input[type="terms"].error {
   box-shadow: none !important;
 }
 
-/* 에러 메시지 */
-.error-message {
-  display: none;
-  margin-top: 4px;
-  font-size: 13px;
-  color: var(--error);
-}
-
 #email-error, #password-error, #nickname-error, #terms-error {
   z-index: 10;
-}
-
-/* 약관 */
-.label-terms {
-  font-size: 14px;
-  font-weight: bold;
 }
 
 .terms-box {
@@ -138,12 +134,20 @@ input[type="terms"].error {
   box-sizing: border-box;
 }
 
-.checkbox-all {
+.checkbox {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 12px;
   font-size: 14px;
+}
+
+.checkbox-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 16px;
 }
 
 .checkbox-all input, .checkbox input {
@@ -156,14 +160,6 @@ input[type="terms"].error {
 .terms-box hr {
   margin: 0 0 12px;
   border-top: 1px solid var(--soft-gray);
-}
-
-.checkbox {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-size: 14px;
 }
 
 .required {
@@ -226,16 +222,16 @@ input[type="terms"].error {
 }
 .signup-form-area .modal-content {
   background: var(--white);
-  /* border-radius: 16px; */
-  width: 45%;
-  max-width: 480px;
+  border-radius: 16px;
+  width: 80%;
+  max-width: 700px;
   min-width: 400px;
   max-height: 80%;
   /* overflow-y: auto; */
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   padding: 24px;
 
-  margin-left: 25%;
+  margin-left: calc(25% + 13px);
   transform: translateX(-50%);
 }
 
@@ -273,12 +269,6 @@ input[type="terms"].error {
 .verify-input.error {
   border-color: var(--error) !important;
   box-shadow: none !important;
-}
-.error-message {
-  font-size: 13px;
-  color: var(--error);
-  display: none;
-  line-height: 1.4;
 }
 .resend-container {
   display: flex;
@@ -334,10 +324,8 @@ input[type="terms"].error {
 #birth-error,
 #gender-error,
 #job-error {
-  /* width: 526px; */
   font-size: 13px;
   color: var(--error);
-  display: none;
   line-height: 1.4;
 }
 .gender-group {
@@ -356,10 +344,16 @@ input[type="terms"].error {
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s, color 0.2s;
 }
+
+.gender-btn:hover {
+  border: 2px solid var(--primary);
+}
+
 .gender-btn.selected {
-  background: var(--primary);
+  background-color: #FFFBEA;
   color: var(--text);
-  border-color: var(--primary);
+  /* border-color: var(--primary); */
+  border: 2px solid var(--primary);
   font-weight: bold;
 }
 
@@ -395,7 +389,7 @@ input[type="terms"].error {
   border-color: var(--info);
 }
 .signup-form-area.step4 .option-btn.selected {
-  background: var(--primary);
+  background-color: #FFFBEA;
   color: var(--text);
   border-color: var(--primary);
   font-weight: bold;
@@ -404,7 +398,7 @@ input[type="terms"].error {
 .signup-form-area.step4 #category-error {
   font-size: 13px;
   color: var(--error);
-  display: none;
+  /* display: none; */
   line-height: 1.4;
 }
 
@@ -415,6 +409,7 @@ input[type="terms"].error {
   font-size: 16px;
   color: var(--gray-dark);
   line-height: 1.6;
+  margin: 0;
 }
 
 .signup-form-wrapper {
@@ -431,10 +426,10 @@ input[type="terms"].error {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  /* gap: 16px; */
+  gap: 8px;
   flex-grow: 1;
   margin-bottom: 25px;
-  /* overflow 제거 */
 }
 
 /* 네모 노란 체크박스 */
@@ -494,7 +489,7 @@ input[type="terms"].error {
 
 .modal-body {
   overflow-y: scroll;
-  max-height: 60vh; /* 최대 높이 설정 */
+  max-height: 70vh; /* 최대 높이 설정 */
   border-radius: 20px;
   background-color: #F5F5F8;
   padding: 20px;

@@ -40,7 +40,7 @@ button {
   text-align: center;
   padding: 6px 10px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 12px;
 
   position: absolute;
   z-index: 10;
@@ -62,10 +62,10 @@ button {
 
 
 .card-wrapper {
+  margin-top: 8px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  
   overflow-y: auto;
   flex-shrink: 0;
   /* Adjust height based on header */
@@ -81,6 +81,10 @@ button {
   font-family: sans-serif;
   background: #FFFFFF;
   padding: 12px;
+}
+
+.chat-window .product-card {
+  width: 130px;
 }
 
 .product-card:hover {

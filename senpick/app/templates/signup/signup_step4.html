@@ -17,16 +17,16 @@
       <div class="signup-form-area step4">
         <!-- 1) 로고 -->
         <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo" onclick="location.href=`{% url 'login' %}`">
+        <!-- 2) 스텝 인디케이터 -->
+        <div class="step-indicator">
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot active"></span>
+          <span class="dot"></span>
+        </div>
         <div class="signup-form-wrapper">
           <form method="post" action="{% url 'signup_step4' %}" class="signup-form profile-form signup-form-area step4">
             {% csrf_token %}
-            <!-- 2) 스텝 인디케이터 -->
-            <div class="step-indicator">
-              <span class="dot active"></span>
-              <span class="dot active"></span>
-              <span class="dot active"></span>
-              <span class="dot"></span>
-            </div>
 
             <!-- 3) 타이틀 -->
             <h2 class="signup-title">당신을 알아갈수록,<br>더 센스있는 선물을 고를 수 있어요.</h2>

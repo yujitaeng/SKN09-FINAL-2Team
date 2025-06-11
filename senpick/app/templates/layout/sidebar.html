@@ -5,7 +5,7 @@
     <!-- 상단 헤더 (브랜드/토글) -->
     <div class="sidebar-header">
       <img src="{% static 'images/top_logo.svg' %}" alt="Senpick Logo" class="logo-img">
-      <button class="menu-btn tooltip" id="sidebar-toggle-btn" title="사이드바 접기">
+      <button class="menu-btn tooltip" id="sidebar-toggle-btn">
         <span class="tooltip-text">사이드바 접기</span>
         <img src="{% static 'images/sidebar_toggle.png' %}" alt="사이드바 토글">
       </button>
@@ -23,21 +23,40 @@
       <img src="{% static 'images/chat_logo.png' %}" alt="Chat">
       <span class="btn-label">Chat</span>
     </div>
+    {% if request.session.type != "guest" %}
     <ul class="chat-list"></ul>
+    {% else %}
+    <div class="guest-message">
+      <div><span>아직 회원이 아니시군요!</span></div>
+      <div><span>지금 이 대화는 저장되지 않아요.</span></div>
+      <p>로그인하시면, 지난 추천을 다시 꺼내보고, 선물 히스토리를 한눈에 확인할 수 있어요.</p>
+      <p>센픽이 그 모든 선물들과 담긴 마음들을 따뜻하게 기억해둘게요.</p>
+    </div>
+    {% endif %}
+    {% if is_birth_today %}
     <div class="menu-btn-row" id="gift-btn" onclick="location.href=`{% url 'birth' %}`">
       <img src="{% static 'images/gift.svg' %}" alt="Gift">
       <span class="btn-label">Happy Birthday</span>
     </div>
+    {% endif %}
   </div>
   <!-- 하단: 마이페이지/브랜드바 -->
   <div class="sidebar-bottom">
     <div class="divider-line"></div>
     <div class="brand-bar">
       <a href="{% url 'mypage' %}" style="display: flex; align-items: center; text-decoration: none;">
-        <img src="{% static 'images/bottom_logo.svg' %}" alt="Brand" class="brand-logo">
-        <span class="brand-label">유지니어스</span>
+        {% if request.session.type == "guest" %}
+        <img src="{% static 'images/bottom_logo_white.svg' %}" alt="Brand" class="brand-logo">
+        {% else %}
+          {% if request.session.profile_image %}
+            <img src="{{ request.session.profile_image }}" alt="프로필 이미지" class="profile-img">
+          {% else %}
+            <img src="{% static 'images/bottom_logo.svg' %}" alt="프로필" class="profile-img">
+          {% endif %}
+        {% endif %}
+        <span class="brand-label">{{request.session.nickname}}</span>
       </a>
-      <a href="{% url 'login' %}" class="brand-link tooltip" title="로그아웃">
+      <a href="{% url 'logout' %}" class="brand-link tooltip">
         <span class="tooltip-text">로그아웃</span>
         <img src="{% static 'images/logout.svg' %}" alt="로그아웃">
       </a>
@@ -45,42 +64,90 @@
   </div>
 </div>
 <script>
-    const chatlist = [
-      "글자몇개를넣으면좋을까요",
-      "공백포함11글자가능하다",
-      "귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물",
-      "귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물 귀엽고 실용적인 친구 선물"
-    ]      
-      
-  // 접힘/펼침 상태 관리
-  const sidebar = document.getElementById('sidebar');
-  const toggleBtn = document.getElementById('sidebar-toggle-btn');
-  const searchRow = document.getElementById('sidebar-search-row');
-  const chathistory = document.querySelector('.chat-list');
-  chathistory.append(...chatlist.map(chat => {
-    const li = document.createElement('li');
-    const span = document.createElement('span');
-    span.className = 'chat-title';
-    span.textContent = chat;
-    li.appendChild(span);
-    li.addEventListener('click', () => {
-      document.querySelector('.chat-list li.selected')?.classList.remove('selected');
-      li.classList.add('selected');
-    });
-    return li;
-  }));
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    const searchRow = document.getElementById('sidebar-search-row');
+    const chatHistoryEl = document.querySelector('.chat-list');
 
-  chathistory.firstElementChild?.classList.add('selected');
+    // 채팅 리스트 렌더링 함수
+    function renderChatList(chatList) {
+      chatHistoryEl.innerHTML = '';  // 기존 목록 초기화
+      const chatFormEl = document.getElementById('chat-form');
+      window.currentChatId = chatFormEl ? chatFormEl.dataset.chatId : null;
+      chatList.forEach(chat => {
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.className = 'chat-title';
+        span.textContent = chat.title;
 
-  function showToggleIfOpen() {
-    if (sidebar.classList.contains('mini')) {
-      toggleBtn.style.display = 'none';
-    } else {
-      toggleBtn.style.display = '';
+        // chat_id 를 dataset 으로 저장 (클릭 시 사용 가능)
+        li.dataset.chatId = chat.chat_id;
+        if (li.dataset.chatId === window.currentChatId) {
+          li.classList.add('selected'); // 현재 선택된 채팅에 selected 클래스 추가
+        }
+
+        li.appendChild(span);
+
+        // 선택 시 selected 클래스 토글
+        li.addEventListener('click', () => {
+          document.querySelector('.chat-list li.selected')?.classList.remove('selected');
+          li.classList.add('selected');
+
+          // 필요시 chat_id 를 활용해서 채팅 불러오기 등 추가 동작 가능
+          console.log('Selected chat_id:', li.dataset.chatId);
+          window.currentChatId = li.dataset.chatId; // 현재 선택된 chat_id 저장
+          window.location.href = `/chat/${li.dataset.chatId}`; // 채팅 페이지로 이동
+        });
+
+        chatHistoryEl.appendChild(li);
+      });
     }
-  }
+
+    if (chatHistoryEl) {
+      // 채팅 히스토리 가져오기
+      fetch("/chat/history")
+        .then(response => response.json())
+        .then(data => {
+          if (data?.chatlist) {
+            renderChatList(data.chatlist);
+          }
+        })
+        .catch(error => console.error('Error fetching chat history:', error));
+
+      
+      chatHistoryEl.firstElementChild?.classList.add('selected');
+    }
+
+    chatHistoryEl.firstElementChild?.classList.add('selected');
+
+    // 접힘/펼침 상태에 따른 토글 버튼 표시
+    function showToggleIfOpen() {
+      toggleBtn.style.display = sidebar.classList.contains('mini') ? 'none' : '';
+    }
+
+    // 채팅 기록 불러오기 및 렌더링
+    fetch("/chat/history")
+      .then(res => res.ok ? res.json() : Promise.reject("채팅 기록을 가져오는 데 실패했습니다."))
+      .then(data => {
+        if (data && Array.isArray(data.chat_history)) {
+          const chatElements = data.chat_history.map(chat => {
+            const li = document.createElement('li');
+            const span = document.createElement('span');
+            span.className = 'chat-title';
+            span.textContent = chat.title;
+
+            li.appendChild(span);
+
+            return li;
+          });
+
+          chathistory.append(...chatElements);
+          chathistory.firstElementChild?.classList.add('selected');
+        }
+      })
+      .catch(error => console.error("채팅 기록을 가져오는 중 오류 발생:", error));
+
+  // 초기 상태 설정
   showToggleIfOpen();
   document.querySelector('.logo-img').addEventListener('click', function() {
     if (sidebar.classList.contains('mini')) {
@@ -100,24 +167,7 @@
     sidebar.classList.add('mini');
     showToggleIfOpen();
   });
+
   const observer = new MutationObserver(showToggleIfOpen);
   observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
-
-  let loginState = true; // 로그인 상태를 나타내는 변수
-  let brandLink = document.querySelector('.brand-link');
-  brandLink.addEventListener('click', function(e) {
-    // e.preventDefault();
-    let brandBar = document.querySelector('.brand-bar');
-    if (loginState) {
-      // 로그아웃 처리
-      loginState = false;
-      brandBar.getElementsByClassName('brand-label')[0].textContent = '로그인';
-      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo_white.svg' %}";
-    } else {
-      // 로그인 처리
-      loginState = true;
-      brandBar.getElementsByClassName('brand-label')[0].textContent = '유지니어스';
-      brandBar.getElementsByTagName('img')[0].src = "{% static 'images/bottom_logo.svg' %}";
-    }
-  });
 </script>
