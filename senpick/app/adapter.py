@@ -42,7 +42,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             sociallogin.connect(request, existing_user)
             sociallogin.account.user = existing_user
             if provider == "google":
-                if not existing_user.birth or not existing_user.gender:
+                if not existing_user.birth or existing_user.birth.strip() == "" or not existing_user.gender or existing_user.gender.strip() == "":
                     print("➡️ 구글: step3으로 이동 (추가 정보 필요)")
                     raise ImmediateHttpResponse(redirect("/signup/step3/"))
                 elif not existing_user.is_email_verified:

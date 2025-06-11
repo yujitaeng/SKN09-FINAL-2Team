@@ -16,8 +16,12 @@ from app.models import User
 @login_required
 def social_redirect_view(request):
     user = request.user
-    if user.type == "social" and not user.is_email_verified:
-        return redirect("signup_step4")
+    if user.type == "social":
+        # birth, gender가 비어 있으면 step3으로 이동
+        if not user.birth or user.birth.strip() == "" or not user.gender or user.gender.strip() == "":
+            return redirect("signup_step3")
+        if not user.is_email_verified:
+            return redirect("signup_step4")
     return redirect("chat")
 
 def is_social_incomplete(user):
@@ -163,6 +167,15 @@ def signup_step3(request):
             "job": job,
         })
 
+    # ✅ 소셜 유저일 경우 DB에 직접 저장
+    if is_social_incomplete(request.user):
+        user = request.user
+        user.birth = birth
+        user.gender = gender
+        user.job = job
+        user.save()
+        return redirect("signup_step4")
+    
     # 검증 통과: 세션에 저장 후 Step4로 이동
     request.session["signup_birth"]  = birth
     request.session["signup_gender"] = gender
