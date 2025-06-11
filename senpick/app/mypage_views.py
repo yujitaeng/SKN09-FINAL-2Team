@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from app.models import User, UserPrefer, PreferType, Chat, ChatRecommend, Recipient
+from app.models import User, UserPrefer, PreferType, Chat
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
 from django.conf import settings
