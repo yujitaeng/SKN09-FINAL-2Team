@@ -24,25 +24,27 @@ def home(request):
     prefer_tags = [p.prefer_type.type_name for p in preferences]
     
     history_data = []  
-    chats = Chat.objects.filter(user_id=profile).select_related('recipient').order_by('-created_at')
+    chats = Chat.objects.filter(user_id=profile).select_related('recipient').prefetch_related(
+        'chatrecommend_set__product_id'
+    ).order_by('-created_at')
 
     for chat in chats:
-        # recipient 정보
-        recipient = Recipient.objects.filter(chat_id=chat).first()
+        # recipient 정보 (이미 select_related로 가져옴)
+        recipient = chat.recipient
 
-        # 추천 상품 목록
-        recommends = ChatRecommend.objects.filter(chat_id=chat, product_id__isnull=False, is_liked=True).select_related('product_id')
-        products = []
-        for rec in recommends:
-            if rec.product_id:  # product_id는 Product 객체
-                products.append({
-                    'rcmd_id': rec.rcmd_id,                    # 키 이름을 맞춰야 JS에서 인식 가능
-                    'brand': rec.product_id.brand,
-                    'title': rec.product_id.name,
-                    'imageUrl': rec.product_id.image_url,
-                    'link': rec.product_id.product_url,
-                    'is_liked': rec.is_liked,
-                })
+        # 추천 상품 목록 (prefetch_related로 가져옴)
+        recommends = chat.chatrecommend_set.filter(product_id__isnull=False, is_liked=True)
+        products = [
+            {
+                'rcmd_id': rec.rcmd_id,                    # 키 이름을 맞춰야 JS에서 인식 가능
+                'brand': rec.product_id.brand,
+                'title': rec.product_id.name,
+                'imageUrl': rec.product_id.image_url,
+                'link': rec.product_id.product_url,
+                'is_liked': rec.is_liked,
+            }
+            for rec in recommends if rec.product_id
+        ]
         if products:
             history_data.append((chat, recipient, products))
     return render(request, 'mypage.html', {
