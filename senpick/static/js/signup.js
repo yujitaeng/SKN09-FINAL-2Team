@@ -459,45 +459,58 @@ else if (path.includes("signup/step4")) {
   let selectedCategories = []; // 최대 3개 저장
 
   // 2) “선호 스타일” 버튼 클릭 핸들링
+  // 스타일 버튼 클릭 시
   styleButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
-        if (selectedStyles.includes(id)) {
-          selectedStyles = selectedStyles.filter(x => x !== id);
-          btn.classList.remove("selected");
-        } else if (selectedStyles.length < 3) {
-          selectedStyles.push(id);
-          btn.classList.add("selected");
-        } else {
-          styleErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
-          styleErrorEl.style.visibility = "visible";
+      const isSelected = selectedStyles.includes(id);
+
+      if (isSelected) {
+        selectedStyles = selectedStyles.filter(x => x !== id);
+        btn.classList.remove("selected");
+      } else if (selectedStyles.length < 3) {
+        selectedStyles.push(id);
+        btn.classList.add("selected");
+      } else {
+        // 최대 선택 수 초과
+        styleErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
+        styleErrorEl.style.visibility = "visible";
+      }
+
+      // ⚠️ 선택이 3개 미만이면 무조건 에러 메시지 숨김 (초기화)
+      if (selectedStyles.length < 3) {
+        styleErrorEl.style.visibility = "hidden";
+        if (styleErrorEl.textContent.includes("최대")) {
+          styleErrorEl.textContent = "";
         }
-        if (styleErrorEl.style.visibility === "visible" && selectedStyles.length < 3) {
-          styleErrorEl.style.visibility = "hidden";
-        }
+      }
     });
-    btn.setAttribute('tabindex', '0');
   });
 
   // 3) “선호 카테고리” 버튼 클릭 핸들링
   categoryButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
-        if (selectedCategories.includes(id)) {
-          selectedCategories = selectedCategories.filter(x => x !== id);
-          btn.classList.remove("selected");
-        } else if (selectedCategories.length < 3) {
-          selectedCategories.push(id);
-          btn.classList.add("selected");
-        } else {
-          categoryErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
-          categoryErrorEl.style.visibility = "visible";
+      const isSelected = selectedCategories.includes(id);
+
+      if (isSelected) {
+        selectedCategories = selectedCategories.filter(x => x !== id);
+        btn.classList.remove("selected");
+      } else if (selectedCategories.length < 3) {
+        selectedCategories.push(id);
+        btn.classList.add("selected");
+      } else {
+        categoryErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
+        categoryErrorEl.style.visibility = "visible";
+      }
+
+      if (selectedCategories.length < 3) {
+        categoryErrorEl.style.visibility = "hidden";
+        if (categoryErrorEl.textContent.includes("최대")) {
+          categoryErrorEl.textContent = "";
         }
-        if (categoryErrorEl.style.visibility === "visible" && selectedCategories.length < 3) {
-          categoryErrorEl.style.visibility = "hidden";
-        }
+      }
     });
-    btn.setAttribute('tabindex', '0');
   });
 
   // 4) “회원가입 완료” 버튼 클릭 시 검증

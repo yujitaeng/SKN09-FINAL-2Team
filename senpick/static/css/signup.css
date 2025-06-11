@@ -114,13 +114,6 @@ body {
   margin-top: 0; 
 }
 
-/* .form-block {
-  display: flex;
-  flex-direction: column;
-  gap: 20px; 
-  flex-grow: 1; 
-} */
-
 .signup-form-area {
   width: 100%;
   background: var(--white); 
@@ -594,11 +587,35 @@ input[type="terms"].error {
 /* =======================
    Step 4: 스타일·카테고리 선택
 ======================= */
-.signup-form-area.step4 .section-title {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 10px;
+.scrollable-step4-content {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-y: auto; 
+  padding: 40px 30px 30px 30px;
+  -webkit-overflow-scrolling: touch; 
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+  flex-grow: 1;
 }
+
+.scrollable-step4-content::-webkit-scrollbar {
+  display: none;
+}
+
+.signup-form-area.step4 .section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.subtext {
+  margin-left: auto;
+  color: var(--error);
+  font-size: 12px;
+  font-weight: 400;
+}
+
 .signup-form-area.step4 .style-group,
 .signup-form-area.step4 .category-group {
   display: flex;
@@ -609,7 +626,7 @@ input[type="terms"].error {
 }
 .signup-form-area.step4 .option-btn {
   width: calc(25% - 8px);
-  height: 48px;
+  height: 38px;
   background: var(--white);
   border: 1px solid var(--gray-medium);
   border-radius: 90px;
@@ -620,49 +637,64 @@ input[type="terms"].error {
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap; 
 }
-.signup-form-area.step4 .option-btn:hover {
-  border-color: var(--info);
-}
+
+.signup-form-area.step4 .option-btn:hover,
 .signup-form-area.step4 .option-btn.selected {
   background-color: #FFFBEA;
   color: var(--text);
-  border-color: var(--primary);
+  border: 2px solid var(--primary);
   font-weight: bold;
 }
+
 .signup-form-area.step4 #style-error,
 .signup-form-area.step4 #category-error {
   font-size: 12px;
   color: var(--error);
-  line-height: 1.4;
-  margin-top: -10px;
+  /* line-height: 1.4; */
+  /* margin-top: -10px; */
 }
 
 /* =======================
    Step 5: 서브타이틀
 ======================= */
+.signup-form-header.step5 .title-group {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center;  */
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.signup-form-header.step5 .signup-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 8px 0; 
+}
+
 .signup-form-area.step5 .signup-subtitle {
   font-size: 16px;
   color: var(--gray-dark);
-  line-height: 1.6;
   margin: 0;
 }
 
-/* .signup-form-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: calc(100vh - 152px); 
-  overflow-y: auto;
-  margin: 0 150px 25px 150px;
-  scrollbar-width: none;
+.step5-verify-btn {
+  height: 44px;
+  font-size: 16px;
+  font-weight: 400;
+  background: var(--gray-light);
+  color: var(--text);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+  margin: 20px auto;
+  max-width: 500px;
+  min-width: 400px;
 }
 
-.signup-form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  flex-grow: 1;
-  margin-bottom: 25px;
-} */
+.step5-verify-btn:hover {
+  background: var(--primary);
+  font-weight: bold;
+}

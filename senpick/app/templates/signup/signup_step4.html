@@ -8,70 +8,67 @@
   <link rel="stylesheet" href="{% static 'css/login.css' %}">
   <link rel="stylesheet" href="{% static 'css/signup.css' %}">
   <link rel="stylesheet" href="{% static 'css/slide.css' %}">
-  <script src="{% static 'js/slide.js' %}" defer></script>
 </head>
 <body>
-  <div class="background">
-    <div class="signup-container">
-      <!-- 왼쪽 폼 영역 -->
-      <div class="signup-form-area step4">
-        <!-- 1) 로고 -->
-        <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo" onclick="location.href=`{% url 'login' %}`">
-        <!-- 2) 스텝 인디케이터 -->
-        <div class="step-indicator">
-          <span class="dot active"></span>
-          <span class="dot active"></span>
-          <span class="dot active"></span>
-          <span class="dot"></span>
-        </div>
-        <div class="signup-form-wrapper">
-          <form method="post" action="{% url 'signup_step4' %}" class="signup-form profile-form signup-form-area step4">
-            {% csrf_token %}
+  <div class="background signup-background">
+    <div class="signup-card">
+      <div class="logo-wrapper">
+        <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
+      </div>
+      <div class="step-indicator">
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+      </div>
+      <div class="signup-form-header">
+        <h2 class="signup-title">당신을 알아갈수록,<br>더 센스있는 선물을 고를 수 있어요.</h2>
+      </div>
 
-            <!-- 3) 타이틀 -->
-            <h2 class="signup-title">당신을 알아갈수록,<br>더 센스있는 선물을 고를 수 있어요.</h2>
+      <div class="scrollable-step4-content">
+        <div class="login-wrapper">
+          <div class="form-block">
+            <form method="post" action="{% url 'signup_step4' %}" class="signup-form profile-form signup-form-area step4">
+              {% csrf_token %}
+              <p class="section-title">
+                선호 스타일 <span class="subtext">(최대 3개 선택)</span>
+              </p>
+              <div class="options-group style-group">
+                {% for opt in style_options %}
+                  <button
+                    type="button"
+                    class="option-btn"
+                    data-id="{{ opt.prefer_id }}"
+                  >
+                    {{ opt.type_name }}
+                  </button>
+                {% endfor %}
+              </div>
+              <div id="style-error" class="error-message"></div>
 
-            <!-- 4) 선호 스타일 (최대 3개 선택) -->
-            <p class="section-title">
-              선호 스타일 <span class="subtext">(최대 3개 선택)</span>
-            </p>
-            <div class="options-group style-group">
-              {% for opt in style_options %}
-                <button
-                  type="button"
-                  class="option-btn"
-                  data-id="{{ opt.prefer_id }}"
-                >
-                  {{ opt.type_name }}
-                </button>
-              {% endfor %}
-            </div>
-            <div id="style-error" class="error-message"></div>
+              <p class="section-title" style="margin-top: 32px;">
+                선호 카테고리 <span class="subtext">(최대 3개 선택)</span>
+              </p>
+              <div class="options-group category-group">
+                {% for opt in category_options %}
+                  <button
+                    type="button"
+                    class="option-btn"
+                    data-id="{{ opt.prefer_id }}"
+                  >
+                    {{ opt.type_name }}
+                  </button>
+                {% endfor %}
+              </div>
+              <div id="category-error" class="error-message"></div>
 
-            <!-- 5) 선호 카테고리 (최대 3개 선택) -->
-            <p class="section-title" style="margin-top: 32px;">
-              선호 카테고리 <span class="subtext">(최대 3개 선택)</span>
-            </p>
-            <div class="options-group category-group">
-              {% for opt in category_options %}
-                <button
-                  type="button"
-                  class="option-btn"
-                  data-id="{{ opt.prefer_id }}"
-                >
-                  {{ opt.type_name }}
-                </button>
-              {% endfor %}
-            </div>
-            <div id="category-error" class="error-message"></div>
-            
-            <input type="hidden" name="preference_ids" id="preference-ids" value="">
+              <input type="hidden" name="preference_ids" id="preference-ids" value="">
 
-            <!-- 6) 회원가입 완료 버튼 -->
-            <button type="submit" id="completeBtn" class="verify-btn" style="margin-top: 48px;">
-              회원가입 완료
-            </button>
-          </form>
+              <button type="submit" id="completeBtn" class="verify-btn" style="margin-top: 48px;">
+                회원가입 완료
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -80,5 +77,6 @@
   </div>
   <!-- JS 로드 -->
   <script src="{% static 'js/signup.js' %}" defer></script>
+  <script src="{% static 'js/slide.js' %}" defer></script>
 </body>
 </html>

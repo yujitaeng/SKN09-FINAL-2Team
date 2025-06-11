@@ -171,8 +171,8 @@ def signup_step3(request):
 
 def signup_step4(request):
     if request.method == "GET":
-        style_options    = PreferType.objects.filter(type="S")
-        category_options = PreferType.objects.filter(type="C")
+        style_options    = PreferType.objects.filter(type="스타일")
+        category_options = PreferType.objects.filter(type="카테고리")
         return render(request, "signup/signup_step4.html", {
             "style_options": style_options,
             "category_options": category_options,
