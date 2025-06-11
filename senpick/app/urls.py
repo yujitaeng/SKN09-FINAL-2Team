@@ -14,12 +14,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
+from django.urls import path, include
 from . import pswd_views
 from . import pswd_verif_views
 from . import pswd_gen_views
 from . import views, birth_views, login_views, chat_views, mypage_views, recommend_views
 # from app.views import user_views, chat_views, recommend_views
+from app.views import social_redirect_view
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -63,6 +64,9 @@ urlpatterns = [
     path('signup/verify-code/', views.verify_code, name='verify_code'),
     path('signup/check-dup/', views.check_duplicate, name='check_duplicate'),
     
+    path('accounts/', include('allauth.urls')),
+    path('social/redirect/', social_redirect_view, name='social_redirect'),
+
     path('chat/start/', chat_views.chat_start, name='chat_start'),
     path('chat/message/', chat_views.chat_message, name='chat_message'),
     path('chat/history/', chat_views.chat_history, name='chat_history'),
