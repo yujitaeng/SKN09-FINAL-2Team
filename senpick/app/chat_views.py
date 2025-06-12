@@ -221,7 +221,7 @@ def chat_message(request):
         if isinstance(res, dict):
             state = res
             situation_info = state.get("situation_info", {})
-            output = state.get("output", "")
+            output = state.get("output", "").replace("bot: ", "")
             chatMsg = ChatMessage.objects.create(
                 chat_id=chat_obj,
                 sender="bot",
@@ -271,7 +271,7 @@ def chat_message(request):
                 
                 # 최종 출력 누적해서 chat_history 에 기록
                 output = "".join(output_parts)
-                state["output"] = output
+                state["output"] = output.replace("bot: ", "")
                 state.get("chat_history").append(f"bot: {output}")
                 ChatMessage.objects.create(
                     chat_id=chat_obj,
