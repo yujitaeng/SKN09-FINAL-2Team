@@ -21,13 +21,3 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl   # <-- 이거 추가 필요
     depends_on:
       - web
-      
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./nginx/ssl:/etc/letsencrypt/live
-      - ./nginx/ssl:/etc/letsencrypt/archive
-      - ./nginx/ssl:/etc/letsencrypt/renewal
-      - ./certbot/www:/var/www/certbot
-    command: certonly --webroot --webroot-path=/var/www/certbot --email your-email@example.com --agree-tos --no-eff-email -d senpick.kr
