@@ -24,7 +24,7 @@
             </h1>
             <p>오늘은 누구를 위한 선물을 고민하고 계신가요?</p>
           </div>
-          {% if is_birth_today %}
+          {% if request.session.is_birth %}
           <a href="{% url 'birth' %}">
             <img src="{% static 'images/birth_message.svg' %}" alt="Birth-Card" class="birth-card" width="500">
           </a>

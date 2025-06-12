@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.contrib.auth.hashers import check_password
 from django.views.decorators.csrf import csrf_exempt
 from app.models.user import User
+from django.utils import timezone
 import json
 
 def home(request):
@@ -37,7 +38,16 @@ def login_view(request):
         request.session["nickname"] = user.nickname
         request.session["birth"] = user.birth
         request.session["profile_image"] = user.profile_image or ""
-        
+
+        # 오늘 날짜 → 'MMDD'만 추출
+        today_mmdd = timezone.now().strftime('%m%d')
+
+        # 생일에서 'MMDD'만 추출
+        birth_mmdd = user.birth[4:] if user.birth else ''
+
+        is_birth_today = (birth_mmdd == today_mmdd)
+        request.session['is_birth'] = is_birth_today  # 세션에 저장
+            
         return redirect("chat")
 
     return render(request, "login.html", {"password_error": "잘못된 접근입니다."})

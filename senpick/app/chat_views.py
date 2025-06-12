@@ -5,7 +5,6 @@ import json, re
 from datetime import datetime
 from giftgraph.graph import gift_fsm 
 from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend
-from django.utils import timezone
 from collections import defaultdict
 from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
@@ -55,19 +54,7 @@ llm_chain = prompt | llm
 def chat(request):
     if request.session.get("user_id") is None:
         return redirect('login')  # 로그인하지 않은 경우 로그인 페이지로 리디렉션
-    birth = request.session.get('birth')  # 예: '19990101'
-
-    # 오늘 날짜 → 'MMDD'만 추출
-    today_mmdd = timezone.now().strftime('%m%d')
-
-    # 생일에서 'MMDD'만 추출
-    birth_mmdd = birth[4:] if birth else ''
-
-    is_birth_today = (birth_mmdd == today_mmdd)
-    
-    return render(request, 'chat.html', {
-        'is_birth_today': is_birth_today,
-    })
+    return render(request, 'chat.html')
 
 def get_state(request):
     return request.session.get("chat_state", {
@@ -234,6 +221,8 @@ def chat_message(request):
             output, products = extract_products_from_response(output)
             recommend_products = []
             for product in products:
+                if "상품명:" in product["brand"]:
+                    product["brand"] = ""
                 product_obj, created = Product.objects.get_or_create(
                     name=product["title"],
                     defaults={

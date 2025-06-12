@@ -33,7 +33,7 @@
       <p>센픽이 그 모든 선물들과 담긴 마음들을 따뜻하게 기억해둘게요.</p>
     </div>
     {% endif %}
-    {% if is_birth_today %}
+    {% if request.session.is_birth %}
     <div class="menu-btn-row" id="gift-btn" onclick="location.href=`{% url 'birth' %}`">
       <img src="{% static 'images/gift.svg' %}" alt="Gift">
       <span class="btn-label">Happy Birthday</span>
@@ -58,7 +58,7 @@
       </a>
       <a href="{% url 'logout' %}" class="brand-link tooltip">
         <span class="tooltip-text">
-          {% if request.session.type|default:"guest" == "guest" %}로그인하기{% else %}로그아웃{% endif %}
+          {% if request.session.nickname|default:"게스트" == "게스트" %}로그인하기{% else %}로그아웃{% endif %}
         </span>
         <img src="{% static 'images/logout.svg' %}" alt="로그아웃">
       </a>
