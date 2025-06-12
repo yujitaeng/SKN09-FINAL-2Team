@@ -200,6 +200,7 @@ body {
 .recommend button:hover {
   background-color: #FFE900;
   color: #333;
+  font-weight: bold;
 }
 
 .guest-message {
@@ -222,16 +223,12 @@ body {
 }
 
 .sidebar-right .guest-message span {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .guest-message p {
   color: #666;
   font-size: 14px;
-}
-
-.sidebar-right .guest-message p {
-  font-size: 16px;
 }
 
 .sidebar.mini .guest-message {
@@ -246,7 +243,7 @@ body {
   width: fit-content;
   display: inline-block;
   padding: 14px 20px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   width: 100%;
   margin-top: 8px;
@@ -260,8 +257,8 @@ body {
 
 .feedback-input img {
   padding: 2px;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.18s;
@@ -278,7 +275,6 @@ body {
   font-size: 14px;
   color: #666;
   text-align: center;
-  margin: 20px auto;
-  max-width: 500px;
+  margin: 20px 32px;
   line-height: 1.5;
 }

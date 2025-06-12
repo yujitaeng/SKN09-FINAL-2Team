@@ -232,7 +232,7 @@ def chat_message(request):
                     situation_info=json.dumps(situation_info)
                 )
             output, products = extract_products_from_response(output)
-            recommend_produsts = []
+            recommend_products = []
             for product in products:
                 product_obj, created = Product.objects.get_or_create(
                     name=product["title"],
@@ -249,7 +249,7 @@ def chat_message(request):
                     product_id=product_obj,
                     reason=product["reason"],
                 )
-                recommend_produsts.append({
+                recommend_products.append({
                     "recommend_id": recommend.rcmd_id,
                     "brand": product_obj.brand,
                     "title": product_obj.name,
@@ -284,14 +284,18 @@ def chat_message(request):
             return StreamingHttpResponse(stream(), content_type='text/plain')
 
         save_state(request, state if isinstance(res, dict) else state)
+        
         #TODO: 추천 질문 내용 생성
-        recommend_inputs = [
-            "다른상품 추천해줘", "더 고급스런 상품 추천해줘"
-        ]
+        recommend_inputs = []
+        if recommend_products != []:
+            recommend_inputs = [
+                "다른상품 추천해줘", "더 고급스런 상품 추천해줘"
+            ]
+            
         return JsonResponse({
                 "msg_id":chatMsg.msg_id, 
                 "bot": output, 
-                "products": recommend_produsts,
+                "products": recommend_products,
                 "recommend_inputs": recommend_inputs,
         })
     return JsonResponse({"error": "POST only"})
@@ -491,7 +495,7 @@ def chat_guest_start(request):
             user_id=guest_user_id,
             email=f"{guest_user_id}@guest.senpick.kr",  # 더미 이메일
             password="",  # 비회원은 password 없음
-            nickname="비회원",  # 기본값
+            nickname="게스트",  # 기본값
             birth="19000101",  # 기본값 (있으면 넣고 아니면 null 가능)
             gender="unknown",  # 기본값
             type="guest",  # 핵심 → guest로 명시
@@ -500,7 +504,7 @@ def chat_guest_start(request):
 
         # 세션에 user_id 저장 → chat()에서도 그대로 사용 가능
         request.session["user_id"] = guest_user_id
-        request.session["nickname"] = "비회원"
+        request.session["nickname"] = "게스트"
         request.session["type"] = "guest"  # guest 타입으로 설정
 
         return redirect('chat')

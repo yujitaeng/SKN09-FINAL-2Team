@@ -93,11 +93,14 @@ body {
 
 .outer-wrapper.scrollable-content {
   overflow-y: auto; 
-  padding: 200px 30px 30px 30px;
+  padding: 30px 30px 30px 30px;
   -webkit-overflow-scrolling: touch; 
   scrollbar-width: none; 
   -ms-overflow-style: none; 
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .outer-wrapper.scrollable-content::-webkit-scrollbar {
@@ -447,9 +450,6 @@ input[type="terms"].error {
 ======================= */
 
 .outer-wrapper.scrollable-step3-content {
-  bottom: 0;
-  left: 0;
-  right: 0;
   overflow-y: auto; 
   padding: 70px 30px 30px 30px;
   -webkit-overflow-scrolling: touch; 

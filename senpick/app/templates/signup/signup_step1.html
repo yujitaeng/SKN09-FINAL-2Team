@@ -46,28 +46,30 @@
               <div id="nickname-error" class="error-message">{{ errors.nickname }}</div>
 
               <label class="label-terms">약관동의</label>
-              <div class="terms-box step-option">
-                <label class="checkbox checkbox-all">
-                  <input type="checkbox" id="allAgree">
-                  전체 약관 동의
-                </label>
-                <hr>
-                <label class="checkbox step-option">
-                  <input type="checkbox" name="agree" id="term1">
-                  <span class="checkbox-label">
-                    <a href="#" data-modal="serviceModal">서비스 이용약관</a>에 동의합니다.
-                  </span>
-                  <span class="required">(필수)</span>
-                </label>
-                <label class="checkbox">
-                  <input type="checkbox" name="agree" id="term2">
-                  <span class="checkbox-label">
-                    <a href="#" data-modal="personalModal">개인정보 수집·이용 약관</a>에 동의합니다.
-                  </span>
-                  <span class="required">(필수)</span>
-                </label>
+              <div>
+                <div class="terms-box step-option">
+                  <label class="checkbox checkbox-all">
+                    <input type="checkbox" id="allAgree">
+                    전체 약관 동의
+                  </label>
+                  <hr>
+                  <label class="checkbox step-option">
+                    <input type="checkbox" name="agree" id="term1">
+                    <span class="checkbox-label">
+                      <a href="#" data-modal="serviceModal">서비스 이용약관</a>에 동의합니다.
+                    </span>
+                    <span class="required">(필수)</span>
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox" name="agree" id="term2">
+                    <span class="checkbox-label">
+                      <a href="#" data-modal="personalModal">개인정보 수집·이용 약관</a>에 동의합니다.
+                    </span>
+                    <span class="required">(필수)</span>
+                  </label>
+                </div>
+                <div id="terms-error" class="error-message"></div>
               </div>
-              <div id="terms-error" class="error-message"></div>
               <!-- 9) 다음 단계 버튼 -->
               <button type="submit" id="nextBtn" class="next-btn active">다음 단계</button>
 

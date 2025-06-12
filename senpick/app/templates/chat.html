@@ -19,7 +19,9 @@
       <div class="chatbot-body" id="chatbot-body">
         <div class="chat-window" id="chat-history">
           <div class="chatbot-header">
-            <h1>안녕하세요! {{request.session.nickname}}님</h1>
+            <h1>
+                안녕하세요{% if request.session.type != "guest" %}! {{ request.session.nickname|default:"게스트" }}님{% endif %}!
+            </h1>
             <p>오늘은 누구를 위한 선물을 고민하고 계신가요?</p>
           </div>
           {% if is_birth_today %}
@@ -248,6 +250,10 @@
           };
 
           const chatHistory = document.getElementById('chat-history');
+          chatHistory.insertAdjacentHTML(
+            'beforeend',
+            `<div class="chat-msg user">좋아! 선물 받는 사람에 대해 조금 더 얘기 해볼게 :)</div>`
+          );
           // 로딩 표시
           chatHistory.insertAdjacentHTML(
             'beforeend',
@@ -354,6 +360,18 @@
               chatHistory.scrollTop = chatHistory.scrollHeight;
           }).finally(() => {
             chatHistory.scrollTop = chatHistory.scrollHeight;
+            const chatList = document.querySelector('.chat-list');
+            if (chatList) {
+              // 채팅 히스토리 가져오기
+              fetch("/chat/history")
+                .then(response => response.json())
+                .then(data => {
+                  if (data?.chatlist) {
+                    renderChatList(data.chatlist);
+                  }
+                })
+                .catch(error => console.error('Error fetching chat history:', error));  
+            }   
             userInput.disabled = false;
             userInput.focus();
           });
@@ -562,7 +580,7 @@
                       const recommendBtn = document.createElement('button');
                       recommendBtn.textContent = recommend_input;
                       recommendBtn.onclick = function () {
-                          document.getElementById('user-input').value = '다른 상품 추천해줘';
+                          document.getElementById('user-input').value = recommend_input;
                           document.getElementById('chat-form').dispatchEvent(new Event('submit'));
                       };
 
@@ -571,56 +589,58 @@
                     chatHistory.appendChild(recommend);
 
                     // feedback 버튼 추가
-                    const feedbackInput = document.createElement('div');
-                    feedbackInput.className = 'feedback-input';
+                    if (data.recommend_input){
+                      const feedbackInput = document.createElement('div');
+                      feedbackInput.className = 'feedback-input';
 
-                    const thumbsUp = document.createElement('img');
-                    thumbsUp.src = '/static/images/thumbs_up.svg';
-                    thumbsUp.alt = '좋아요';
+                      const thumbsUp = document.createElement('img');
+                      thumbsUp.src = '/static/images/thumbs_up.svg';
+                      thumbsUp.alt = '좋아요';
 
-                    const thumbsDown = document.createElement('img');
-                    thumbsDown.src = '/static/images/thumbs_down.svg';
-                    thumbsDown.alt = '싫어요';
+                      const thumbsDown = document.createElement('img');
+                      thumbsDown.src = '/static/images/thumbs_down.svg';
+                      thumbsDown.alt = '싫어요';
 
-                    feedbackInput.appendChild(thumbsUp);
-                    feedbackInput.appendChild(thumbsDown);
-                    chatHistory.appendChild(feedbackInput);
+                      feedbackInput.appendChild(thumbsUp);
+                      feedbackInput.appendChild(thumbsDown);
+                      chatHistory.appendChild(feedbackInput);
 
-                    // thumbsUp 클릭 처리
-                    thumbsUp.onclick = function () {
-                        fetch(`/chat/feedback/${data.msg_id}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ feedback: 'like' })
-                        }).then(response => {
-                            if (response.ok) {
-                                thumbsUp.src = '/static/images/thumbs_up_selected.svg';
-                                thumbsDown.src = '/static/images/thumbs_down.svg'; // 초기화
-                            } else {
-                                console.error('Feedback failed');
-                            }
-                        }).catch(error => {
-                            console.error('Network error', error);
-                        });
-                    };
+                      // thumbsUp 클릭 처리
+                      thumbsUp.onclick = function () {
+                          fetch(`/chat/feedback/${data.msg_id}`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ feedback: 'like' })
+                          }).then(response => {
+                              if (response.ok) {
+                                  thumbsUp.src = '/static/images/thumbs_up_selected.svg';
+                                  thumbsDown.src = '/static/images/thumbs_down.svg'; // 초기화
+                              } else {
+                                  console.error('Feedback failed');
+                              }
+                          }).catch(error => {
+                              console.error('Network error', error);
+                          });
+                      };
 
-                    // thumbsDown 클릭 처리
-                    thumbsDown.onclick = function () {
-                        fetch(`/chat/feedback/${data.msg_id}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ feedback: 'dislike' })
-                        }).then(response => {
-                            if (response.ok) {
-                                thumbsDown.src = '/static/images/thumbs_down_selected.svg';
-                                thumbsUp.src = '/static/images/thumbs_up.svg'; // 초기화
-                            } else {
-                                console.error('Feedback failed');
-                            }
-                        }).catch(error => {
-                            console.error('Network error', error);
-                        });
-                    };
+                      // thumbsDown 클릭 처리
+                      thumbsDown.onclick = function () {
+                          fetch(`/chat/feedback/${data.msg_id}`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ feedback: 'dislike' })
+                          }).then(response => {
+                              if (response.ok) {
+                                  thumbsDown.src = '/static/images/thumbs_down_selected.svg';
+                                  thumbsUp.src = '/static/images/thumbs_up.svg'; // 초기화
+                              } else {
+                                  console.error('Feedback failed');
+                              }
+                          }).catch(error => {
+                              console.error('Network error', error);
+                          });
+                      };
+                    }
                   });
               }
               else {

@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     remainingTime = 300;
     updateTimer();
     timerText.style.display = "block";
-    resendText.style.display = "none";
+    // resendText.style.display = "none";
 
     timerInterval = setInterval(() => {
       remainingTime--;
@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (remainingTime === 0) {
         clearInterval(timerInterval);
-        resendText.style.display = "block";
       }
     }, 1000);
   }

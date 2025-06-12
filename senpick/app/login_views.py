@@ -20,14 +20,14 @@ def login_view(request):
         password = request.POST.get("password", "").strip()
 
         if not email:
-            return render(request, "login.html", {"email_error": "이메일이 올바르지 않습니다."})
+            return render(request, "login.html", {"email_error": "이메일을 입력해주세요"})
         if not password:
-            return render(request, "login.html", {"password_error": "이메일 또는 비밀번호가 올바르지 않습니다."})
+            return render(request, "login.html", {"password_error": "비밀번호를 입력해 주세요."})
 
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return render(request, "login.html", {"email_error": "이메일이 올바르지 않습니다."})
+            return render(request, "login.html", {"password_error": "이메일 또는 비밀번호가 올바르지 않습니다."})
 
         if not check_password(password, user.password):
             return render(request, "login.html", {"password_error": "이메일 또는 비밀번호가 올바르지 않습니다."})

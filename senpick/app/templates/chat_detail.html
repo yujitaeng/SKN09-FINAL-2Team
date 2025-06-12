@@ -45,7 +45,7 @@
                              class="heart-icon {% if product.is_liked %}active{% endif %}"
                              data-recd_id="{{ product.recommend_id }}">
                       </div>
-                      <div class="reason">{{ product.reason }}</div>
+                      <div class="reason">추천 이유: {{ product.reason }}</div>
                     </div>
                   {% endfor %}
                 </div>
@@ -68,7 +68,7 @@
           {% endfor %}
         </div>
         <!-- 이전 채팅 내용을 볼 때는 채팅 입력창을 숨깁니다 -->
-        <div class="chat-readonly-notice" style="text-align: center; color: #666; margin-bottom: 20px;">
+        <div class="chat-readonly-notice" id="chat-form" style="text-align: center; color: #666; margin-bottom: 20px;" data-chat-id="{{ chat.chat_id }}">
           이전 대화 내용입니다. 새로운 대화를 시작하려면 왼쪽 사이드바의 '새 채팅' 버튼을 클릭하세요.
         </div>
       </div>

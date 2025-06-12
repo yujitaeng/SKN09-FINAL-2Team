@@ -225,7 +225,6 @@ input.error {
   text-align: right;
   text-decoration: underline;
   font-family: 'Spoqa Han Sans Neo';
-  display: none;
   cursor: pointer;
 }
 

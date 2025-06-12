@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 1. 형식이 틀릴 경우
     if (!pwRegex.test(val1)) {
-      pw1Msg.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자를 이용하여 최소 8~15자리";
+      pw1Msg.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 최소 8~15자리";
       pw1Msg.classList.add("show");
       pw1.classList.add("error");
       hasError = true;

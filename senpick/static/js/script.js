@@ -164,3 +164,37 @@ function toggleLikeBlock(cardEl) {
         }
     }
 }
+
+// 채팅 리스트 렌더링 함수
+function renderChatList(chatList) {
+    chatHistoryEl.innerHTML = '';  // 기존 목록 초기화
+    const chatFormEl = document.getElementById('chat-form');
+    window.currentChatId = chatFormEl ? chatFormEl.dataset.chatId : null;
+    chatList.forEach(chat => {
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.className = 'chat-title';
+        span.textContent = chat.title;
+
+        // chat_id 를 dataset 으로 저장 (클릭 시 사용 가능)
+        li.dataset.chatId = chat.chat_id;
+        if (li.dataset.chatId === window.currentChatId) {
+        li.classList.add('selected'); // 현재 선택된 채팅에 selected 클래스 추가
+        }
+
+        li.appendChild(span);
+
+        // 선택 시 selected 클래스 토글
+        li.addEventListener('click', () => {
+        document.querySelector('.chat-list li.selected')?.classList.remove('selected');
+        li.classList.add('selected');
+
+        // 필요시 chat_id 를 활용해서 채팅 불러오기 등 추가 동작 가능
+        console.log('Selected chat_id:', li.dataset.chatId);
+        window.currentChatId = li.dataset.chatId; // 현재 선택된 chat_id 저장
+        window.location.href = `/chat/${li.dataset.chatId}`; // 채팅 페이지로 이동
+        });
+
+        chatHistoryEl.appendChild(li);
+    });
+}

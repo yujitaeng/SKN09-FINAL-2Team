@@ -41,16 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
-    // document.querySelectorAll(".modal-close").forEach(btn => {
-    //   btn.addEventListener("click", () => {
-    //     btn.closest(".modal-overlay").classList.remove("open");
-    //   });
-    // });
-    // document.querySelectorAll(".modal-overlay").forEach(overlay => {
-    //   overlay.addEventListener("click", e => {
-    //     if (e.target === overlay) overlay.classList.remove("open");
-    //   });
-    // });
 
     // 전체 동의 제어
     allAgree.addEventListener("change", () => {
@@ -115,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // 비밀번호 검증 (통합 메시지)
       const pwValue = password.value.trim();
       if (pwValue === "" || !passwordPattern.test(pwValue)) {
-        pwErr.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자를 이용하여 최소 8~15자리";
+        pwErr.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 최소 8~15자리";
         pwErr.style.display = "block";
         password.classList.add("error");
         hasError = true;
@@ -131,23 +121,20 @@ document.addEventListener('DOMContentLoaded', () => {
         hasError = true;
         if (!firstErrorElement) firstErrorElement = nickname; 
       } else {
-      try {
-        const res = await fetch(`/signup/check-dup/?field=nickname&value=${encodeURIComponent(nickValue)}`);
-        const data = await res.json();
-        if (data.exists) {
-          nickErr.textContent = "이미 사용 중인 닉네임입니다.";
-          nickErr.style.display = "block";
-          nickname.classList.add("error");
-          hasError = true;
-          if (!firstErrorElement) firstErrorElement = nickname;
+        try {
+          const res = await fetch(`/signup/check-dup/?field=nickname&value=${encodeURIComponent(nickValue)}`);
+          const data = await res.json();
+          if (data.exists) {
+            nickErr.textContent = "이미 사용 중인 닉네임입니다.";
+            nickErr.style.display = "block";
+            nickname.classList.add("error");
+            hasError = true;
+            if (!firstErrorElement) firstErrorElement = nickname;
+          }
+        } catch (err) {
+          console.error("닉네임 중복검사 오류:", err);
         }
-      } catch (err) {
-        console.error("닉네임 중복검사 오류:", err);
       }
-    }
-    if (hasError) {
-      return;
-    }
 
       // 약관 검증
       if (!Array.from(requiredChk).every(c => c.checked)) {

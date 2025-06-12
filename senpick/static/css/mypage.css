@@ -334,6 +334,11 @@ a {
   font-size: 11px;
   color: #999;
   margin-bottom: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .title {

@@ -157,6 +157,7 @@ def profile_password(request):
         
         # 비밀번호 변경 후 세션 초기화
         request.session.flush()
+        request.session["nickname"] = "게스트"
         
         return redirect('profile_password_confirm')
     return render(request, 'profile/profile_password.html')
@@ -216,7 +217,8 @@ def delete_user_account(request):
         user.save()
 
         # 세션 삭제 = 로그아웃 처리
-        request.session.flush()
+        request.session.flush() # 만료된 세션 제거
+        request.session["nickname"] = "게스트"
 
         # 성공 응답 + 리디렉트 경로 전달
         return JsonResponse({"success": True, "message": "계정이 성공적으로 삭제되었습니다."}, status=200)
