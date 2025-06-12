@@ -622,7 +622,6 @@ input[type="terms"].error {
   flex-wrap: wrap;
   gap: 10px;
   width: 100%;
-  margin-bottom: 20px;
 }
 .signup-form-area.step4 .option-btn {
   width: calc(25% - 8px);
@@ -653,7 +652,7 @@ input[type="terms"].error {
   font-size: 12px;
   color: var(--error);
   /* line-height: 1.4; */
-  /* margin-top: -10px; */
+  margin-top: -15px;
 }
 
 /* =======================
@@ -690,8 +689,7 @@ input[type="terms"].error {
   cursor: pointer;
   transition: background 0.3s ease, color 0.3s ease;
   margin: 20px auto;
-  max-width: 500px;
-  min-width: 400px;
+  width: 470px;
 }
 
 .step5-verify-btn:hover {

@@ -60,7 +60,7 @@
             <button type="submit" class="guest-btn">비회원으로 시작하기</button>
           </form>
           <div class="social-login">
-            <img src="{% static 'images/kakao_login.svg' %}" alt="카카오 로그인" id="kakaoLoginBtn"> 
+            {% comment %} <img src="{% static 'images/kakao_login.svg' %}" alt="카카오 로그인" id="kakaoLoginBtn">  {% endcomment %}
             <img src="{% static 'images/google_login.svg' %}" alt="구글 로그인" id="googleLoginBtn">
             {% comment %} <img src="{% static 'images/naver_login.svg' %}" alt="네이버 로그인" id="naverLoginBtn"> {% endcomment %}
             <form method="post" action="/accounts/naver/login/">
