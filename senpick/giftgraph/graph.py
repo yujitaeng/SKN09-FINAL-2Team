@@ -1,85 +1,85 @@
 # graph.py
-
 from functools import partial
 from langgraph.graph import StateGraph, END
-
 from giftgraph.states import (
-    handle_feedback,
-    feedback_condition,
+# from states import (
     extract_situation,
-    ask_for_missing_info,
-    conversation,
     call_agent,
     final_response,
-    is_situation_complete,
+    extract_action,
+
     CONVERSATION_PROMPT,
-    SITUATION_EXTRACTION_PROMPT
+    SITUATION_EXTRACTION_PROMPT,
+    ACTION_EXTRACTION_PROMPT,
+    compare_prompt,
+    refine_prompt,
+    stream_output
 )
 from giftgraph.agent import llm, create_agent
 
-# agent_executor를 미리 생성
+# ✅ Agent 초기화
 agent_executor = create_agent()
 
-# LangGraph FSM, 상태는 dict만 쓴다!
+# ✅ FSM 초기화
 graph = StateGraph(state_schema=dict)
 
-# FSM 각 단계 등록 (partial로 리소스 주입)
+# ✅ 노드 정의
 graph.add_node(
     "ExtractSituation",
     partial(extract_situation, llm=llm, prompt_template=SITUATION_EXTRACTION_PROMPT)
 )
+
 graph.add_node(
-    "AskQuestion", 
-    partial(conversation, llm=llm, prompt_template=CONVERSATION_PROMPT)
+    "ExtractAction", 
+    partial(extract_action, llm=llm, prompt_template=ACTION_EXTRACTION_PROMPT)
 )
+
+# ✅ stream 기반 출력 노드들
+graph.add_node(
+    "AskQuestion",
+    partial(stream_output, llm=llm, prompt_template=CONVERSATION_PROMPT)
+)
+
+graph.add_node(
+    "Refine",
+    partial(stream_output, llm=llm, prompt_template=refine_prompt)
+)
+
+graph.add_node(
+    "Compare",
+    partial(stream_output, llm=llm, prompt_template=compare_prompt)
+)
+
 graph.add_node(
     "AgentCall",
     partial(call_agent, agent_executor=agent_executor)
 )
+
 graph.add_node("Respond", final_response)
-# graph.add_node("HandleFeedback", handle_feedback)
-# 시작점 등록
+
+# ✅ 라우팅 노드: action에 따라 분기
+def route_by_action(state):
+    return state.get("action", "ask")
+
+graph.add_node("RouteByAction", lambda state: state)  # 상태 변경 없음
+
+# ✅ 흐름 정의
 graph.set_entry_point("ExtractSituation")
+graph.add_edge("ExtractSituation", "ExtractAction")
+graph.add_edge("ExtractAction", "RouteByAction")
 
+graph.add_conditional_edges("RouteByAction", route_by_action, {
+    "ask": "AskQuestion",
+    "recommend": "AgentCall",
+    "compare": "Compare",
+    "refine": "Refine"
+})
 
-# 조건 분기 (상황 정보가 충분하면 AgentCall, 아니면 AskQuestion)
-def situation_condition(state):
-    # state는 dict임에 유의!
-    if is_situation_complete(state["situation_info"], state["chat_history"]):
-        return "complete"
-    return "incomplete"
+# graph.add_edge("AskQuestion", "ExtractAction")
+graph.add_edge("AskQuestion", "Respond")
+graph.add_edge("AgentCall", "Respond")
+graph.add_edge("Compare", "Respond")
+graph.add_edge("Refine", "Respond")
 
-graph.add_conditional_edges(
-    "ExtractSituation",
-    situation_condition,
-    {
-        "complete": "AgentCall",
-        "incomplete": "AskQuestion"
-    }
-)
-
-# graph.add_conditional_edges(
-#     "AgentCall",
-#     feedback_condition,
-#     {
-#         "modify": "ExtractSituation",  # 상황 정보 수정 필요
-#         "compare": "AskQuestion",       # 추가 질문 필요
-#         # "end": END,                     # 대화 종료
-#         # "ask_again": "HandleFeedback"   # 피드백 처리 후 다시 질문
-#     }
-# )
-
-# graph.add_edge("Respond", "HandleFeedback")
-# graph.add_conditional_edges(
-#     "HandleFeedback",
-#     feedback_condition,
-#     {"modify": "ExtractSituation", "compare":"AskQuestion", "end": END, "ask_again": "HandleFeedback", }
-# )
-
-# 일반 상태 전이
-# graph.add_edge("AskQuestion", "ExtractSituation")
-# graph.add_edge("AgentCall", "Respond")
-# graph.add_edge("Respond", "HandleFeedback")
-
-# FSM 빌드/컴파일
+# ✅ FSM 빌드
 gift_fsm = graph.compile()

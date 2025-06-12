@@ -6,7 +6,8 @@ from langchain.tools import Tool              # LangChain Tool 정의
 from langchain_openai import ChatOpenAI  # LLM 호출용
 from dotenv import load_dotenv                # .env 환경변수 로딩
 from pathlib import Path                      # 상대 경로를 사용하기 위함
-
+import re
+import requests
 
 base_path = Path(__file__).resolve().parent.parent  # tools/의 상위 → project/
 env_path = base_path / ".env"   
@@ -23,8 +24,7 @@ llm = ChatOpenAI(
     openai_api_key=OPENAI_API_KEY
 )
 
-def naver_shop_search(user_input: str) -> str:
-    # Step 1: 자연어를 검색용 쿼리로 변환
+def naver_shop_search(user_input: str) -> list:
     prompt = f"""
     사용자가 상품을 요청했지만 내부 DB에는 적절한 결과가 없었습니다.
     아래 문장을 네이버 쇼핑에서 검색하기에 적합한 **간결하고 핵심적인 검색어**로 변환해 주세요.
@@ -35,9 +35,9 @@ def naver_shop_search(user_input: str) -> str:
     try:
         search_query = llm.invoke(prompt).content.strip()
     except Exception as e:
-        return f"쿼리 정제 중 오류가 발생했습니다: {e}"
+        print(f"[naver_tool] 쿼리 정제 중 오류: {e}")
+        return []
 
-    # Step 2: 네이버 쇼핑 검색 API 호출
     headers = {
         "X-Naver-Client-Id": CLIENT_ID,
         "X-Naver-Client-Secret": CLIENT_SECRET
@@ -45,30 +45,42 @@ def naver_shop_search(user_input: str) -> str:
 
     params = {
         "query": search_query,
-        "display": 5,    # 상품 5개 가져옴
+        "display": 5,
         "start": 1,
         "sort": "sim"
     }
 
     url = "https://openapi.naver.com/v1/search/shop.json"
-    response = requests.get(url, headers=headers, params=params)
-    
-    if response.status_code != 200:
-        return "\n상품 검색 중 오류가 발생했습니다.\n"
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        response.raise_for_status()
+    except Exception as e:
+        print(f"[naver_tool] 검색 API 오류: {e}")
+        return []
 
     items = response.json().get("items", [])
-    if not items:
-        return "\n검색 결과가 없습니다.\n"
-
-    result = f"\n🔍 검색어: {search_query}\n\n"
+    results = []
     for item in items:
-        title = re.sub(r'<.*?>', '', item['title'])
-        price = item['lprice']
-        link = item['link']
-        image = item['image'] 
-        result += f"📌 {title} - {price}원\n🔗 {link}\n🖼️ 이미지: {image}\n\n"
+        try:
+            title = re.sub(r'<.*?>', '', item['title']).strip()
+            price = int(item['lprice'])
+            brand = item.get('brand', '브랜드 정보 없음')
+            link = item['link']
+            image = item['image']
+            results.append({
+                "BRAND": brand,
+                "NAME": title,
+                "PRICE": price,
+                "IMAGE": image,
+                "LINK": link
+            })
+        except Exception as e:
+            print(f"[naver_tool] 항목 파싱 실패: {e}")
+            continue
 
-    return result.strip()
+    return results
+
+
 naver_tool = Tool(
     name="naver_search",
     func=naver_shop_search,

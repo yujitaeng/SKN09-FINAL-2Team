@@ -7,6 +7,7 @@ from langchain.tools import BaseTool  # LangChain 사용자 정의 Tool 기반 �
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import json
 
 
 env_path = Path(__file__).resolve().parent.parent / ".env"
@@ -58,7 +59,13 @@ class MySQLQueryTool(BaseTool):
             column_names = [desc[0] for desc in cursor.description]
 
             result = [dict(zip(column_names, row)) for row in rows]
-            return result or "결과 없음"
+            if not result:
+                return "결과 없음"
+            # ✅ JSON 형식으로 문자열 출력
+            return json.dumps(result, ensure_ascii=False, indent=2, default=str)
+
+            # return result or "결과 없음"
+
         except Exception as e:
             return f"오류 발생: {e}\n{traceback.format_exc()}"
         finally:
