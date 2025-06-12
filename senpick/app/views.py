@@ -63,6 +63,7 @@ def signup_step1(request):
         password = request.POST.get("password", "").strip()
         nickname = request.POST.get("nickname", "").strip()
         agree_terms = request.POST.getlist("agree")  # 필수 동의 체크박스
+        request.session.flush()
 
         # 1) 간단 검증 (예시: 이메일, 비밀번호, 닉네임이 빈 문자열인지)
         errors = {}
