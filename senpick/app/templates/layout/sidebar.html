@@ -134,6 +134,37 @@
     showToggleIfOpen();
   });
 
+  // blur 시 검색
+  sidebarSearch.addEventListener('blur', function() {
+    triggerSearch();
+  });
+
+  // Enter 키 눌렀을 때 검색
+  sidebarSearch.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();  // form submit 방지 (있다면)
+      triggerSearch();
+    }
+  });
+
+  // 검색 수행 함수 (공통)
+  function triggerSearch() {
+    if (sidebarSearch.value.trim() === '') {
+      return;
+    }
+
+    fetch(`/chat/history?query=${encodeURIComponent(sidebarSearch.value)}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data && Array.isArray(data.chatlist)) {
+          renderChatList(data.chatlist);
+        } else {
+          console.error("채팅 기록을 가져오는 데 실패했습니다.");
+        }
+      })
+      .catch(error => console.error('Error fetching chat history:', error));
+  }
+
   const observer = new MutationObserver(showToggleIfOpen);
   observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
 </script>

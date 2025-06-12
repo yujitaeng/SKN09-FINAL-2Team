@@ -290,9 +290,15 @@ def chat_message(request):
     return JsonResponse({"error": "POST only"})
 
 def chat_history(request):
-    chats = Chat.objects.filter(user_id_id=request.session.get("user_id", None)) \
-                        .order_by('-created_at') \
-                        .values('chat_id', 'title', 'created_at')
+    query = request.GET.get("query", None)  # GET 요청에서 user_id 가져오기
+    # 기본 쿼리셋 (user_id에 해당하는 chat만 조회)
+    chats = Chat.objects.filter(user_id_id=request.session.get("user_id", None))
+
+    # query가 있으면 title에 해당 query가 포함된 것만 필터링
+    if query and query.strip() != "":
+        chats = chats.filter(title__icontains=query)
+    chats = chats.order_by('-created_at').values('chat_id', 'title', 'created_at')
+    
     return JsonResponse({"chatlist": list(chats)})
 
 def chat_detail(request, chat_id):
