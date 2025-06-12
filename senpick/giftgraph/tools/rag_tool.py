@@ -11,19 +11,26 @@ vectorstore = QdrantVectorStore(
     embedding=embedding,
 )
 
-def retrieve_from_qdrant(query: str) -> str:
+def retrieve_from_qdrant(query: str) -> list[dict]:
     try:
         results = vectorstore.similarity_search_with_score(query, k=4)
         if not results:
-            return ""
-        formatted_results = []
-        for i, doc in enumerate(results, 1):
-            formatted_result = f"\n[결과 {i}]\n내용: {doc[0].metadata}\n유사도: {doc[1]}\n"
-            formatted_results.append(formatted_result)
-        return "\n\n".join(formatted_results)
+            return []
+
+        observations = []
+        for doc, score in results:
+            metadata = doc.metadata
+            observations.append({
+                "BRAND": metadata.get("brand", "브랜드 정보 없음"),
+                "NAME": metadata.get("title", "이름 없음"),
+                "PRICE": metadata.get("price", 0),
+                "IMAGE": metadata.get("thumbnail_url", ""),
+                "LINK": metadata.get("product_url", "")
+            })
+        return observations
     except Exception as e:
         print(f"RAG 검색 중 오류 발생: {e}")
-        return ""
+        return []
 
 rag_tool = Tool(
     name="rag_tool",

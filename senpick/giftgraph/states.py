@@ -117,9 +117,21 @@ compare_prompt = PromptTemplate(
 [선물 비교 - compare]
 사용자가 추천된 상품을 비교해달라고 요청하면 친절하게 비교 응답을 하세요. 
 (사용자 선물 비교 요청 예시: 뭐가 더 좋은지 비교해줘 / A랑 B 중에 뭐가 더 좋을 것 같아? / ~를 생각하면 C가 더 좋겠지? 등)
-마크다운 문법을 사용하지 마세요.
-사용자가 읽기 편하게 적절하게 줄바꿈하세요.
-최종 결정은 사용자에게 맡기고, 사용자 정보에 따른 비교 사유를 생성하는 데에 집중하세요. 
+
+- 마크다운 문법은 절대 사용하지 마세요.
+- 필요한 경우 줄바꿈을 활용해 가독성을 높이되, 전체 흐름은 문장형으로 자연스럽게 유지하세요.
+- 이모지(✔️, 🎯 등)는 적절하게 활용해도 좋습니다.
+- 객관적인 특징 비교와 함께, 사용자의 상황이나 감정을 고려한 설명을 넣어주세요.
+- 결론을 단정적으로 내리지 말고, 선택은 사용자에게 맡기되, 방향을 제안하는 톤을 유지하세요.
+
+예시:
+데스크패드는 사무실 책상에서 바로 쓸 수 있어서 실용적이에요. 깔끔한 디자인 덕분에 전문적인 분위기를 줄 수 있고, 승진을 축하하는 의미로도 잘 어울려요.
+
+반면, 타올은 좀 더 개인적인 느낌이 있어요. 집에서 자주 쓰는 실용적인 아이템이고, 부드럽고 고급스러운 분위기를 줄 수 있어서 예의 있는 선물로 좋아요.
+
+실용성과 단정한 분위기를 원하신다면 데스크패드,
+따뜻하고 정감 있는 느낌을 원하신다면 타올이 잘 맞을 거예요.
+어느 쪽이 더 마음에 드세요?
 
 [입력 내용]
 {user_input}
@@ -151,6 +163,7 @@ refine 액션은 사용자의 "입력 문장"만을 기준으로 판단하세요
 
 거절 메시지와 함께 사용자가 정보를 보완하거나 다시 입력할 수 있도록 친절하게 안내 + 질문을 함께 출력하세요.
 
+단, 사용자가 "무난한 느낌, 고급스러운 느낌 등"과 같이 추상적인 표현으로 선물 추천을 요구할 때에는 refine 하지 말고 선물 추천을 진행하세요.
 [입력 내용]
 {user_input}
 """
@@ -243,6 +256,45 @@ def extract_action(state, llm, prompt_template):
             "output": "죄송해요. 다시 한 번 입력해 주실 수 있을까요?"
         }
 
+# def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
+#     history_str = "\n".join(state.get("chat_history", [])[-10:])
+#     try:
+#         user_intent = (
+#             f"[추출된 조건]\n감정: {state['situation_info'].get('emotion')}, \n"
+#             f"스타일: {state['situation_info'].get('preferred_style')}, \n"
+#             f"예산: {state['situation_info'].get('price_range')}원\n"
+#             f"친밀도: {state['situation_info'].get('closeness')}\n"
+#             f"[수령인 정보]\n{state.get('recipient_info', {})}\n"
+#             f"[대화 맥락]\n{history_str}"
+#         )
+
+#         stream_result = ""
+#         if agent_executor:
+#             for chunk in agent_executor.stream({
+#                 "input": user_intent,
+#                 "chat_history": state.get("chat_history", [])
+#             }):
+#                 value = chunk.get("output") if isinstance(chunk, dict) else str(chunk)
+#                 if value:
+#                     print(value, end="", flush=True)
+#                     stream_result += value
+#             agent_response = stream_result
+#         else:
+#             agent_response = "에이전트가 없습니다."
+
+#         return {
+#             **state,
+#             "output": agent_response
+#         }
+
+#     except Exception as e:
+#         print(f"[call_agent 에러]: {e}")
+#         return {
+#             **state,
+#             "output": "추천 처리 중 에러가 발생했습니다."
+#         }
+import json
+
 def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
     history_str = "\n".join(state.get("chat_history", [])[-10:])
     try:
@@ -269,142 +321,30 @@ def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
         else:
             agent_response = "에이전트가 없습니다."
 
+        # ✅ JSON 문자열 파싱 시도 → observation에 저장
+        try:
+            parsed = json.loads(agent_response)
+            if isinstance(parsed, list):
+                observation = parsed
+            else:
+                observation = []
+        except Exception as e:
+            print(f"[call_agent JSON 파싱 실패]: {e}")
+            observation = []
+
         return {
             **state,
-            "output": agent_response
+            "output": agent_response,
+            "observation": observation  # ✅ Observation 삽입
         }
 
     except Exception as e:
         print(f"[call_agent 에러]: {e}")
         return {
             **state,
-            "output": "추천 처리 중 에러가 발생했습니다."
+            "output": "추천 처리 중 에러가 발생했습니다.",
+            "observation": []
         }
-
-# def final_response(state) -> dict:
-#     print("[DEBUG] final_response 진입 / 타입 =", type(state))
-#     try:
-#         return {
-#             **state,
-#             "output": state.get("output")
-#         }
-#     except Exception as e:
-#         print(f"[final_response 에러]: {e}")
-#         return {
-#             **state,
-#             "output": "최종 응답 생성 중 에러가 발생했습니다."
-#         }
-
-# def call_agent(state, agent_executor: AgentExecutor = None):
-#     print("\n==== call_agent 진입 ====")
-#     try:
-#         chat_history = state.get("chat_history", [])
-#         history_str = "\n".join(chat_history[-10:])
-#         situation = state.get("situation_info", {})
-#         recipient_info = state.get("recipient_info", {})
-
-#         user_intent = (
-#             f"[추출된 조건]\n감정: {situation.get('emotion', '')}, \n"
-#             f"스타일: {situation.get('preferred_style', '')}, \n"
-#             f"예산: {situation.get('price_range', '')}원\n"
-#             f"친밀도: {situation.get('closeness', '')}\n"
-#             f"[수령인 정보]\n{recipient_info}\n"
-#             f"[대화 맥락]\n{history_str}"
-#         )
-
-#         print("[call_agent] 👉 최종 전달 user_intent:")
-#         print(user_intent)
-
-#         stream_result = ""
-
-#         if agent_executor:
-#             for chunk in agent_executor.stream({
-#                 "input": user_intent,
-#                 "chat_history": chat_history
-#             }):
-#                 # LangChain의 streaming chunk
-#                 value = chunk.get("output", "") if isinstance(chunk, dict) else str(chunk)
-#                 if value:
-#                     print(value, end="", flush=True)
-#                     stream_result += value
-#                     yield value  # ✅ 실시간으로 스트림 전송
-#         else:
-#             yield "에이전트가 없습니다."
-#             stream_result = "에이전트가 없습니다."
-
-#         # ✅ LangGraph 최종 상태 반환
-#         yield {
-#             **state,
-#             "output": stream_result,
-#             "chat_history": chat_history + [stream_result]
-#         }
-
-#     except Exception as e:
-#         print(f"[call_agent 에러]: {e}")
-#         yield {
-#             **state,
-#             "output": "추천 처리 중 에러가 발생했습니다."
-#         }
-
-# def call_agent(state, agent_executor: AgentExecutor = None):
-#     print("\n==== call_agent 진입 ====")
-#     try:
-#         chat_history = state.get("chat_history", [])
-#         situation = state.get("situation_info", {})
-#         recipient_info = state.get("recipient_info", {})
-
-#         # 사용자 입력 요약
-#         user_intent = (
-#             f"[추출된 조건]\n"
-#             f"감정: {situation.get('emotion', '')}, \n"
-#             f"스타일: {situation.get('preferred_style', '')}, \n"
-#             f"예산: {situation.get('price_range', '')}원\n"
-#             f"친밀도: {situation.get('closeness', '')}\n"
-#             f"[수령인 정보]\n{recipient_info}\n"
-#             f"[대화 맥락]\n" + "\n".join(chat_history[-10:])
-#         )
-
-#         print("[call_agent] 👉 user_intent:\n", user_intent)
-
-#         stream_gen = agent_executor.stream({
-#             "input": user_intent,
-#             "chat_history": chat_history
-#         })
-
-#         buffer = ""
-
-#         for chunk in stream_gen:
-#             # 🎯 FSM용 상태 반환 (마지막 dict)
-#             if isinstance(chunk, dict):
-#                 print("\n✅ 최종 상태 dict 반환됨")
-#                 yield {
-#                     **state,
-#                     "output": buffer,
-#                     "chat_history": chat_history + [buffer]
-#                 }
-#                 return  # 종료
-
-#             # 🔄 실시간 응답 스트리밍 처리
-#             value = getattr(chunk, "content", str(chunk))
-#             print(value, end="", flush=True)
-#             buffer += value
-#             yield value  # Django에 실시간 전송
-
-#         # 만일 dict 반환이 없을 경우 대비해서 안전하게 마무리
-#         print("\n⚠️ [call_agent] dict 상태 없이 종료됨 → 수동 반환")
-#         yield {
-#             **state,
-#             "output": buffer,
-#             "chat_history": chat_history + [buffer]
-#         }
-
-#     except Exception as e:
-#         print(f"[call_agent 에러]: {e}")
-#         yield {
-#             **state,
-#             "output": "추천 처리 중 오류가 발생했습니다."
-#         }
-
 
 def final_response(state):
     try:
@@ -432,122 +372,7 @@ def final_response(state):
         }
 
 
-# ===================== 🔹 공통 출력 노드 (stream 기반) 🔹 =====================
 
-# def stream_output(state, llm: ChatOpenAI, prompt_template):
-#     try:
-#         user_input = state["chat_history"][-1]
-#         prompt = prompt_template.format(
-#             user_input=user_input,
-#             chat_history="\n".join(state.get("chat_history", [])[-10:]),
-#             recipient_info=state.get("recipient_info", {}),
-#             situation_info=state.get("situation_info", {})
-#         )
-#         output = ""
-#         for chunk in llm.stream(prompt):
-#             token = getattr(chunk, "content", "")
-#             output += token
-#             yield token  # 실시간 출력
-#         yield {
-#             **state,
-#             "output": output
-#         }
-#     except Exception as e:
-#         print(f"[stream_output 예외]: {e}")
-#         yield {
-#             **state,
-#             "output": "출력 중 오류가 발생했습니다."
-#         }
-
-
-# def stream_output(state, llm: ChatOpenAI, prompt_template):
-#     print("\n==== stream_output 진입 ====")
-#     try:
-#         chat_history = state.get("chat_history", [])
-#         recipient_info = state.get("recipient_info", {})
-#         situation_info = state.get("situation_info", {})
-
-#         input_vars = set(prompt_template.input_variables)
-
-#         if "user_input" in input_vars:
-#             if not chat_history:
-#                 raise ValueError("[stream_output] chat_history가 비어 있음")
-#             user_input = chat_history[-1]
-#             prompt = prompt_template.format(user_input=user_input)
-#         else:
-#             prompt = prompt_template.format(
-#                 chat_history="\n".join(chat_history[-10:]),
-#                 recipient_info=recipient_info,
-#                 situation_info=situation_info
-#             )
-
-#         print("\n--- [LLM 전달 prompt] ---")
-#         print(prompt)
-#         print("-------------------------")
-
-#         output = ""
-#         for chunk in llm.stream(prompt):
-#             token = getattr(chunk, "content", "")
-#             output += token
-#             yield AIMessage(content=token)  # ✅ 이렇게 하면 console에도 stream 출력됨
-
-#         # 마지막에 상태 반환
-#         yield {
-#             **state,
-#             "output": output,
-#             "chat_history": chat_history + [output]
-#         }
-
-#     except Exception as e:
-#         print(f"[stream_output 예외]: {e}")
-#         yield {
-#             **state,
-#             "output": "출력 중 오류가 발생했습니다."
-#         }
-# def stream_output(state, llm: ChatOpenAI, prompt_template):
-#     print("\n==== stream_output 진입 ====")
-#     try:
-#         chat_history = state.get("chat_history", [])
-#         recipient_info = state.get("recipient_info", {})
-#         situation_info = state.get("situation_info", {})
-
-#         input_vars = set(prompt_template.input_variables)
-
-#         if "user_input" in input_vars:
-#             if not chat_history:
-#                 raise ValueError("[stream_output] chat_history가 비어 있음")
-#             user_input = chat_history[-1]
-#             prompt = prompt_template.format(user_input=user_input)
-#         else:
-#             prompt = prompt_template.format(
-#                 chat_history="\n".join(chat_history[-10:]),
-#                 recipient_info=recipient_info,
-#                 situation_info=situation_info
-#             )
-
-#         output = ""
-#         for chunk in llm.stream(prompt):
-#             token = getattr(chunk, "content", "")
-#             output += token
-#             yield token  # ✅ 반드시 str로 yield (dict X)
-
-#         # 🟡 추가적인 상태 처리는 외부에서 handle
-#         # LangGraph에서는 stream 종료 후 자동으로 다음 상태로 넘어감
-#         # ✅ 최종 상태는 return으로 반환!
-#         print("[stream_output] 🔚 최종 상태 반환 직전")
-#         return {
-#             **state,
-#             "output": output,
-#             "chat_history": chat_history + [output]
-#         }
-
-#     except Exception as e:
-#         print(f"[stream_output 예외]: {e}")
-#         yield "출력 중 오류가 발생했습니다."
-#         return {
-#             **state,
-#             "output": "출력 중 오류가 발생했습니다."
-#         }
 def stream_output(state, llm: ChatOpenAI, prompt_template):
     print("\n==== stream_output 진입 ====")
     try:
