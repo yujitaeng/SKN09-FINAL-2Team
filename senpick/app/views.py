@@ -17,6 +17,11 @@ def social_redirect_view(request):
     user = request.user
     if user.type == "social" and not user.is_email_verified:
         return redirect("signup_step4")
+    if user.type == "social":
+        request.session["user_id"] = user.user_id
+        request.session["nickname"] = user.nickname
+        request.session["birth"] = user.birth
+        request.session["profile_image"] = user.profile_image or ""
     return redirect("chat")
 
 def is_social_incomplete(user):
