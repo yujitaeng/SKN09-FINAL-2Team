@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
 
 
 # Application definition
@@ -155,8 +155,10 @@ USE_TZ = True
 
 # STATIC_URL = 'static/'
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"] # 로컬 세팅
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static') # 배포용 세팅
+if os.getenv("ENVIRONMENT") == 'PRODUCTION': # 배포용 환경 변수 설정
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static') # 배포용 세팅
+else:
+    STATICFILES_DIRS = [BASE_DIR / "static"] # 로컬 세팅
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -32,4 +32,6 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 # 5. 설치 확인
 docker-compose --version
 
+scp -i ./senpick.pem -r ./qdrant_ad/qdrant_storage/  ubuntu@52.4.21.137:/home/ubuntu/
+
 # cat your-private-key.pem | base64
