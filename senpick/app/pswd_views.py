@@ -46,8 +46,7 @@ def password_reset_request(request):
             return JsonResponse({"success": False, "message": "존재하지 않는 이메일입니다."}, status=404)
 
         try:
-            send_pswd_verification_code(request, email)
-            
+            request.session['verification_email'] = email
             session_key = request.session.session_key
 
             response = JsonResponse({"success": True, "redirect_url": "/pswd/verif/"})

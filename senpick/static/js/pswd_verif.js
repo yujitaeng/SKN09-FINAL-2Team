@@ -130,4 +130,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 타이머 시작
   startTimer();
+  resendText.click(); // 초기 인증번호 재전송 요청
 });

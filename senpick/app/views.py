@@ -113,7 +113,9 @@ def signup_step1(request):
         recipient_list = [email]
         
         try:
-            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+            request.session['verification_email'] = email
+            # send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+            pass
         except Exception as e:
             # 발송 실패 시, 다시 Step1으로 돌아가 에러 메시지 출력
             errors["email_send"] = "이메일 발송에 실패했습니다. 나중에 다시 시도해주세요."

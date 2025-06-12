@@ -158,6 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log("모든 검증 통과 — 다음 단계로 이동");
       document.querySelector("form.signup-form-area.step1").submit();
     });
+    resendEl.click();
   }
 
   // ✅ step2: 이메일 인증 (5자리 입력)
