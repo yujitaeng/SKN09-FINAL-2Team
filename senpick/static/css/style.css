@@ -32,7 +32,7 @@ button {
 }
 
 .tooltip .tooltip-text {
-  visibility: hidden;
+  display: none;
   width: max-content;
   background-color: #fff;
 
@@ -56,7 +56,7 @@ button {
 }
 
 .tooltip:hover .tooltip-text {
-  visibility: visible;
+  display: block;
   opacity: 1;
 }
 

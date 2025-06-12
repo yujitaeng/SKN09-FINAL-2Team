@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("📣 signup.js가 로드되었습니다. 현재 path =", window.location.pathname);
+  const logoBtn = document.querySelector(".logo");
+  logoBtn.addEventListener("click", () => window.location.href = "/login");
 
   const path = window.location.pathname;
 
@@ -27,15 +28,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 모달 닫기
     document.querySelectorAll(".modal-close").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", e => {
+        e.preventDefault(); 
         btn.closest(".modal-overlay").classList.remove("open");
       });
     });
     document.querySelectorAll(".modal-overlay").forEach(overlay => {
       overlay.addEventListener("click", e => {
-        if (e.target === overlay) overlay.classList.remove("open");
+        if (e.target === overlay) {
+          e.preventDefault(); 
+          overlay.classList.remove("open");
+        }
       });
     });
+    // document.querySelectorAll(".modal-close").forEach(btn => {
+    //   btn.addEventListener("click", () => {
+    //     btn.closest(".modal-overlay").classList.remove("open");
+    //   });
+    // });
+    // document.querySelectorAll(".modal-overlay").forEach(overlay => {
+    //   overlay.addEventListener("click", e => {
+    //     if (e.target === overlay) overlay.classList.remove("open");
+    //   });
+    // });
 
     // 전체 동의 제어
     allAgree.addEventListener("change", () => {
@@ -51,42 +66,46 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetErrors() {
       [email, password, nickname].forEach(input => input.classList.remove('error'));
       [emailErr, pwErr, nickErr, termsErr].forEach(err => {
-        err.style.visibility = "hidden";
+        err.style.display = "none";
         err.textContent = "";
       });
     }
 
     // 이메일, 비밀번호, 닉네임 정규식
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordPattern = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$^*()_\+\-=\[\]{}])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[0-9])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
     const nicknamePattern = /^[가-힣]{2,8}$/;
 
     nextBtn.addEventListener("click", async e => {
-      e.preventDefault();
+      e.preventDefault(); // 폼 제출 방지
       resetErrors();
       let hasError = false;
+      let firstErrorElement = null; 
 
       // 이메일 검증
       const emailValue = email.value.trim();
       if (emailValue === "") {
       emailErr.textContent = "이메일을 필수 입력해주세요.";
-      emailErr.style.visibility = "visible";
+      emailErr.style.display = "block";
       email.classList.add("error");
       hasError = true;
+      if (!firstErrorElement) firstErrorElement = email;
     } else if (!emailPattern.test(emailValue)) {
       emailErr.textContent = "올바른 이메일 형식으로 입력해주세요.";
-      emailErr.style.visibility = "visible";
+      emailErr.style.display = "block";
       email.classList.add("error");
       hasError = true;
+      if (!firstErrorElement) firstErrorElement = email;
     } else {
       try {
         const res = await fetch(`/signup/check-dup/?field=email&value=${encodeURIComponent(emailValue)}`);
         const data = await res.json();
         if (data.exists) {
           emailErr.textContent = "이미 사용 중인 이메일입니다.";
-          emailErr.style.visibility = "visible";
+          emailErr.style.display = "block";
           email.classList.add("error");
           hasError = true;
+          if (!firstErrorElement) firstErrorElement = email;
         }
       } catch (err) {
         console.error("이메일 중복검사 오류:", err);
@@ -97,18 +116,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const pwValue = password.value.trim();
       if (pwValue === "" || !passwordPattern.test(pwValue)) {
         pwErr.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자를 이용하여 최소 8~15자리";
-        pwErr.style.visibility = "visible";
+        pwErr.style.display = "block";
         password.classList.add("error");
         hasError = true;
+        if (!firstErrorElement) firstErrorElement = password;
       }
 
       // 닉네임 검증 (통합 메시지)
       const nickValue = nickname.value.trim();
       if (nickValue === "" || !nicknamePattern.test(nickValue)) {
         nickErr.textContent = "닉네임을 입력해주세요. *한글로 최대 8자";
-        nickErr.style.visibility = "visible";
+        nickErr.style.display = "block";
         nickname.classList.add("error");
         hasError = true;
+        if (!firstErrorElement) firstErrorElement = nickname; 
       } else {
       try {
         const res = await fetch(`/signup/check-dup/?field=nickname&value=${encodeURIComponent(nickValue)}`);
@@ -118,24 +139,37 @@ document.addEventListener('DOMContentLoaded', () => {
           nickErr.style.display = "block";
           nickname.classList.add("error");
           hasError = true;
+          if (!firstErrorElement) firstErrorElement = nickname;
         }
       } catch (err) {
         console.error("닉네임 중복검사 오류:", err);
       }
     }
+    if (hasError) {
+      return;
+    }
 
       // 약관 검증
       if (!Array.from(requiredChk).every(c => c.checked)) {
         termsErr.textContent = "필수 약관에 동의해주세요.";
-        termsErr.style.visibility = "visible";
+        termsErr.style.display = "block";
         hasError = true;
+        if (!firstErrorElement) firstErrorElement = termsErr; 
       }
 
-      if (!hasError) {
-        console.log("모든 검증 통과 — 다음 단계로 이동");
-        window.location.href = "/signup/step2/";
-        document.querySelector("form.signup-form-area").submit();
+      if (hasError) {
+          if (firstErrorElement) {
+              const scrollableContainer = document.querySelector('.outer-wrapper.scrollable-content');
+              if (scrollableContainer) {
+                  // firstErrorElement를 scrollableContainer 내부에서 보이도록 스크롤합니다.
+                  // 'center'는 요소가 스크롤 영역의 중앙에 오도록 시도합니다.
+                  firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+          }
+          return; // 에러가 있으므로 함수 실행을 중단합니다.
       }
+      console.log("모든 검증 통과 — 다음 단계로 이동");
+      document.querySelector("form.signup-form-area.step1").submit();
     });
   }
 
@@ -151,7 +185,7 @@ else if (path.includes("signup/step2")) {
     // 2) 타이머 초기화 및 카운트다운 시작 (5분 = 300초)
     let timeLeft = 300;  // 300초 (5*60)
     timerEl.textContent = formatTime(timeLeft);  // 초기값 "05:00"
-    const countdown = setInterval(() => {
+    let countdown = setInterval(() => { 
       timeLeft--;
       if (timeLeft < 0) {
         // 1) 타이머 멈추기
@@ -243,7 +277,7 @@ else if (path.includes("signup/step2")) {
       clearInterval(countdown);
       timeLeft = 300;
       timerEl.textContent = formatTime(timeLeft);
-      const newCountdown = setInterval(() => {
+      countdown = setInterval(() => {
         timeLeft--;
         if (timeLeft < 0) {
           clearInterval(newCountdown);
@@ -306,6 +340,7 @@ else if (path.includes("signup/step2")) {
     const jobSelect     = document.getElementById("job");
     const jobErrEl      = document.getElementById("job-error");
     const nextBtn       = document.getElementById("nextBtn");
+    const genderInput   = document.getElementById("genderInput");
 
     let selectedGender = "";  // "male" 또는 "female"
 
@@ -324,12 +359,12 @@ else if (path.includes("signup/step2")) {
     maleBtn.addEventListener("click", () => {
       selectGender("male");
       genderErrEl.textContent = ""; // 에러 메시지 초기화
-      genderErrEl.style.visibility = "hidden"; 
+      genderErrEl.style.display = "none"; 
     });
     femaleBtn.addEventListener("click", () => {
       selectGender("female");
       genderErrEl.textContent = ""; // 에러 메시지 초기화
-      genderErrEl.style.visibility = "hidden"; 
+      genderErrEl.style.display = "none"; 
     });
 
     // 3) “다음 단계” 버튼 클릭 시 검증
@@ -337,6 +372,7 @@ else if (path.includes("signup/step2")) {
       e.preventDefault();
 
       let hasError = false;
+      let firstErrorElement = null; 
 
       // 3-1) 생년월일 검증: 8자리 숫자(YYYYMMDD)
       const birthValue = birthEl.value.trim();
@@ -344,35 +380,48 @@ else if (path.includes("signup/step2")) {
       const birthPattern = /^(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/;
       if (!birthPattern.test(birthValue)) {
         birthErrEl.textContent = "생년월일이 올바르지 않습니다. (숫자만 8자리 입력)";
-        birthErrEl.style.visibility = "visible";
+        birthErrEl.style.display = "block";
         birthEl.classList.add("error");
         hasError = true;
+        if (!firstErrorElement) firstErrorElement = birthEl;
       } else {
         birthErrEl.textContent = ""; // 에러 메시지 초기화
-        birthErrEl.style.visibility = "hidden";
+        birthErrEl.style.display = "none";
         birthEl.classList.remove("error");
       }
 
       // 3-2) 성별 검증: 반드시 남자 or 여자 버튼 중 하나 선택
       if (selectedGender === "") {
         genderErrEl.textContent = "성별을 선택해주세요.";
-        genderErrEl.style.visibility = "visible";
+        genderErrEl.style.display = "block";
         hasError = true;
+        if (!firstErrorElement) firstErrorElement = maleBtn; 
       } else {
         genderErrEl.textContent = ""; // 에러 메시지 초기화
-        genderErrEl.style.visibility = "hidden";
+        genderErrEl.style.display = "none";
       }
 
       // 3-3) 직업 검증: 값이 빈 문자열이 아닌지
-      const jobValue = jobSelect.value;
-      if (jobValue === "직업 선택") {
+      const jobValue = jobInput.value.trim(); // jobSelect 대신 jobInput 사용
+      if (jobValue === "" || jobValue === jobInput.placeholder) { // 플레이스홀더 텍스트도 비어있는 것으로 간주
         jobErrEl.textContent = "직업을 선택해주세요.";
-        jobErrEl.style.visibility = "visible";
-        jobSelect.classList.add("error");
+        jobErrEl.style.display = "block";
+        jobInput.classList.add("error"); // jobSelect 대신 jobInput 사용
         hasError = true;
+        if (!firstErrorElement) firstErrorElement = jobInput; // jobSelect 대신 jobInput 사용
       } else {
-        jobErrEl.style.visibility = "hidden";
-        jobSelect.classList.remove("error");
+        jobErrEl.style.display = "none";
+        jobInput.classList.remove("error"); // jobSelect 대신 jobInput 사용
+      }
+
+      if (hasError) {
+        if (firstErrorElement) {
+          const scrollableContainer = document.querySelector('.outer-wrapper.scrollable-step3-content'); // Step3도 이 클래스를 사용한다고 가정
+          if (scrollableContainer) {
+            firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+        return; // 에러가 있으므로 함수 실행을 중단합니다.
       }
 
       // 3-4) 모든 검증 통과 시 다음 단계로 이동
@@ -383,11 +432,11 @@ else if (path.includes("signup/step2")) {
 
     // 4) 입력값이 변경되면 에러 표시 제거(실시간 UX 개선)
     birthEl.addEventListener("input", () => {
-      birthErrEl.style.visibility = "hidden";
+      birthErrEl.style.display = "none";
       birthEl.classList.remove("error");
     });
     jobSelect.addEventListener("change", () => {
-      jobErrEl.style.visibility = "hidden";
+      jobErrEl.style.display = "none";
       jobSelect.classList.remove("error");
     });
   }
@@ -406,77 +455,102 @@ else if (path.includes("signup/step4")) {
   let selectedCategories = []; // 최대 3개 저장
 
   // 2) “선호 스타일” 버튼 클릭 핸들링
+  // 스타일 버튼 클릭 시
   styleButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
-        if (selectedStyles.includes(id)) {
-          selectedStyles = selectedStyles.filter(x => x !== id);
-          btn.classList.remove("selected");
-        } else if (selectedStyles.length < 3) {
-          selectedStyles.push(id);
-          btn.classList.add("selected");
-        } else {
-          styleErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
-          styleErrorEl.style.visibility = "visible";
+      const isSelected = selectedStyles.includes(id);
+
+      if (isSelected) {
+        selectedStyles = selectedStyles.filter(x => x !== id);
+        btn.classList.remove("selected");
+      } else if (selectedStyles.length < 3) {
+        selectedStyles.push(id);
+        btn.classList.add("selected");
+      } else {
+        // 최대 선택 수 초과
+        styleErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
+        styleErrorEl.style.display = "block";
+      }
+
+      // ⚠️ 선택이 3개 미만이면 무조건 에러 메시지 숨김 (초기화)
+      if (selectedStyles.length < 3) {
+        styleErrorEl.style.display = "none";
+        if (styleErrorEl.textContent.includes("최대")) {
+          styleErrorEl.textContent = "";
         }
-        if (styleErrorEl.style.visibility === "visible" && selectedStyles.length < 3) {
-          styleErrorEl.style.visibility = "hidden";
-        }
+      }
     });
-    btn.setAttribute('tabindex', '0');
   });
 
   // 3) “선호 카테고리” 버튼 클릭 핸들링
   categoryButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.id;
-        if (selectedCategories.includes(id)) {
-          selectedCategories = selectedCategories.filter(x => x !== id);
-          btn.classList.remove("selected");
-        } else if (selectedCategories.length < 3) {
-          selectedCategories.push(id);
-          btn.classList.add("selected");
-        } else {
-          categoryErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
-          categoryErrorEl.style.visibility = "visible";
+      const isSelected = selectedCategories.includes(id);
+
+      if (isSelected) {
+        selectedCategories = selectedCategories.filter(x => x !== id);
+        btn.classList.remove("selected");
+      } else if (selectedCategories.length < 3) {
+        selectedCategories.push(id);
+        btn.classList.add("selected");
+      } else {
+        categoryErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
+        categoryErrorEl.style.display = "block";
+      }
+
+      if (selectedCategories.length < 3) {
+        categoryErrorEl.style.display = "none";
+        if (categoryErrorEl.textContent.includes("최대")) {
+          categoryErrorEl.textContent = "";
         }
-        if (categoryErrorEl.style.visibility === "visible" && selectedCategories.length < 3) {
-          categoryErrorEl.style.visibility = "hidden";
-        }
+      }
     });
-    btn.setAttribute('tabindex', '0');
   });
 
   // 4) “회원가입 완료” 버튼 클릭 시 검증
   completeBtn.addEventListener('click', e => {
     e.preventDefault();
     let hasError = false;
+    let firstErrorElement = null;
 
     // 4-1) 스타일 검증: 최소 1개 선택 여부
     if (selectedStyles.length === 0) {
       styleErrorEl.textContent = "최소 1개 이상의 선호 스타일을 선택해주세요.";
-      styleErrorEl.style.visibility = "visible";
+      styleErrorEl.style.display = "block";
       hasError = true;
+      if (!firstErrorElement) firstErrorElement = styleErrorEl; 
     } else {
       styleErrorEl.textContent = ""; // 에러 메시지 초기화
-      styleErrorEl.style.visibility = "hidden";
+      styleErrorEl.style.display = "none";
     }
 
     // 4-2) 카테고리 검증: 최소 1개 선택 여부
     if (selectedCategories.length === 0) {
       categoryErrorEl.textContent = "최소 1개 이상의 선호 카테고리를 선택해주세요.";
-      categoryErrorEl.style.visibility = "visible";
+      categoryErrorEl.style.display = "block";
       hasError = true;
+      if (!firstErrorElement) firstErrorElement = categoryErrorEl;
     } else {
       categoryErrorEl.textContent = ""; // 에러 메시지 초기화
-      categoryErrorEl.style.visibility = "hidden";
+      categoryErrorEl.style.display = "none";
     }
 
-    if (hasError) return;
-      const allIds = [...selectedStyles, ...selectedCategories];
-      prefInput.value = allIds.join(",");
+    if (hasError) {
+      if (firstErrorElement) {
+        const scrollableContainer = document.querySelector('.outer-wrapper.scrollable-content'); // Step4도 이 클래스를 사용한다고 가정
+        if (scrollableContainer) {
+          firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+      return; // 에러가 있으므로 함수 실행을 중단합니다.
+    }
 
-      document.querySelector("form.signup-form-area.step4").submit();
+    const allIds = [...selectedStyles, ...selectedCategories];
+    prefInput.value = allIds.join(",");
+
+    document.querySelector("form.signup-form-area.step4").submit();
   });
 }
 

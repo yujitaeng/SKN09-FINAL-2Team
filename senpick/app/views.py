@@ -10,7 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 from app.models import User, PreferType, UserPrefer
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
-import uuid
 from app.models import User
 
 @login_required
@@ -22,6 +21,10 @@ def social_redirect_view(request):
             return redirect("signup_step3")
         if not user.is_email_verified:
             return redirect("signup_step4")
+        request.session["user_id"] = user.user_id
+        request.session["nickname"] = user.nickname
+        request.session["birth"] = user.birth
+        request.session["profile_image"] = user.profile_image or ""
     return redirect("chat")
 
 def is_social_incomplete(user):
@@ -135,7 +138,7 @@ def check_duplicate(request):
         return JsonResponse({"exists": False})
 
     # signup_step1과 똑같은 검사 로직
-    exists = User.objects.filter(**{field: value}).exists()
+    exists = User.objects.filter(deleted_at__isnull=True, **{field: value}).exists()
     return JsonResponse({"exists": exists})
 
 def signup_step2(request):

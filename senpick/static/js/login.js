@@ -5,44 +5,31 @@ document.addEventListener("DOMContentLoaded", function () {
   const pwError = document.getElementById("password-error");
   const loginForm = document.querySelector(".login-form");
 
-  if (emailError.textContent.trim() !== "") {
-    emailError.style.visibility = "visible";
-  }
-  if (pwError.textContent.trim() !== "") {
-    pwError.style.visibility = "visible";
-  }
-
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(";").shift();
   }
 
-  // ✅ [1] focus 시: 빈 값일 경우 에러 표시
   emailInput.addEventListener("focus", () => {
     if (emailInput.value.trim() === "") {
       emailInput.classList.add("error");
-      // emailError.textContent = "이메일을 입력해주세요.";
-      // emailError.style.display = "block";
-      emailError.style.visibility = "visible";
+      emailError.style.display = "block";
     }
   });
 
   pwInput.addEventListener("focus", () => {
     if (pwInput.value.trim() === "") {
       pwInput.classList.add("error");
-      // pwError.textContent = "비밀번호를 입력해주세요.";
-      // pwError.style.display = "block";
-      pwError.style.visibility = "visible";
+      pwError.style.display = "block";
     }
   });
 
-  // ✅ [2] blur 시: 값이 채워지면 에러 제거
   emailInput.addEventListener("blur", () => {
     if (emailInput.value.trim() !== "") {
       emailInput.classList.remove("error");
       emailError.textContent = ""; // 에러 메시지 초기화
-      emailError.style.visibility = "hidden";
+      emailError.style.display = "none";
     }
   });
 
@@ -50,16 +37,14 @@ document.addEventListener("DOMContentLoaded", function () {
     if (pwInput.value.trim() !== "") {
       pwInput.classList.remove("error");
       pwError.textContent = ""; // 에러 메시지 초기화
-      pwError.style.visibility = "hidden";
+      pwError.style.display = "none";
     }
   });
 
-  // ✅ [3] 제출 시: 유효성 검사 + 서버 응답 처리
   loginForm.addEventListener("submit", function (e) {
     const email = emailInput.value.trim();
     const password = pwInput.value.trim();
 
-    // 에러 초기화
     emailInput.classList.remove("error");
     emailError.style.display = "none";
     pwInput.classList.remove("error");
@@ -69,38 +54,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!email) {
       emailInput.classList.add("error");
-      // emailError.textContent = "이메일을 입력해주세요.";
-      // emailError.style.display = "block";
-      // valid = false;
+      emailError.textContent = "이메일을 입력해주세요.";
       emailError.textContent = "이메일이 올바르지 않습니다.";
-      emailError.style.visibility = "visible";
+      emailError.style.display = "block";
       valid = false;
-    } else {
-      emailInput.classList.remove("error");
-      emailError.textContent = ""; // 에러 메시지 초기화
-      emailError.style.visibility = "hidden";
-    }
+    } 
 
     if (!password) {
       pwInput.classList.add("error");
-      // pwError.textContent = "비밀번호를 입력해주세요.";
-      // pwError.style.display = "block";
-      // valid = false;
       pwError.textContent = "비밀번호가 올바르지 않습니다.";
-      pwError.style.visibility = "visible";
+      pwError.style.display = "block";
       valid = false;
-    } else {
-      pwInput.classList.remove("error");
-      pwError.textContent = ""; // 에러 메시지 초기화
-      pwError.style.visibility = "hidden";
-    }
+    } 
 
     if (!valid) {
-      e.preventDefault();
+      e.preventDefault(); // 폼 제출 방지
       return;
-    };
+    }
 
-    // 서버로 AJAX 요청
+    // // 서버로 AJAX 요청
     // fetch("/login/", {
     //   method: "POST",
     //   headers: {
@@ -131,6 +103,8 @@ document.addEventListener("DOMContentLoaded", function () {
     //   })
     //   .catch(err => {
     //     console.error("로그인 요청 실패", err);
+    //     pwError.textContent = "서버 통신 오류. 다시 시도해 주세요.";
+    //     pwError.style.display = "block";
     //   });
   });
 });

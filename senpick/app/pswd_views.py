@@ -24,6 +24,8 @@ def send_pswd_verification_code(request, email):
     request.session['verification_email'] = email
     request.session.set_expiry(500)
     request.session.modified = True
+    
+    print(code)
 
     return code
 
@@ -48,7 +50,7 @@ def password_reset_request(request):
             
             session_key = request.session.session_key
 
-            response = JsonResponse({"success": True, "redirect_url": "/pswd_verif/"})
+            response = JsonResponse({"success": True, "redirect_url": "/pswd/verif/"})
             response.set_cookie(
                 key=settings.SESSION_COOKIE_NAME,
                 value=session_key,
