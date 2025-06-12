@@ -10,7 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 from app.models import User, PreferType, UserPrefer
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
-import uuid
 from app.models import User
 
 @login_required
@@ -131,7 +130,7 @@ def check_duplicate(request):
         return JsonResponse({"exists": False})
 
     # signup_step1과 똑같은 검사 로직
-    exists = User.objects.filter(**{field: value}).exists()
+    exists = User.objects.filter(deleted_at__isnull=True, **{field: value}).exists()
     return JsonResponse({"exists": exists})
 
 def signup_step2(request):
@@ -171,8 +170,8 @@ def signup_step3(request):
 
 def signup_step4(request):
     if request.method == "GET":
-        style_options    = PreferType.objects.filter(type="스타일")
-        category_options = PreferType.objects.filter(type="카테고리")
+        style_options    = PreferType.objects.filter(type="S")
+        category_options = PreferType.objects.filter(type="C")
         return render(request, "signup/signup_step4.html", {
             "style_options": style_options,
             "category_options": category_options,

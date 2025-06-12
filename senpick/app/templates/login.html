@@ -31,7 +31,7 @@
             <div class="input-group"  id="email-group">
               <input type="email" name="username" id="email" placeholder="이메일 입력" required>
               {% if email_error %}
-              <div class="error-message" id="email-error">{{ email_error }}</div>
+              <div class="error-message" id="email-error" style="display: block;">{{ email_error }}</div>
               {% else %}
               <div class="error-message" id="email-error"></div>
               {% endif %}
@@ -40,7 +40,7 @@
             <div class="input-group" id="password-group">
               <input type="password" name="password" id="password" placeholder="비밀번호 입력" required>
               {% if password_error %}
-              <div class="error-message" id="password-error">{{password_error}}</div>
+              <div class="error-message" id="password-error" style="display: block;">{{password_error}}</div>
               {% else %}
               <div class="error-message" id="password-error"></div>
               {% endif %}

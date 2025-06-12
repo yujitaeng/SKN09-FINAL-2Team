@@ -82,7 +82,7 @@
         jobInput.value = job;
         jobDropdown.style.display = "none";
         jobError.textContent = ""; // Clear error message
-        jobError.style.visibility = "hidden"; // Hide error message
+        jobError.style.display = "none"; // Hide error message
         jobInput.classList.remove("error"); // Remove error class
       });
       jobDropdown.appendChild(li);
@@ -114,7 +114,7 @@
     birth.addEventListener("input", function() {
       const birthError = document.getElementById("birth-error");
       birthError.textContent = "";
-      birthError.style.visibility = "hidden";
+      birthError.style.display = "block";
       birth.classList.remove("error");
     });
   </script>

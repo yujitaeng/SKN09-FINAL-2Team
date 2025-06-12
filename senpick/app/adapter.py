@@ -41,24 +41,24 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             print("🔁 기존 유저 연결")
             sociallogin.connect(request, existing_user)
             sociallogin.account.user = existing_user
-            if provider == "google":
-                if not existing_user.birth or not existing_user.gender:
-                    print("➡️ 구글: step3으로 이동 (추가 정보 필요)")
-                    raise ImmediateHttpResponse(redirect("/signup/step3/"))
-                elif not existing_user.is_email_verified:
-                    print("➡️ 구글: step4으로 이동 (선호 정보 입력)")
-                    raise ImmediateHttpResponse(redirect("/signup/step4/"))
-                else:
-                    print("➡️ 구글: 가입 완료 → chat 이동")
-                    raise ImmediateHttpResponse(redirect("/chat"))
+            # if provider == "google":
+            #     if not existing_user.birth or not existing_user.gender:
+            #         print("➡️ 구글: step3으로 이동 (추가 정보 필요)")
+            #         raise ImmediateHttpResponse(redirect("/signup/step3/"))
+            #     elif not existing_user.is_email_verified:
+            #         print("➡️ 구글: step4으로 이동 (선호 정보 입력)")
+            #         raise ImmediateHttpResponse(redirect("/signup/step4/"))
+            #     else:
+            #         print("➡️ 구글: 가입 완료 → chat 이동")
+            #         raise ImmediateHttpResponse(redirect("/chat"))
 
-            else:  # 네이버
-                if not existing_user.is_email_verified:
-                    print("➡️ step4으로 이동 (가입 미완료)")
-                    raise ImmediateHttpResponse(redirect("/signup/step4/"))
-                else:
-                    print("➡️ chat으로 이동 (가입 완료)")
-                    raise ImmediateHttpResponse(redirect("/chat"))
+            # else:  # 네이버
+            #     if not existing_user.is_email_verified:
+            #         print("➡️ step4으로 이동 (가입 미완료)")
+            #         raise ImmediateHttpResponse(redirect("/signup/step4/"))
+            #     else:
+            #         print("➡️ chat으로 이동 (가입 완료)")
+            #         raise ImmediateHttpResponse(redirect("/chat"))
 
     def save_user(self, request, sociallogin, form=None):
         print("🔥 [SAVE_USER] 진입")

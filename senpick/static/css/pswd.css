@@ -65,14 +65,14 @@ input.error {
   margin-top: 5px;
   font-family: 'Spoqa Han Sans Neo';
   font-weight: 400;
-  visibility: hidden;
+  display: none;
   transition: opacity 0.2s ease;
 }
 
 .error-message.show,
 .password-message.show {
   opacity: 1;
-  visibility: visible;
+  display: block;
 }
 
 /* ========= Buttons ========= */

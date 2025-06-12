@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-  loginForm.addEventListener("submit", function (e) {
+  pswdForm.addEventListener("submit", function (e) {
     e.preventDefault();
     console.log("submit 이벤트 발생");
     const email = emailInput.value.trim();

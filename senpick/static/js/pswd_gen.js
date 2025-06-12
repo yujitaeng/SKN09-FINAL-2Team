@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
   pw1.addEventListener("focus", function () {
     const val = pw1.value.trim();
     if (!pwRegex.test(val)) {
-      pw1Msg.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자를 이용하여 최소 8~15자리";
+      pw1Msg.textContent = "새로운 비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 최소 8~15자리";
       pw1Msg.classList.add("show");
       pw1.classList.add("error");
     }
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
       pw1Msg.classList.remove("show");
       pw1.classList.remove("error");
     } else {
-      pw1Msg.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자를 이용하여 최소 8~15자리";
+      pw1Msg.textContent = "새로운 비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 최소 8~15자리";
       pw1Msg.classList.add("show");
       pw1.classList.add("error");
     }
