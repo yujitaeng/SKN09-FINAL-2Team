@@ -31,6 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['senpick.kr', 'web', '127.0.0.1', 'localhost', os.getenv('ALLOWED_HOSTS')]
 
+SECURE_SSL_REDIRECT = True
 
 # Application definition
 
