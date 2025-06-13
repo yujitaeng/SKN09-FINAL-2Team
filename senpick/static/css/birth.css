@@ -163,3 +163,57 @@
         transform: translateX(-50%) translateY(10px);
     }
 }
+/* skeleton 상태일 때 wrapper 스타일 추가 (선택사항) */
+.card-wrapper.skeleton {
+  /* 원하는 경우 흐림 효과 줄 수도 있음 */
+  /* opacity: 0.8; */
+  /* pointer-events: none; */
+  
+}
+
+/* Skeleton 전용 스타일 */
+.product-card.skeleton {
+  animation: pulse 1.5s infinite;
+}
+
+.skeleton-image {
+  width: 100%;
+  height: 120px;
+  background-color: #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.skeleton-text {
+  height: 14px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.skeleton-text.title {
+  width: 80%;
+  height: 18px;
+}
+
+.skeleton-text.subtitle {
+  width: 60%;
+}
+
+.skeleton-text.reason {
+  width: 90%;
+  height: 12px;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0% {
+    background-color: #f0f0f0;
+  }
+  50% {
+    background-color: #e0e0e0;
+  }
+  100% {
+    background-color: #f0f0f0;
+  }
+}

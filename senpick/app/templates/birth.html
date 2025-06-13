@@ -24,7 +24,36 @@
             <section class="snap-section animate-on-scroll">
                 <h2>{{request.session.nickname}}님의 생일, &nbsp;<span class="font-b">Senpick</span>이 함께 축하드려요.</h2>
                 <p><span class="font-b">Senpick</span>이 마음을 담아, 당신만을 위한 선물을 준비했어요.</p>
-                <div class="card-wrapper" style="margin: 60px auto;"></div>
+                <div class="card-wrapper skeleton">
+                    <!-- 스켈레톤 카드 4개 (데이터 로딩 전 상태) -->
+                    <div class="product-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text title"></div>
+                        <div class="skeleton-text subtitle"></div>
+                        <div class="skeleton-text reason"></div>
+                    </div>
+
+                    <div class="product-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text title"></div>
+                        <div class="skeleton-text subtitle"></div>
+                        <div class="skeleton-text reason"></div>
+                    </div>
+
+                    <div class="product-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text title"></div>
+                        <div class="skeleton-text subtitle"></div>
+                        <div class="skeleton-text reason"></div>
+                    </div>
+
+                    <div class="product-card skeleton">
+                        <div class="skeleton-image"></div>
+                        <div class="skeleton-text title"></div>
+                        <div class="skeleton-text subtitle"></div>
+                        <div class="skeleton-text reason"></div>
+                    </div>
+                </div>
             </section>
             <section class="snap-section animate-on-scroll" style="text-align: center;">
                 <h2>당신의 오늘이 더 특별하길 <span class="font-b">Senpick</span>이 응원해요!</h2>
@@ -40,6 +69,8 @@
                 fetch('/birth/recommend-products/')
                 .then(response => response.json())
                 .then(data => {
+                    cardWrapper.classList.remove('skeleton'); // 스켈레톤 클래스 제거
+                    cardWrapper.innerHTML = ''; // 기존 카드 내용 제거
                     data.products.forEach(product => {
                         createProductCard(cardWrapper, {
                             imageUrl: product.imageUrl,
