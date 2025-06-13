@@ -255,8 +255,7 @@ else if (path.includes("signup/step2")) {
       });
     });
 
-    // 5) “인증코드 재전송” 클릭 이벤트
-    resendEl.addEventListener('click', () => {
+    function resendCode() {
       // 재전송 시 기존 에러 메시지/빨간 테두리 모두 초기화
       inputs.forEach(i => i.classList.remove('error'));
       errorMsg.style.visibility = 'hidden';
@@ -299,7 +298,11 @@ else if (path.includes("signup/step2")) {
       .catch(() => {
         alert('네트워크 오류로 인증코드 재전송에 실패했습니다.');
       });
-    });
+    }
+
+
+    // 5) “인증코드 재전송” 클릭 이벤트
+    resendEl.addEventListener('click', resendCode);
     // **CSRF 토큰을 가져오는 헬퍼 함수**
     function getCookie(name) {
       let cookieValue = null;
@@ -313,6 +316,7 @@ else if (path.includes("signup/step2")) {
       }
       return cookieValue;
     }
+    resendCode(); // 페이지 로드 시 자동으로 인증코드 재전송
   }
 
 

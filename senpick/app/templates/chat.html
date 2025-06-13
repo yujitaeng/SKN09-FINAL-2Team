@@ -380,9 +380,6 @@
           document.getElementById('chat-history').scrollTop = document.getElementById('chat-history').scrollHeight;
           setTimeout(() => {
               const chatMessages = document.querySelectorAll('.chat-msg');
-              if (chatMessages.length > 4) {
-                document.getElementById('chat-form').scrollIntoView({ behavior: 'smooth' });
-              }
           }, 200);
         };
 
