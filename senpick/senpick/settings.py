@@ -74,6 +74,10 @@ AUTH_USER_MODEL = 'app.User'
 LOGIN_REDIRECT_URL = '/social/redirect/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://senpick.kr",
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
