@@ -358,7 +358,7 @@ def chat_detail(request, chat_id):
             message_data['feedback'] = feedback_obj
         
         # bot 메시지이고 Final Answer가 포함된 경우 상품 정보 추출
-        if msg.sender == 'bot' and 'Final Answer: ' in msg.message:
+        if msg.sender == 'bot':
             try:
                 output, products = extract_products_from_response(msg.message)
                 # Final Answer 이후의 텍스트만 표시
