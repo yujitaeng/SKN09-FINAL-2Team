@@ -362,9 +362,6 @@ a {
 } 
 
 @media (max-width: 1024px) {
-  .layout {
-    flex-direction: column;
-  }
   .mypage-container {
     padding: 24px;
   }
