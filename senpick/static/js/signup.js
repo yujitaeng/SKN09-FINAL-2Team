@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 이메일, 비밀번호, 닉네임 정규식
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordPattern = /^(?=.*[a-z])(?=.*[0-9])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$^*()_\+\-=\[\]{}])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
     const nicknamePattern = /^[가-힣]{2,8}$/;
 
     nextBtn.addEventListener("click", async e => {
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // 비밀번호 검증 (통합 메시지)
       const pwValue = password.value.trim();
       if (pwValue === "" || !passwordPattern.test(pwValue)) {
-        pwErr.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 최소 8~15자리";
+        pwErr.textContent = "비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 8~15자";
         pwErr.style.display = "block";
         password.classList.add("error");
         hasError = true;

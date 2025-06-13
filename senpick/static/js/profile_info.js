@@ -96,13 +96,11 @@ document.addEventListener("DOMContentLoaded", function () {
     clearError(birth);
     clearError(jobInput);
 
-    if (!password.value) {
-      setError(password, "비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 최소 8~15자리");
-      // alert("비밀번호를 입력해 주세요");
-      isValid = false;
-    } else if (password.value.length < 8 || password.value.length > 15) {
-      setError(password, "비밀번호는 8~15자 이내여야 합니다.");
-      alert("비밀번호는 8~15자 이내여야 합니다.");
+    const pwRegex = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$^*()_\+\-=\[\]{}])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
+
+    if (!password.value || !pwRegex.test(password.value)) {
+      setError(password, "비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 8~15자");
+      alert("비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 8~15자");
       isValid = false;
     }
 
