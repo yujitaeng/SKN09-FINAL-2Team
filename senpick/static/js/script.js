@@ -43,13 +43,13 @@ function createProductCard(wrapper, data) {
     heartDiv.className = "heart";
 
     const heartIcon = document.createElement("img");
-    heartIcon.src = "/static/images/heart_gray.svg";
+    heartIcon.src = "/static/images/Heart_gray.svg";
     heartIcon.alt = "Heart Icon";
     heartIcon.className = "heart-icon";
     heartIcon.dataset.recd_id = data.recommend_id
     if (data.is_liked === true) {
         heartIcon.classList.add("active");
-        heartIcon.src = "/static/images/heart_red.svg";
+        heartIcon.src = "/static/images/Heart_red.svg";
     }
 
     heartDiv.appendChild(heartIcon);
@@ -58,8 +58,8 @@ function createProductCard(wrapper, data) {
         e.stopPropagation();
         heartIcon.classList.toggle("active");
         heartIcon.src = heartIcon.classList.contains("active")
-            ? "/static/images/heart_red.svg"
-            : "/static/images/heart_gray.svg";
+            ? "/static/images/Heart_red.svg"
+            : "/static/images/Heart_gray.svg";
         fetch(`/recommends/${heartIcon.dataset.recd_id}/like`, {
             method: "POST",
             headers: {
@@ -79,13 +79,13 @@ function createProductCard(wrapper, data) {
 
     heartIcon.addEventListener("mouseenter", () => {
         if (!heartIcon.classList.contains("active")) {
-            heartIcon.src = "/static/images/heart_red.svg";
+            heartIcon.src = "/static/images/Heart_red.svg";
         }
     });
 
     heartIcon.addEventListener("mouseleave", () => {
         if (!heartIcon.classList.contains("active")) {
-            heartIcon.src = "/static/images/heart_gray.svg";
+            heartIcon.src = "/static/images/Heart_gray.svg";
         }
     });
 
@@ -108,8 +108,8 @@ function attachHeartEvents(heartIcon) {
     e.stopPropagation();
     heartIcon.classList.toggle('active');
     heartIcon.src = heartIcon.classList.contains('active')
-        ? '/static/images/heart_red.svg'
-        : '/static/images/heart_gray.svg';
+        ? '/static/images/Heart_red.svg'
+        : '/static/images/Heart_gray.svg';
     
     fetch(`/recommends/${heartIcon.dataset.recd_id}/like`, {
         method: 'POST',
@@ -130,13 +130,13 @@ function attachHeartEvents(heartIcon) {
 
     heartIcon.addEventListener('mouseenter', () => {
     if (!heartIcon.classList.contains('active')) {
-        heartIcon.src = '/static/images/heart_red.svg';
+        heartIcon.src = '/static/images/Heart_red.svg';
     }
     });
 
     heartIcon.addEventListener('mouseleave', () => {
     if (!heartIcon.classList.contains('active')) {
-        heartIcon.src = '/static/images/heart_gray.svg';
+        heartIcon.src = '/static/images/Heart_gray.svg';
     }
     });
 }

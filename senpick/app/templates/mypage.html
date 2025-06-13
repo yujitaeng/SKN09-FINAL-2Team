@@ -83,7 +83,7 @@
                               </div>
                           </a>
                           <div class="heart">
-                              <img src="{% if product.is_liked %}/static/images/heart_red.svg{% else %}/static/images/heart_gray.svg{% endif %}" 
+                              <img src="{% if product.is_liked %}/static/images/Heart_red.svg{% else %}/static/images/Heart_gray.svg{% endif %}" 
                                   alt="Heart Icon" 
                                   class="heart-icon {% if product.is_liked %}active{% endif %}" 
                                   data-recd_id="{{ product.rcmd_id }}" onclick="attachHeartEvents(this)">
