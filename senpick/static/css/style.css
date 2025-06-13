@@ -117,6 +117,7 @@ button {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 1.4em;
 }
 
 .product-card .title {
@@ -124,14 +125,13 @@ button {
   font-weight: 500;
   line-height: 1.4;
   color: #222;
-  /* overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; */
+
   display: -webkit-box;
   -webkit-line-clamp: 2;       /* 최대 2줄 */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 2.8em;
 }
 
 .product-card .reason {
