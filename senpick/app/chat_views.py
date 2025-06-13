@@ -55,16 +55,16 @@ llm_chain = prompt | llm
 def chat(request):
     if request.session.get("user_id") is None:
         return redirect('login')  # 로그인하지 않은 경우 로그인 페이지로 리디렉션
-    birth = request.session["birth"]
+    birth = request.session.get("birth", None)
+    if birth:
+        # 오늘 날짜 → 'MMDD'만 추출
+        today_mmdd = timezone.now().strftime('%m%d')
 
-    # 오늘 날짜 → 'MMDD'만 추출
-    today_mmdd = timezone.now().strftime('%m%d')
+        # 생일에서 'MMDD'만 추출
+        birth_mmdd = birth[4:] if birth else ''
 
-    # 생일에서 'MMDD'만 추출
-    birth_mmdd = birth[4:] if birth else ''
-
-    is_birth_today = (birth_mmdd == today_mmdd)
-    request.session['is_birth'] = is_birth_today  # 세션에 저장
+        is_birth_today = (birth_mmdd == today_mmdd)
+        request.session['is_birth'] = is_birth_today  # 세션에 저장
     return render(request, 'chat.html')
 
 def get_state(request):
