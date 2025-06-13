@@ -18,7 +18,7 @@ OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
                # project/.env
 
 llm = ChatOpenAI(
-    model="gpt-4o-mini",
+    model="gpt-4o",
     temperature=0,
     openai_api_key=OPENAI_API_KEY
 )

@@ -11,7 +11,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 # 채팅 모델 선언
 chat_model = ChatOpenAI(
     temperature=0.7,
-    model_name="gpt-4o-mini",
+    model_name="gpt-4o",
 )
 
 # ▶️ 시스템 프롬프트 설정

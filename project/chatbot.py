@@ -15,7 +15,7 @@ from agent import create_agent
 # ▶️ GPT 모델 초기화
 chat_model = ChatOpenAI(
     temperature=0.7,
-    model_name="gpt-4o-mini",
+    model_name="gpt-4o",
 )
 
 # ▶️ 대화 메모리
