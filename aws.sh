@@ -37,6 +37,6 @@ scp -i ./senpick.pem -r ./qdrant_ad/qdrant_storage/  ubuntu@52.4.21.137:/home/ub
 sudo yum update
 sudo yum install certbot python3-certbot-nginx -y
 
-sudo certbot --nginx -d senpick.kr
+sudo certbot certonly --standalone -d senpick.kr
 
 # cat your-private-key.pem | base64
