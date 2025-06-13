@@ -13,7 +13,7 @@ from django.utils import timezone
 
 # Initialize the OpenAI model
 llm = ChatOpenAI(
-    model="gpt-4.1-nano",  # 원하는 모델로 사용 가능
+    model="gpt-4o",  # 원하는 모델로 사용 가능
     temperature=0,
 )
 

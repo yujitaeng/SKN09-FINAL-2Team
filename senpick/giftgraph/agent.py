@@ -18,7 +18,7 @@ from giftgraph.tools.naver_tool import naver_tool
 
 # LLM 초기화
 llm = ChatOpenAI(
-    model="gpt-4o-mini",
+    model="gpt-4o",
     temperature=0,
     streaming=True,
 )

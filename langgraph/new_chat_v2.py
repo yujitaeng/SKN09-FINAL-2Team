@@ -11,7 +11,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 from agents import create_agent
 
 # LLM 및 agent 초기화 (streaming 활성화)
-chat_model = ChatOpenAI(temperature=0.7, model_name="gpt-4o-mini", streaming=True)
+chat_model = ChatOpenAI(temperature=0.7, model_name="gpt-4o", streaming=True)
 agent = create_agent()
 
 # 시스템 프롬프트
