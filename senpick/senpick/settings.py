@@ -173,7 +173,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # 2. SMTP 서버 호스트 (예: Gmail SMTP, Naver SMTP 등)
-EMAIL_HOST = 'smtp.gmail.com'       # Gmail을 쓰는 경우
+EMAIL_HOST = 'email-smtp.ap-northeast-2.amazonaws.com'       # Gmail을 쓰는 경우
 # EMAIL_HOST = 'smtp.naver.com'     # 네이버 SMTP를 쓰는 경우
 
 # 3. SMTP 서버 포트
