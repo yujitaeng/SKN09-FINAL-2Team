@@ -3,7 +3,16 @@ from langchain_qdrant import QdrantVectorStore
 from langchain_huggingface import HuggingFaceEmbeddings
 from qdrant_client import QdrantClient
 
-qdrant = QdrantClient(url="http://localhost:6333", prefer_grpc=False)
+import os
+from dotenv import load_dotenv
+
+# 환경 변수 로드
+load_dotenv()
+
+if os.getenv("ENVIRONMENT") == "PRODUCTION":
+    qdrant = QdrantClient(url="http://qdrant:6333", prefer_grpc=False)
+else:
+    qdrant = QdrantClient(url="http://localhost:6333", prefer_grpc=False)
 embedding = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-large-instruct")
 vectorstore = QdrantVectorStore(
     client=qdrant,
