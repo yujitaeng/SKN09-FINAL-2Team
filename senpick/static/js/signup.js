@@ -184,7 +184,7 @@ else if (path.includes("signup/step2")) {
         inputs.forEach(i => i.classList.add('error'));
         // 3) 에러 메시지 변경 및 보이기
         errorMsg.textContent = '인증 시간이 만료되었습니다. 인증번호 재전송 후 다시 시도 부탁드립니다.';
-        errorMsg.style.visibility = 'visible';
+        errorMsg.style.display = "block";
 
         return;
       }
@@ -241,24 +241,24 @@ else if (path.includes("signup/step2")) {
           // 인증 실패: 에러 처리
           inputs.forEach(i => i.classList.add('error'));
           errorMsg.textContent = data.error || '인증번호가 일치하지 않습니다.';
-          errorMsg.style.visibility = 'visible';
+          errorMsg.style.display = "block";
           setTimeout(() => {
             inputs.forEach(i => i.classList.remove('error'));
             errorMsg.textContent = '';
-            errorMsg.style.visibility = 'hidden';
+            errorMsg.style.display = "none";
           }, 2000);
         }
       })
       .catch(() => {
         errorMsg.textContent = '서버 오류가 발생했습니다.';
-        errorMsg.style.visibility = 'visible';
+        errorMsg.style.display = "block";
       });
     });
 
     function resendCode() {
       // 재전송 시 기존 에러 메시지/빨간 테두리 모두 초기화
       inputs.forEach(i => i.classList.remove('error'));
-      errorMsg.style.visibility = 'hidden';
+      errorMsg.style.display = "none";
 
       // 타이머 다시 5분 초기화 후 카운트다운 재시작
       clearInterval(countdown);
@@ -272,7 +272,7 @@ else if (path.includes("signup/step2")) {
           // 만료 시 다시 에러 출력을 원하신다면 아래 로직을 활용하세요.
           inputs.forEach(i => i.classList.add('error'));
           errorMsg.textContent = '인증 시간이 만료되었습니다. 인증번호 재전송 후 다시 시도 부탁드립니다.';
-          errorMsg.style.visibility = 'visible';
+          errorMsg.style.display = "block";
           return;
         }
         timerEl.textContent = formatTime(timeLeft);
