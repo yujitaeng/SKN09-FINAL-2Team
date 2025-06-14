@@ -186,6 +186,9 @@
   flex-shrink: 0;
   transition: all 0.22s;
 }
+#chat-btn {
+  cursor: default !important;
+}
 .menu-btn-row img {
   width: 20px;
   height: 20px;

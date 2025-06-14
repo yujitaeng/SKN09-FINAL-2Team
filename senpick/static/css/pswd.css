@@ -25,7 +25,7 @@
   max-width: 450px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  /* gap: 15px; */
   margin: 0 auto;
 }
 
@@ -209,6 +209,7 @@ input.error {
   font-size: 12px;
   font-weight: 300;
   color: var(--gray-dark);
+  margin-top: 7px;
 }
 
 #timer-text {
@@ -237,6 +238,7 @@ input.error {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  margin-top: 15px;
 }
 .verify-input {
   width: calc(100% / 5 - 8px);

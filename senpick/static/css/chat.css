@@ -155,7 +155,7 @@ body {
 /* 전송 버튼 */
 .chat-send-btn {
   position: static; /* 플로팅 제거 */
-  background: #111;
+  background: #2e2e2e;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -191,15 +191,16 @@ body {
   border: none;
   border-radius: 72px;
   width:fit-content;
+  height: 44px;
   display: inline-block;
-  padding: 8px 15px;
+  /* padding: 8px 15px; */
   font-size: 14px;
   cursor: pointer;
 }
 
 .recommend button:hover {
   background-color: #FFE900;
-  color: #333;
+  color: #2e2e2e;
   font-weight: bold;
 }
 
@@ -247,6 +248,12 @@ body {
   cursor: pointer;
   width: 100%;
   margin-top: 8px;
+}
+
+.guest-message button:hover {
+    background-color: #FFE900;
+  color: #333;
+  font-weight: bold;
 }
 
 .feedback-input {

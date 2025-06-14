@@ -33,17 +33,20 @@
             <p class="sub-title">이메일로 받은 인증번호 5자리를 입력해주세요.</p>
           </div>
           <div class="verification-input-group">
-              <input type="text" maxlength="1" class="verify-input" id="code1" autofocus="">
-              <input type="text" maxlength="1" class="verify-input" id="code2">
-              <input type="text" maxlength="1" class="verify-input" id="code3">
-              <input type="text" maxlength="1" class="verify-input" id="code4">
-              <input type="text" maxlength="1" class="verify-input" id="code5">
-            </div>
+            <input type="text" maxlength="1" class="verify-input" id="code1" autofocus="">
+            <input type="text" maxlength="1" class="verify-input" id="code2">
+            <input type="text" maxlength="1" class="verify-input" id="code3">
+            <input type="text" maxlength="1" class="verify-input" id="code4">
+            <input type="text" maxlength="1" class="verify-input" id="code5">
+          </div>
+
+          <div id="verif-error-msg" class="error-message"></div>
+          
           <div class="verif-timer-group">
             <div id="timer-text">00:00</div>
             <div id="resend-text">인증코드 재전송</div>
           </div>
-          <div id="verif-error-msg" class="error-message"></div>
+          
           <button class="verif-comp-btn">이메일 인증 완료</button>
         </div>
       </div>

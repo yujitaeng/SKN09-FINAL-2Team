@@ -19,9 +19,7 @@
     <div class="guest-message" >
         <div><span>아직 저장된 선물 추천 기록이 없습니다.</span></div>
         <p>대화가 길어질수록,<br>처음 추천받았던 선물들이 흐릿해질 때가 있어요.<br>마음이 갈렸던 선물들, 다시 비교하고 싶을 때도 있고요.</p>
-
         <p>로그인하시면,<br> 오고 간 대화 속 모든 선물 추천을<br> 한눈에 다시 꺼내볼 수 있도록 정리해드릴게요.</p>
-
         <p>언젠가 다시 꺼내보고 싶은 그 순간<br>선물과 함께 그 마음도 꺼내볼 수 있도록요.</p>
         <button onclick="location.href=`{% url 'login' %}`">내 선물 기록 시작하기</button>
     </div>
@@ -46,6 +44,7 @@
     const sidebarRight = document.getElementById("sidebar-right");
     const sidebarHistory = document.querySelector(".sidebar-history");
     const cardWrapper = document.querySelector('#sidebar2-card-wrapper');
+    const userType = sidebarRight.dataset.userType;
 
     sidebarHistory.addEventListener("click", () => {
         sidebarRight.classList.add("collapsed");
@@ -58,15 +57,27 @@
             fetch("/recommends?chat_id="+chatForm.dataset.chatId)
                 .then(response => response.json())
                 .then(data => {
-
                     if (!data.products || data.products.length === 0) {
                         cardWrapper.classList.add("guest-message");
-                        cardWrapper.innerHTML = `<div><span>아직 저장된 선물 추천 기록이 없습니다.</span></div>
+
+                        cardWrapper.innerHTML = `
+                            <div><span>아직 저장된 선물 추천 기록이 없습니다.</span></div>
                             <p>대화가 길어질수록,<br>처음 추천받았던 선물들이 흐릿해질 때가 있어요.<br>마음이 갈렸던 선물들, 다시 비교하고 싶을 때도 있고요.</p>
-                            <p>로그인하시면,<br> 오고 간 대화 속 모든 선물 추천을<br> 한눈에 다시 꺼내볼 수 있도록 정리해드릴게요.</p>
-                            <p>언젠가 다시 꺼내보고 싶은 그 순간<br>선물과 함께 그 마음도 꺼내볼 수 있도록요.</p>`;
-                        return;
-                    }
+                            ${
+                              userType === "guest"
+                                ? `<p>로그인하시면,<br> 오고 간 대화 속 모든 선물 추천을<br> 한눈에 다시 꺼내볼 수 있도록 정리해드릴게요.</p>`
+                                : `<p><br> 오고 간 대화 속 모든 선물 추천을<br> 한눈에 다시 꺼내볼 수 있도록 정리해드릴게요.</p>`
+                            }
+                            <p>언젠가 다시 꺼내보고 싶은 그 순간<br>선물과 함께 그 마음도 꺼내볼 수 있도록요.</p>
+                            ${
+                              userType === "guest"
+                                ? `<button onclick="location.href='${window.location.origin + '/login'}'">내 선물 기록 시작하기</button>`
+                                : ``
+                            }
+                          `;
+                          return;
+                        }
+
                     
                     cardWrapper.innerHTML = ''; // 기존 카드 초기화
                     for (const product of data.products) {
@@ -85,10 +96,22 @@
                 });
         } else if (cardWrapper) {
             cardWrapper.classList.add("guest-message");
-            cardWrapper.innerHTML = `<div><span>아직 저장된 선물 추천 기록이 없습니다.</span></div>
-                            <p>대화가 길어질수록,<br>처음 추천받았던 선물들이 흐릿해질 때가 있어요.<br>마음이 갈렸던 선물들, 다시 비교하고 싶을 때도 있고요.</p>
-                            <p>로그인하시면,<br> 오고 간 대화 속 모든 선물 추천을<br> 한눈에 다시 꺼내볼 수 있도록 정리해드릴게요.</p>
-                            <p>언젠가 다시 꺼내보고 싶은 그 순간<br>선물과 함께 그 마음도 꺼내볼 수 있도록요.</p>`;
+            cardWrapper.innerHTML = 
+                `
+                    <div><span>아직 저장된 선물 추천 기록이 없습니다.</span></div>
+                    <p>대화가 길어질수록,<br>처음 추천받았던 선물들이 흐릿해질 때가 있어요.<br>마음이 갈렸던 선물들, 다시 비교하고 싶을 때도 있고요.</p>
+                    ${
+                        userType === "guest"
+                            ? `<p>로그인하시면,<br> 오고 간 대화 속 모든 선물 추천을<br> 한눈에 다시 꺼내볼 수 있도록 정리해드릴게요.</p>`
+                            : `<p><br> 오고 간 대화 속 모든 선물 추천을<br> 한눈에 다시 꺼내볼 수 있도록 정리해드릴게요.</p>`
+                    }
+                    <p>언젠가 다시 꺼내보고 싶은 그 순간<br>선물과 함께 그 마음도 꺼내볼 수 있도록요.</p>
+                    ${
+                      userType === "guest"
+                        ? `<button onclick="location.href='${window.location.origin + '/login'}'">내 선물 기록 시작하기</button>`
+                        : ``
+                    }
+                `;
         }
     }
 </script>
