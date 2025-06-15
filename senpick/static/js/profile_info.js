@@ -213,10 +213,11 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       let msg = document.createElement("p");
       msg.className = "error-message";
-      msg.style.color = "#EB1C24";
-      msg.style.fontSize = "13px";
-      msg.style.marginTop = "6px";
+      // msg.style.color = "#EB1C24";
+      // msg.style.fontSize = "13px";
+      // msg.style.marginTop = "6px";
       msg.textContent = message;
+      msg.style.display = "block";
       el.insertAdjacentElement("afterend", msg);
     }
   }
