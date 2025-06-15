@@ -18,6 +18,11 @@ document.addEventListener("DOMContentLoaded", function () {
     "자영업자", "주부", "비직업군", "기타"
   ];
 
+  if (!jobInput.value) { // 만약 user.job 값이 없다면
+    jobInput.value = ""; // 입력 필드 값을 비움
+    jobInput.placeholder = "직업 선택"; // 플레이스홀더 표시
+  }
+
   jobList.forEach((job) => {
     const li = document.createElement("li");
     li.textContent = job;
