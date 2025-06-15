@@ -108,26 +108,7 @@ def signup_step1(request):
         request.session["email_verification_code"] = code
         print(code)
 
-        # 4) 이메일 발송 (Django send_mail 사용)
-        subject = "[Senpick] 이메일 인증 코드 안내"
-        message = f"Senpick 회원가입 인증 번호는 [{code}] 입니다.\n\n해당 번호를 인증번호 입력란에 입력해 주세요.\n\n발신 전용 이메일입니다."
-        from_email = settings.DEFAULT_FROM_EMAIL
-        recipient_list = [email]
-        
-        try:
-            request.session['verification_email'] = email
-            # send_mail(subject, message, from_email, recipient_list, fail_silently=False)
-            pass
-        except Exception as e:
-            # 발송 실패 시, 다시 Step1으로 돌아가 에러 메시지 출력
-            errors["email_send"] = "이메일 발송에 실패했습니다. 나중에 다시 시도해주세요."
-            return render(request, "signup/signup_step1.html", {
-                "service_content": service_html,
-                "personal_content": personal_html,
-                "errors": errors,
-                "email": email,
-                "nickname": nickname,
-            })
+        request.session['verification_email'] = email
 
         # 5) 발송 성공 → Step2로 이동
         return redirect("signup_step2")
