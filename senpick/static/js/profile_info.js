@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
     clearError(password);
     clearError(nickname);
     clearError(birth);
-    clearError(jobInput);
+    jobError.style.display = "none"; // Clear job error message
 
     const pwRegex = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$^*()_\+\-=\[\]{}])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
 
@@ -125,7 +125,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (!jobInput.value || jobInput.value.trim() === "") {
-      setError(jobInput, "직업을 선택해주세요.");
+      jobError.textContent = "직업을 선택해주세요.";
+      jobError.style.display = "block";
       isValid = false;
     }
 
@@ -179,9 +180,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function validateJob() {
     if (!jobInput.value || jobInput.value.trim() === "") {
-      setError(jobInput, "직업을 선택해주세요.");
+      jobError.style.display = "block"; // Show job error message
+      jobError.textContent = "직업을 선택해주세요.";
     } else {
-      clearError(jobInput);
+      jobError.style.display = "none"; // Clear job error message
     }
   }
   jobInput.addEventListener("input", validateJob);
