@@ -434,129 +434,131 @@ else if (path.includes("signup/step2")) {
   }
 
   // ✅ step4
-else if (path.includes("signup/step4")) {
-  // 1) DOM 요소 참조
-  const styleButtons     = document.querySelectorAll('.style-group .option-btn');
-  const categoryButtons  = document.querySelectorAll('.category-group .option-btn');
-  const styleErrorEl     = document.getElementById('style-error');
-  const categoryErrorEl  = document.getElementById('category-error');
-  const completeBtn      = document.getElementById('completeBtn');
-  const prefInput       = document.getElementById("preference-ids");
+  else if (path.includes("signup/step4")) {
+    // 1) DOM 요소 참조
+    const styleButtons     = document.querySelectorAll('.style-group .option-btn');
+    const categoryButtons  = document.querySelectorAll('.category-group .option-btn');
+    const styleErrorEl     = document.getElementById('style-error');
+    const categoryErrorEl  = document.getElementById('category-error');
+    const completeBtn      = document.getElementById('completeBtn');
+    const prefInput       = document.getElementById("preference-ids");
 
-  let selectedStyles     = []; // 최대 3개 저장
-  let selectedCategories = []; // 최대 3개 저장
+    let selectedStyles     = []; // 최대 3개 저장
+    let selectedCategories = []; // 최대 3개 저장
 
-  // 2) “선호 스타일” 버튼 클릭 핸들링
-  // 스타일 버튼 클릭 시
-  styleButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.id;
-      const isSelected = selectedStyles.includes(id);
+    // 2) “선호 스타일” 버튼 클릭 핸들링
+    // 스타일 버튼 클릭 시
+    styleButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const isSelected = selectedStyles.includes(id);
 
-      if (isSelected) {
-        selectedStyles = selectedStyles.filter(x => x !== id);
-        btn.classList.remove("selected");
-      } else if (selectedStyles.length < 3) {
-        selectedStyles.push(id);
-        btn.classList.add("selected");
-      } else {
-        // 최대 선택 수 초과
-        styleErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
+        if (isSelected) {
+          selectedStyles = selectedStyles.filter(x => x !== id);
+          btn.classList.remove("selected");
+        } else if (selectedStyles.length < 3) {
+          selectedStyles.push(id);
+          btn.classList.add("selected");
+        } else {
+          // 최대 선택 수 초과
+          styleErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
+          styleErrorEl.style.display = "block";
+        }
+
+        // ⚠️ 선택이 3개 미만이면 무조건 에러 메시지 숨김 (초기화)
+        if (selectedStyles.length < 3) {
+          styleErrorEl.style.display = "none";
+          if (styleErrorEl.textContent.includes("최대")) {
+            styleErrorEl.textContent = "";
+          }
+        }
+      });
+    });
+
+    // 3) “선호 카테고리” 버튼 클릭 핸들링
+    categoryButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const isSelected = selectedCategories.includes(id);
+
+        if (isSelected) {
+          selectedCategories = selectedCategories.filter(x => x !== id);
+          btn.classList.remove("selected");
+        } else if (selectedCategories.length < 3) {
+          selectedCategories.push(id);
+          btn.classList.add("selected");
+        } else {
+          categoryErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
+          categoryErrorEl.style.display = "block";
+        }
+
+        if (selectedCategories.length < 3) {
+          categoryErrorEl.style.display = "none";
+          if (categoryErrorEl.textContent.includes("최대")) {
+            categoryErrorEl.textContent = "";
+          }
+        }
+      });
+    });
+
+    // 4) “회원가입 완료” 버튼 클릭 시 검증
+    completeBtn.addEventListener('click', e => {
+      e.preventDefault();
+      let hasError = false;
+      let firstErrorElement = null;
+
+      // 4-1) 스타일 검증: 최소 1개 선택 여부
+      if (selectedStyles.length === 0) {
+        styleErrorEl.textContent = "최소 1개 이상의 선호 스타일을 선택해주세요.";
         styleErrorEl.style.display = "block";
-      }
-
-      // ⚠️ 선택이 3개 미만이면 무조건 에러 메시지 숨김 (초기화)
-      if (selectedStyles.length < 3) {
-        styleErrorEl.style.display = "none";
-        if (styleErrorEl.textContent.includes("최대")) {
-          styleErrorEl.textContent = "";
-        }
-      }
-    });
-  });
-
-  // 3) “선호 카테고리” 버튼 클릭 핸들링
-  categoryButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.id;
-      const isSelected = selectedCategories.includes(id);
-
-      if (isSelected) {
-        selectedCategories = selectedCategories.filter(x => x !== id);
-        btn.classList.remove("selected");
-      } else if (selectedCategories.length < 3) {
-        selectedCategories.push(id);
-        btn.classList.add("selected");
+        hasError = true;
+        if (!firstErrorElement) firstErrorElement = styleErrorEl; 
       } else {
-        categoryErrorEl.textContent = "최대 3개까지 선택 가능합니다.";
+        styleErrorEl.textContent = ""; // 에러 메시지 초기화
+        styleErrorEl.style.display = "none";
+      }
+
+      // 4-2) 카테고리 검증: 최소 1개 선택 여부
+      if (selectedCategories.length === 0) {
+        categoryErrorEl.textContent = "최소 1개 이상의 선호 카테고리를 선택해주세요.";
         categoryErrorEl.style.display = "block";
-      }
-
-      if (selectedCategories.length < 3) {
+        hasError = true;
+        if (!firstErrorElement) firstErrorElement = categoryErrorEl;
+      } else {
+        categoryErrorEl.textContent = ""; // 에러 메시지 초기화
         categoryErrorEl.style.display = "none";
-        if (categoryErrorEl.textContent.includes("최대")) {
-          categoryErrorEl.textContent = "";
-        }
       }
+
+      if (hasError) {
+        if (firstErrorElement) {
+          const scrollableContainer = document.querySelector('.outer-wrapper.scrollable-content'); // Step4도 이 클래스를 사용한다고 가정
+          if (scrollableContainer) {
+            firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+        return; // 에러가 있으므로 함수 실행을 중단합니다.
+      }
+
+      const allIds = [...selectedStyles, ...selectedCategories];
+      prefInput.value = allIds.join(",");
+
+      completeBtn.disabled = true; // 중복 클릭 방지
+
+      document.querySelector("form.signup-form-area.step4").submit();
     });
-  });
-
-  // 4) “회원가입 완료” 버튼 클릭 시 검증
-  completeBtn.addEventListener('click', e => {
-    e.preventDefault();
-    let hasError = false;
-    let firstErrorElement = null;
-
-    // 4-1) 스타일 검증: 최소 1개 선택 여부
-    if (selectedStyles.length === 0) {
-      styleErrorEl.textContent = "최소 1개 이상의 선호 스타일을 선택해주세요.";
-      styleErrorEl.style.display = "block";
-      hasError = true;
-      if (!firstErrorElement) firstErrorElement = styleErrorEl; 
-    } else {
-      styleErrorEl.textContent = ""; // 에러 메시지 초기화
-      styleErrorEl.style.display = "none";
-    }
-
-    // 4-2) 카테고리 검증: 최소 1개 선택 여부
-    if (selectedCategories.length === 0) {
-      categoryErrorEl.textContent = "최소 1개 이상의 선호 카테고리를 선택해주세요.";
-      categoryErrorEl.style.display = "block";
-      hasError = true;
-      if (!firstErrorElement) firstErrorElement = categoryErrorEl;
-    } else {
-      categoryErrorEl.textContent = ""; // 에러 메시지 초기화
-      categoryErrorEl.style.display = "none";
-    }
-
-    if (hasError) {
-      if (firstErrorElement) {
-        const scrollableContainer = document.querySelector('.outer-wrapper.scrollable-content'); // Step4도 이 클래스를 사용한다고 가정
-        if (scrollableContainer) {
-          firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }
-      return; // 에러가 있으므로 함수 실행을 중단합니다.
-    }
-
-    const allIds = [...selectedStyles, ...selectedCategories];
-    prefInput.value = allIds.join(",");
-
-    document.querySelector("form.signup-form-area.step4").submit();
-  });
-}
+  }
 
 
   // ✅ step5 자리 확보
   else if (path.includes("signup/step5")) {
-  const startBtn = document.getElementById('startBtn');
-  if (startBtn) {
-    startBtn.addEventListener('click', () => {
-      // 로그인 페이지 URL로 수정
-      window.location.href = "/login/";
-    });
+    const startBtn = document.getElementById('startBtn');
+    if (startBtn) {
+      startBtn.addEventListener('click', () => {
+        // 로그인 페이지 URL로 수정
+        window.location.href = "/login/";
+      });
+    }
   }
-}
 });
 
 
