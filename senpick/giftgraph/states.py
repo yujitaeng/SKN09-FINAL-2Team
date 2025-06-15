@@ -383,10 +383,43 @@ def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
             print(f"[call_agent JSON 파싱 실패]: {e}")
             observation = []
 
+        prev_urls = {
+            p["product_url"]
+            for p in state.get("recommended_products", [])
+            if isinstance(p, dict) and "product_url" in p
+        }
+
+        # 🔹 중복 제거 (refresh 요청 시)
+        if state.get("refresh_recommend"):
+            observation = [
+                p for p in observation
+                if p.get("LINK") not in prev_urls and p.get("product_url") not in prev_urls
+            ]
+            state.pop("refresh_recommend", None)
+
+        # 🔹 누적 저장
+        existing_urls = {
+            p["product_url"]
+            for p in state.get("recommended_products", [])
+            if isinstance(p, dict)
+        }
+
+        new_items = [
+            {
+                "product_url": p.get("LINK") or p.get("product_url", ""),
+                "title": p.get("NAME") or p.get("title", "")
+            }
+            for p in observation
+            if (p.get("LINK") or p.get("product_url", "")) not in existing_urls
+        ]
+
+        state.setdefault("recommended_products", []).extend(new_items)
+
+        # 🔹 최종 상태 반환
         return {
             **state,
             "output": agent_response,
-            "observation": observation  # ✅ Observation 삽입
+            "observation": observation
         }
 
     except Exception as e:

@@ -130,7 +130,7 @@ def extract_products_from_response(data):
             link_match = re.search(
                 r'-\s*\*?\s*\*?\s*링크\s*\*?\s*\*?\s*:\s*(?:\[.*?\]\(\s*(.*?)\s*\)|(\S+))', block
             )
-            product_url = link_match.group(1) or link_match.group(2) if link_match else None
+            product_url = (link_match.group(1) or link_match.group(2))  if link_match else None
 
             reason = re.search(r'-\s*\*?\s*\*?\s*추천\s*이유\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
 
@@ -253,14 +253,15 @@ def chat_message(request):
             recommend_products = []
             for product in products:
                 if "상품명:" in product["brand"]:
-                    product["brand"] = ""
+                    product["brand"] = "",
                 product_obj, created = Product.objects.get_or_create(
                     name=product["title"],
+                    product_url=product["product_url"],
                     defaults={
                         "brand": product["brand"],
                         "price": int(str(product["price"]).replace(",", "").replace("₩", "").strip()),
                         "image_url": product["imageUrl"],
-                        "product_url": product["product_url"],
+                        
                     }
                 )
                 recommend = ChatRecommend.objects.create(
