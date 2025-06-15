@@ -8,12 +8,14 @@
         계정 정보 수정
       </a>
     </li>
+    {% if request.session.type != "social" %}
     <li class="{% if active_tab == 'password' %}active{% endif %}">
       <a href="{% url 'profile_password' %}">
         <img src="{% static 'images/profile_password.svg' %}" alt="비밀번호 재설정 아이콘">
         비밀번호 재설정
       </a>
     </li>
+    {% endif %}
   </ul>
   <div class="withdraw-link-wrapper">
     <a href="{% url 'profile_delete' %}" class="withdraw-link">

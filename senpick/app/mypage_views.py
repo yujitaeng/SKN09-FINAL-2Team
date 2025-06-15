@@ -88,7 +88,7 @@ def profile_info(request):
         style_ids = request.POST.getlist("style")
         category_ids = request.POST.getlist("category")
 
-        if not check_password(password, user.password):
+        if request.session.get("type") != "social" and not check_password(password, user.password):
             preferences = UserPrefer.objects.filter(user=user).select_related("prefer_type")
             style_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "S"]
             category_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "C"]

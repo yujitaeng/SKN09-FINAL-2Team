@@ -51,8 +51,12 @@
               <label for="email">이메일</label>
               <input id="email" type="email" name="email" value="{{ user.email }}" readonly>
 
+              {% if request.session.type == "social" %}
+              <input id="password" type="hidden" name="password" value="social_dummy">
+              {% else %}
               <label for="password">비밀번호 확인</label>
               <input id="password" type="password" name="password" placeholder="비밀번호 입력" required>
+              {% endif %}
 
               {% if error %}
                 <p class="error-message" style="display:block;">{{ error }}</p>
