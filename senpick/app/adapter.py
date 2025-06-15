@@ -1,10 +1,10 @@
-from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
-from allauth.exceptions import ImmediateHttpResponse
-from django.shortcuts import redirect
-from app.models import User
 import uuid
 import pprint
 import secrets
+from app.models import User
+from django.shortcuts import redirect
+from allauth.exceptions import ImmediateHttpResponse
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 # ✅ 디버깅용 함수 (클래스 바깥)
 def social_debug_hook(request, sociallogin, **kwargs):

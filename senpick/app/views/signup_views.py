@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+
 import os
 import markdown
 import random
+from django.shortcuts import render, redirect
 from django.conf import settings
 from django.core.mail import send_mail
 from django.http import JsonResponse

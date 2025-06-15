@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ✅ step2: 이메일 인증 (5자리 입력)
-else if (path.includes("signup/step2")) {
+  else if (path.includes("signup/step2")) {
     // 1) DOM 요소 참조
     const inputs    = document.querySelectorAll('.verify-input');   // 5칸 입력박스
     const verifyBtn = document.getElementById('verifyBtn');         // "이메일 인증 완료" 버튼

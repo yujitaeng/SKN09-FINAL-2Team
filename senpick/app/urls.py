@@ -1,44 +1,26 @@
-"""
-URL configuration for senpick project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.urls import path, include
 from app.views import pswd_views, signup_views
-from app.views import pswd_verif_views
-from app.views import pswd_gen_views
-from app.views import birth_views, login_views, chat_views, mypage_views, recommend_views
+from app.views import chat_views, mypage_views, recommend_views, user_views
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('', chat_views.chat, name='chat'),
 
-    path('login/', login_views.login_view, name='login'),                                                # 로그인
-    path('logout/', login_views.logout_view, name='logout'),                                             # 로그아웃
+    path('login/', user_views.login_view, name='login'),                                                # 로그인
+    path('logout/', user_views.logout_view, name='logout'),                                             # 로그아웃
     path('pswd/', pswd_views.pswd, name='pswd'),                                                         # 비밀번호 찾기
-    path('pswd/verif/', pswd_verif_views.pswd_verif, name='pswd_verif'),                                       # 이메일 인증
+    path('pswd/verif/', pswd_views.pswd_verif, name='pswd_verif'),                                       # 이메일 인증
     
     path("api/pswd_request/", pswd_views.password_reset_request, name="password_reset_request"),         # 인증번호 전송
-    path("api/resend_code/", pswd_verif_views.resend_verification_code, name="resend_code"),             # 재전송
-    path("api/verify_code/", pswd_verif_views.verify_code, name="verify_code"),                          # 유효성 검사
-    path("pswd/gen/", pswd_gen_views.pswd_gen, name="pswd_gen"),                                             # 비밀번호 생성 
-    path("api/set_password/", pswd_gen_views.set_new_password, name="set_password"),
+    path("api/resend_code/", pswd_views.resend_verification_code, name="resend_code"),             # 재전송
+    path("api/verify_code/", pswd_views.verify_code, name="verify_code"),                          # 유효성 검사
+    path("pswd/gen/", pswd_views.pswd_gen, name="pswd_gen"),                                             # 비밀번호 생성 
+    path("api/set_password/", pswd_views.set_new_password, name="set_password"),
     path("api/check_password/", mypage_views.password_check, name="check_password"),
     
-    path('birth/', birth_views.birth, name='birth'),  # 생일 페이지
-    path('birth/recommend-products/', birth_views.birth_recommend_products, name='birth_recommend_products'),  # 생일 추천 상품 페이지
+    path('birth/', user_views.birth, name='birth'),  # 생일 페이지
+    path('birth/recommend-products/', user_views.birth_recommend_products, name='birth_recommend_products'),  # 생일 추천 상품 페이지
     
     path('chat/', chat_views.chat, name='chat'),
     path('chat/<int:chat_id>/', chat_views.chat_detail, name='chat_detail'),  # 채팅 상세 페이지

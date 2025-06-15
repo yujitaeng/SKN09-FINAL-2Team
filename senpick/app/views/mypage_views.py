@@ -1,14 +1,11 @@
+import json
+from django.utils import timezone
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from app.models import User, UserPrefer, PreferType, Chat
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
-from django.conf import settings
-import os
-from uuid import uuid4
-
-from django.utils import timezone
-from django.http import JsonResponse
-import json
+from app.utils import upload_to_s3
 
 def home(request):
     if not request.session.get('user_id') or request.session.get('type') == 'guest':
@@ -108,14 +105,6 @@ def profile_info(request):
         uploaded_file = request.FILES.get("profile_image")
         if uploaded_file:
             path = upload_to_s3(uploaded_file)  # S3에 업로드   
-            # ext = os.path.splitext(uploaded_file.name)[1].lower()
-            # filename = f"{uuid4().hex}{ext}"
-            # save_dir = os.path.join(settings.MEDIA_ROOT, "profile_images")
-            # os.makedirs(save_dir, exist_ok=True)
-            # file_path = os.path.join(save_dir, filename)
-            # with open(file_path, "wb+") as f:
-            #     for chunk in uploaded_file.chunks():
-            #         f.write(chunk)
             if path:
                 user.profile_image = path
             else:
@@ -253,32 +242,3 @@ def delete_user_account(request):
         return JsonResponse({"success": True, "message": "계정이 성공적으로 삭제되었습니다."}, status=200)
     except Exception as e:
         return JsonResponse({"success": False, "message": str(e)}, status=400)
-    
-    
-import boto3
-from uuid import uuid4
-import os
-from django.conf import settings
-
-def upload_to_s3(uploaded_file):
-    if uploaded_file:
-        s3 = boto3.client(
-            "s3",
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name=settings.AWS_REGION,
-        )
-
-        ext = os.path.splitext(uploaded_file.name)[1].lower()
-        filename = f"profile_images/{uuid4().hex}{ext}"
-
-        s3.upload_fileobj(
-            uploaded_file,
-            "senpickbucket",
-            filename,
-            ExtraArgs={"ContentType": uploaded_file.content_type}
-        )
-
-        s3_url = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{filename}"  # 또는 직접 구성
-        return s3_url
-    return None

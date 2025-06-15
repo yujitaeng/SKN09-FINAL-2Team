@@ -10,6 +10,7 @@ from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from django.db.models import Prefetch
 from django.utils import timezone
+from app.utils import extract_products_from_response
 
 # Initialize the OpenAI model
 llm = ChatOpenAI(
@@ -87,46 +88,6 @@ def get_state(request):
 def save_state(request, state):
     request.session["chat_state"] = state
     request.session.save()
-    
-def extract_products_from_response(data):
-    # 상품 블록 분리
-    data = re.split(r'\n\d+\.\s*', data.strip())
-    msg = data[0]
-    blocks = data[1:]
-
-    # JSON 배열 구성
-    items = []
-    for idx, block in enumerate(blocks):
-        brand = re.search(r'-\s*\*?\s*\*?\s*브랜드\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
-        name = re.search(r'-\s*\*?\s*\*?\s*상품명\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
-        price = re.search(r'-\s*\*?\s*\*?\s*가격\s*\*?\s*\*?\s*:\s*₩\s*([\d,]+)', block).group(1)
-        # 이미지 robust 패턴
-        image_match = re.search(
-            r'-\s*\*?\s*\*?\s*이미지\s*\*?\s*\*?\s*:\s*(?:!\[.*?\]\(\s*(.*?)\s*\)|(\S+))',
-            block
-        )
-        image = image_match.group(1) or image_match.group(2) if image_match else None
-
-        # 링크 robust 패턴
-        link_match = re.search(
-            r'-\s*\*?\s*\*?\s*링크\s*\*?\s*\*?\s*:\s*(?:\[.*?\]\(\s*(.*?)\s*\)|(\S+))',
-            block
-        )
-        product_url = link_match.group(1) or link_match.group(2) if link_match else None
-
-        reason = re.search(r'-\s*\*?\s*\*?\s*추천\s*이유\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
-
-        items.append({
-            # "id": len(st.session_state.all_products) + idx,
-            "brand": brand,
-            "title": name,
-            "price": price,
-            "imageUrl": image,
-            "product_url": product_url,
-            "reason": reason
-        })
-
-    return msg, items
 
 @csrf_exempt
 def chat_start(request):
@@ -238,7 +199,7 @@ def chat_message(request):
                     name=product["title"],
                     defaults={
                         "brand": product["brand"],
-                        "price": int(product["price"].replace(",", "").replace("₩", "").strip()),
+                        "price": int(str(product["price"]).replace(",", "").replace("₩", "").strip()),
                         "image_url": product["imageUrl"],
                         "product_url": product["product_url"],
                     }
@@ -247,7 +208,7 @@ def chat_message(request):
                     chat_id=chat_obj,
                     msg_id=chatMsg,
                     product_id=product_obj,
-                    reason=product["reason"],
+                    reason=product["REASON"],
                 )
                 recommend_products.append({
                     "recommend_id": recommend.rcmd_id,
@@ -257,7 +218,7 @@ def chat_message(request):
                     "price": product_obj.price,
                     "link": product_obj.product_url,
                     "is_liked": recommend.is_liked,
-                    "reason": product["reason"],
+                    "reason": recommend.reason,
                 })
                 
             output = output.split("Final Answer:")[1].strip() if "Final Answer:" in output else output
@@ -360,9 +321,9 @@ def chat_detail(request, chat_id):
         # bot 메시지이고 Final Answer가 포함된 경우 상품 정보 추출
         if msg.sender == 'bot':
             try:
-                output, products = extract_products_from_response(msg.message)
+                output, products = extract_message_and_parse_json(msg.message)
                 # Final Answer 이후의 텍스트만 표시
-                message_data['message'] = output.split("Final Answer: ")[1].strip().replace("bot: ", "") if "Final Answer:" in output else output
+                message_data['message'] = output.strip().replace("bot: ", "")
             except Exception as e:
                 print(f"Error extracting products: {e}")
         formatted_messages.append(message_data)

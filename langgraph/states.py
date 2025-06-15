@@ -128,7 +128,6 @@ def ask_for_missing_info(state) -> dict:
         }
         
 def conversation(state, llm:ChatOpenAI, prompt_template):
-    # try:
     situation_info = state.get("situation_info", {})
     chat_str = "\n".join(state["chat_history"][-10:])
     recipient_info = state.get("recipient_info", {})

@@ -1,35 +1,15 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from django.core.mail import send_mail
 from django.conf import settings
 from app.models import User 
-import random
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
+from app.utils import send_pswd_verification_code
 
 def pswd(request):
     return render(request, 'pswd.html')
-
-def send_pswd_verification_code(request, email):
-    code = ''.join([str(random.randint(0, 9)) for _ in range(5)])
-
-    subject = "[Senpick] 비밀번호 찾기 인증 코드 안내"
-    message = f"Senpick 비밀번호 찾기 인증 번호는 [{code}] 입니다.\n\n해당 번호를 인증번호 입력란에 입력해 주세요."
-    from_email = settings.DEFAULT_FROM_EMAIL
-    recipient_list = [email]
-
-    send_mail(subject, message, from_email, recipient_list)
-
-    request.session['verification_code'] = code
-    request.session['verification_email'] = email
-    request.session.set_expiry(500)
-    request.session.modified = True
-    
-    print(code)
-
-    return code
 
 @csrf_exempt 
 def password_reset_request(request):
