@@ -82,6 +82,10 @@
 .profile-img{
   width: 35px;
   height: 35px;
+
+}
+.profile-img {
+  object-fit: cover;
 }
 
 .brand-link img, 
