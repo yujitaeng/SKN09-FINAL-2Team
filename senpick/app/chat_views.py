@@ -128,6 +128,29 @@ def extract_products_from_response(data):
 
     return msg, items
 
+def extract_message_and_parse_json(raw_text: str):
+    """
+    입력 텍스트에서 설명 메시지와 JSON 배열을 분리하고 파싱합니다.
+    
+    Returns:
+        (message_str, json_data_list)
+    """
+    try:
+        match = re.search(r'\[.*\]', raw_text, re.DOTALL)
+        if not match:
+            print("JSON 배열이 감지되지 않았습니다.")
+            return raw_text.strip(), []
+
+        json_str = match.group(0)
+        message = raw_text.replace(json_str, "").strip()
+        data = json.loads(json_str)
+
+        return message, data
+
+    except json.JSONDecodeError as e:
+        print("JSON 파싱 오류:", e)
+        return raw_text.strip(), []
+
 @csrf_exempt
 def chat_start(request):
     if request.method == "POST":
@@ -229,25 +252,27 @@ def chat_message(request):
                 Recipient.objects.filter(chat_id=chat_obj).update(
                     situation_info=json.dumps(situation_info)
                 )
-            output, products = extract_products_from_response(output)
+            output, products = extract_message_and_parse_json(output)
             recommend_products = []
             for product in products:
-                if "상품명:" in product["brand"]:
-                    product["brand"] = ""
-                product_obj, created = Product.objects.get_or_create(
-                    name=product["title"],
-                    defaults={
-                        "brand": product["brand"],
-                        "price": int(product["price"].replace(",", "").replace("₩", "").strip()),
-                        "image_url": product["imageUrl"],
-                        "product_url": product["product_url"],
-                    }
-                )
+                if "상품명:" in product["BRAND"]:
+                    product["BRAND"] = ""
+                if isinstance(product["PRICE"], str):
+                    product["PRICE"] = int(product["PRICE"].replace(",", "").replace("₩", "").strip())
+                product_obj = Product.objects.filter(name="족발 5만원권").first()
+                if not product:
+                    product_obj = Product.objects.create(
+                        name=product["NAME"],
+                        brand=product["BRAND"],
+                        price=product["PRICE"],
+                        image_url=product["IMAGE"],
+                        product_url=product["LINK"]
+                    )
                 recommend = ChatRecommend.objects.create(
                     chat_id=chat_obj,
                     msg_id=chatMsg,
                     product_id=product_obj,
-                    reason=product["reason"],
+                    reason=product["REASON"],
                 )
                 recommend_products.append({
                     "recommend_id": recommend.rcmd_id,
@@ -257,7 +282,7 @@ def chat_message(request):
                     "price": product_obj.price,
                     "link": product_obj.product_url,
                     "is_liked": recommend.is_liked,
-                    "reason": product["reason"],
+                    "reason": recommend.reason,
                 })
                 
             output = output.split("Final Answer:")[1].strip() if "Final Answer:" in output else output
@@ -360,9 +385,9 @@ def chat_detail(request, chat_id):
         # bot 메시지이고 Final Answer가 포함된 경우 상품 정보 추출
         if msg.sender == 'bot':
             try:
-                output, products = extract_products_from_response(msg.message)
+                output, products = extract_message_and_parse_json(msg.message)
                 # Final Answer 이후의 텍스트만 표시
-                message_data['message'] = output.split("Final Answer: ")[1].strip().replace("bot: ", "") if "Final Answer:" in output else output
+                message_data['message'] = output.strip().replace("bot: ", "")
             except Exception as e:
                 print(f"Error extracting products: {e}")
         formatted_messages.append(message_data)

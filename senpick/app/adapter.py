@@ -1,7 +1,7 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.exceptions import ImmediateHttpResponse
 from django.shortcuts import redirect
-from .models import User
+from app.models import User
 import uuid
 import pprint
 import secrets
