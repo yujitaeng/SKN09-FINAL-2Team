@@ -24,6 +24,7 @@ def social_redirect_view(request):
         request.session["user_id"] = user.user_id
         request.session["nickname"] = user.nickname
         request.session["birth"] = user.birth
+        request.session["type"] = user.type
         request.session["profile_image"] = user.profile_image or ""
     return redirect("chat")
 
