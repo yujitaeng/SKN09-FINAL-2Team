@@ -160,6 +160,7 @@
     // 프로필 이미지 변경 시 파일 이름 표시
     profileImage.addEventListener("change", function() {
       const filename = document.querySelector(".profile-img-note add");
+      deleteImageInput.value = "0";
       if (filename) {
         filename.textContent = profileImage.files[0] ? "업로드 이미지 : " + profileImage.files[0].name : "선택된 파일 없음";
       } else {
