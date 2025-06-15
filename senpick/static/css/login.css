@@ -145,12 +145,12 @@ input.error#password + .error-message {
 input.error#password + .error-message ~ .login-btn {
   margin-top: 3px; 
 }
-.error-message {
+/* .error-message {
   font-size: 12px;
   color: #EB1C24;
   display: none;
   margin-top: 2px;
-}
+} */
 
 /* 로그인 버튼 */
 .login-btn,

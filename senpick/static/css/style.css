@@ -161,3 +161,10 @@ button {
 .font-b {
     font-family: 'Cafe24Supermagic', sans-serif;
 }
+
+.error-message {
+  font-size: 12px;
+  color: #EB1C24;
+  display: none;
+  margin-top: 2px;
+}

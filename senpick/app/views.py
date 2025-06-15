@@ -314,6 +314,7 @@ def send_verification_code(request):
     # 5자리 랜덤 코드 생성
     code = str(random.randint(10000, 99999))
     request.session["email_verification_code"] = code
+    print(code)
 
     subject = "[Senpick] 이메일 인증 코드 안내"
     message = f"Senpick 회원가입 인증 번호는 [{code}] 입니다.\n\n해당 번호를 인증번호 입력란에 입력해 주세요."
@@ -323,6 +324,7 @@ def send_verification_code(request):
     try:
         send_mail(subject, message, from_email, recipient_list, fail_silently=False)
     except Exception as e:
+        print(e)
         return JsonResponse({
             "success": False,
             "error": "이메일 발송에 실패했습니다. 나중에 다시 시도해주세요."

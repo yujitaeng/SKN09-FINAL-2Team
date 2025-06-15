@@ -89,7 +89,20 @@ def profile_info(request):
         category_ids = request.POST.getlist("category")
 
         if not check_password(password, user.password):
-            return redirect("mypage")
+            preferences = UserPrefer.objects.filter(user=user).select_related("prefer_type")
+            style_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "S"]
+            category_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "C"]
+            style_options = PreferType.objects.filter(type="S")
+            category_options = PreferType.objects.filter(type="C")
+
+            return render(request, "profile/profile_info.html", {
+                "user": user,
+                "style_ids": style_ids,
+                "category_ids": category_ids,
+                "style_options": style_options,
+                "category_options": category_options,
+                "error": "비밀번호가 올바르지 않습니다.",
+            })
 
         # 프로필 이미지 업로드 or 삭제 처리
         uploaded_file = request.FILES.get("profile_image")
