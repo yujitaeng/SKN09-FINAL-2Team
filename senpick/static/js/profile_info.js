@@ -97,9 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
     clearError(jobInput);
 
     const pwRegex = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$^*()_\+\-=\[\]{}])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
-    
-    const userType = "{{ request.session.type }}";
-    if (userType !== "social") {
+
+    if (password.value !== "social_dummy") {
       if (!password.value || !pwRegex.test(password.value)) {
         setError(password, "비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 8~15자");
         alert("비밀번호를 입력해주세요. *영문 소문자, 숫자, 특수문자(!@#$^*()_+-=[]{})를 포함하여 8~15자");
