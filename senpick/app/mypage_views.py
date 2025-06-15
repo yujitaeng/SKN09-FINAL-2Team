@@ -107,15 +107,31 @@ def profile_info(request):
         # 프로필 이미지 업로드 or 삭제 처리
         uploaded_file = request.FILES.get("profile_image")
         if uploaded_file:
-            ext = os.path.splitext(uploaded_file.name)[1].lower()
-            filename = f"{uuid4().hex}{ext}"
-            save_dir = os.path.join(settings.MEDIA_ROOT, "profile_images")
-            os.makedirs(save_dir, exist_ok=True)
-            file_path = os.path.join(save_dir, filename)
-            with open(file_path, "wb+") as f:
-                for chunk in uploaded_file.chunks():
-                    f.write(chunk)
-            user.profile_image = f"/media/profile_images/{filename}"
+            path = upload_to_s3(uploaded_file)  # S3에 업로드   
+            # ext = os.path.splitext(uploaded_file.name)[1].lower()
+            # filename = f"{uuid4().hex}{ext}"
+            # save_dir = os.path.join(settings.MEDIA_ROOT, "profile_images")
+            # os.makedirs(save_dir, exist_ok=True)
+            # file_path = os.path.join(save_dir, filename)
+            # with open(file_path, "wb+") as f:
+            #     for chunk in uploaded_file.chunks():
+            #         f.write(chunk)
+            if path:
+                user.profile_image = path
+            else:
+                preferences = UserPrefer.objects.filter(user=user).select_related("prefer_type")
+                style_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "S"]
+                category_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "C"]
+                style_options = PreferType.objects.filter(type="S")
+                category_options = PreferType.objects.filter(type="C")
+                return render(request, "profile/profile_info.html", {
+                    "user": user,
+                    "style_ids": style_ids,
+                    "category_ids": category_ids,
+                    "style_options": style_options,
+                    "category_options": category_options,
+                    "error": "이미지 업로드에 실패했습니다. 다시 시도해주세요.",
+                })
 
         elif delete_image == "1":
             user.profile_image = ""
@@ -237,3 +253,32 @@ def delete_user_account(request):
         return JsonResponse({"success": True, "message": "계정이 성공적으로 삭제되었습니다."}, status=200)
     except Exception as e:
         return JsonResponse({"success": False, "message": str(e)}, status=400)
+    
+    
+import boto3
+from uuid import uuid4
+import os
+from django.conf import settings
+
+def upload_to_s3(uploaded_file):
+    if uploaded_file:
+        s3 = boto3.client(
+            "s3",
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_REGION,
+        )
+
+        ext = os.path.splitext(uploaded_file.name)[1].lower()
+        filename = f"profile_images/{uuid4().hex}{ext}"
+
+        s3.upload_fileobj(
+            uploaded_file,
+            "senpickbucket",
+            filename,
+            ExtraArgs={"ContentType": uploaded_file.content_type}
+        )
+
+        s3_url = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{filename}"  # 또는 직접 구성
+        return s3_url
+    return None

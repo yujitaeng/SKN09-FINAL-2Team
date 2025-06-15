@@ -205,3 +205,14 @@ DEFAULT_FROM_EMAIL = 'Senpick <no-reply@senpick.com>'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_REGION = "ap-northeast-2"
+
+AWS_STORAGE_BUCKET_NAME = "senpickbucket"
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"  # 또는 CloudFront 도메인
+
+# 미디어 경로 커스텀 시 사용
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+
