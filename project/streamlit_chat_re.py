@@ -100,31 +100,58 @@ def build_llm_chat_history():
             llm_chat_history.append(AIMessage(content=content))
     return llm_chat_history
 
+import json, re
+
 def extract_products_from_response(data):
-    # 상품 블록 분리
-    data = re.split(r'\n\d+\.\s*', data.strip())
-    msg = data[0]
-    blocks = data[1:]
+    try:
+        # 우선 Final Answer 이후 JSON만 추출
+        if "Final Answer:" in data:
+            data = data.split("Final Answer:")[1].strip()
 
-    # JSON 배열 구성
-    items = []
-    for idx, block in enumerate(blocks):
-        name = re.search(r'-\s*\*?\*?상품명\*?\*?:\s*(.*)', block).group(1)
-        price = re.search(r'-\s*\*?\*?가격\*?\*?:\s*₩([\d,]+)', block).group(1)
-        image = re.search(r'-\s*\*?\*?이미지\*?\*?:\s*!\[.*?\]\((.*?)\)', block).group(1)
-        link = re.search(r'-\s*\*?\*?링크\*?\*?:\s*\[.*?\]\((.*?)\)', block).group(1)
-        reason = re.search(r'-\s*\*?\*?\s*추천\s*이유\s*\*?\*?\s*:\s*(.*)', block).group(1)
+        # JSON 시작 여부 판단
+        json_start = data.find("[")
+        if json_start != -1:
+            json_str = data[json_start:]
+            products = json.loads(json_str)
+            message = data[:json_start].strip()
 
-        items.append({
-            # "id": len(st.session_state.all_products) + idx,
-            "title": name,
-            "price": price,
-            "img": image,
-            "link": link,
-            "reason": reason
-        })
+            items = []
+            for p in products:
+                items.append({
+                    "brand": p.get("BRAND") or p.get("brand", ""),
+                    "title": p.get("NAME") or p.get("name", ""),
+                    "price": str(p.get("PRICE") or p.get("price", "")),
+                    "imageUrl": p.get("IMAGE") or p.get("image", ""),
+                    "product_url": p.get("LINK") or p.get("link", ""),
+                    "reason": p.get("REASON") or p.get("reason", "")
+                })
+            return message, items
 
-    return msg, items
+        # fallback: markdown 형식 파싱 (기존 방식)
+        blocks = re.split(r'\n\d+\.\s*', data.strip())
+        msg = blocks[0]
+        items = []
+        for block in blocks[1:]:
+            name = re.search(r'-\s*\*?\*?상품명\*?\*?:\s*(.*)', block).group(1)
+            price = re.search(r'-\s*\*?\*?가격\*?\*?:\s*₩([\d,]+)', block).group(1)
+            image = re.search(r'-\s*\*?\*?이미지\*?\*?:\s*!\[.*?\]\((.*?)\)', block).group(1)
+            link = re.search(r'-\s*\*?\*?링크\*?\*?:\s*\[.*?\]\((.*?)\)', block).group(1)
+            reason = re.search(r'-\s*\*?\*?추천\s*이유\*?\*?:\s*(.*)', block).group(1)
+
+            items.append({
+                "brand": "",  # 없으므로 비워두기
+                "title": name,
+                "price": price,
+                "imageUrl": image,
+                "product_url": link,
+                "reason": reason
+            })
+        return msg, items
+
+    except Exception as e:
+        print("[extract_products_from_response 에러]:", e)
+        return data, []
+
 
 def get_bot_response(user_input):
     now_time = datetime.now().strftime("%Y-%m-%d %H:%M")

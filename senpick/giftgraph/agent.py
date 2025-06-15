@@ -35,15 +35,15 @@ system_prompt_text= """
 - Observation이 비어 있으면 다른 도구로 재시도하세요.
 
 [Observation 예시]
-Observation: [{{'BRAND': '이케아', 'NAME': '모던 머그컵', 'PRICE': 25000, ...}}]
+Observation: [{{{{\"BRAND\": \"이케아\", \"NAME\": \"모던 머그컵\", \"PRICE\": 25000, ...}}}}]
 
 Final Answer:
-- 브랜드: {{BRAND}}
-- 상품명: {{NAME}}
-- 가격: ₩{{PRICE}}
-- 이미지: {{IMAGE}}
-- 링크: {{LINK}}
-- 추천 이유: {{REASON}} (사용자의 감정, 고민, 예산, 제외 조건 등과 상품 특징의 연결을 자연스럽게 설명)
+- 브랜드: {{{{BRAND}}}}
+- 상품명: {{{{NAME}}}}
+- 가격: ₩{{{{PRICE}}}}
+- 이미지: {{{{IMAGE}}}}
+- 링크: {{{{LINK}}}}
+- 추천 이유: {{{{REASON}}}} (사용자의 감정, 고민, 예산, 제외 조건 등과 상품 특징의 연결을 자연스럽게 설명)
 
 [절차]
 1. Thought → Action → Action Input → Observation 흐름을 최대 4회까지 반복합니다.
@@ -122,20 +122,22 @@ Final Answer:
 Final Answer:
 진심이 전해질 수 있도록 감성과 실용성을 함께 고려했어요.
 [
-  {
+  {{
     "BRAND": "젠틀몬스터",
     "NAME": "랭 01(OR)",
     "PRICE": 269000,
     "IMAGE": "https://example.com/glasses.jpg",
     "LINK": "https://shop.com/product/456"
-  },
-  {
+    "REASON": "따뜻한 온열 찜질팩으로 친구의 피로를 풀어주며, 실용적이고 따뜻한 마음을 전할 수 있는 선물입니다
+  }},
+  {{
     "BRAND": "크로싱",
     "NAME": "14K 큐빅 팔찌",
     "PRICE": 215305,
     "IMAGE": "https://example.com/flower.jpg",
     "LINK": "https://shop.com/product/123"
-  }
+    "REASON": "따뜻한 온열 찜질팩으로 친구의 피로를 풀어주며, 실용적이고 따뜻한 마음을 전할 수 있는 선물입니다
+  }}
 ]
 
 [포맷 예시]

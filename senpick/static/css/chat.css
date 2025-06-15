@@ -87,6 +87,7 @@ body {
   max-width: 80%;
   margin: 40px auto 0 0;  
   padding: 20px;
+  white-space: pre-wrap;
 
   background: #ffffff;
   color: #2e2e2e;
