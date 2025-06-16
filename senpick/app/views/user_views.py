@@ -32,7 +32,6 @@ def logout_view(request):
     request.session.flush()
     return redirect("login")
 
-
 def birth(request):
     return render(request, 'birth.html')
 

@@ -32,15 +32,10 @@ def social_redirect_view(request):
 def is_social_incomplete(user):
     return user.is_authenticated and user.type == "social" and not user.is_email_verified
 
-def home(request):
-    return render(request, 'index.html')
-
 def login_view(request):
     return render(request, 'login.html')
 
 def signup_step1(request):
-    # return render(request, 'signup/signup_step1.html')
-
     base = os.path.join(settings.BASE_DIR, "app", "templates", "signup")
     # 서비스 이용약관
     with open(os.path.join(base, "service_term.txt"), encoding="utf-8") as f:
