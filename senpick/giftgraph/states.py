@@ -288,45 +288,6 @@ def extract_action(state, llm, prompt_template):
             "output": "죄송해요. 다시 한 번 입력해 주실 수 있을까요?"
         }
 
-# def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
-#     history_str = "\n".join(state.get("chat_history", [])[-10:])
-#     try:
-#         user_intent = (
-#             f"[추출된 조건]\n감정: {state['situation_info'].get('emotion')}, \n"
-#             f"스타일: {state['situation_info'].get('preferred_style')}, \n"
-#             f"예산: {state['situation_info'].get('price_range')}원\n"
-#             f"친밀도: {state['situation_info'].get('closeness')}\n"
-#             f"[수령인 정보]\n{state.get('recipient_info', {})}\n"
-#             f"[대화 맥락]\n{history_str}"
-#         )
-
-#         stream_result = ""
-#         if agent_executor:
-#             for chunk in agent_executor.stream({
-#                 "input": user_intent,
-#                 "chat_history": state.get("chat_history", [])
-#             }):
-#                 value = chunk.get("output") if isinstance(chunk, dict) else str(chunk)
-#                 if value:
-#                     print(value, end="", flush=True)
-#                     stream_result += value
-#             agent_response = stream_result
-#         else:
-#             agent_response = "에이전트가 없습니다."
-
-#         return {
-#             **state,
-#             "output": agent_response
-#         }
-
-#     except Exception as e:
-#         print(f"[call_agent 에러]: {e}")
-#         return {
-#             **state,
-#             "output": "추천 처리 중 에러가 발생했습니다."
-#         }
-import json
-
 def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
     history_str = "\n".join(state.get("chat_history", [])[-10:])
     try:
@@ -336,6 +297,20 @@ def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
             f"관계: {state['recipient_info'].get('relationship')}, "
             f"기념일/상황: {state['recipient_info'].get('occasion')}"
         )
+        # "messager_analysis": {
+        #     "intimacy_level": "unknown",
+        #     "emotional_tone": "unknown",
+        #     "personality": "unknown",
+        #     "interests": "unknown",
+        #     "reason": f"LLM parsing error: {str(e)}"
+        # }
+        messager_analysis = state.get("messager_analysis", {})
+        msssager_info_str = (
+            f"친밀도: {messager_analysis.get('intimacy_level', '알 수 없음')}, "
+            f"감정 톤: {messager_analysis.get('emotional_tone', '알 수 없음')}, "
+            f"성격: {messager_analysis.get('personality', '알 수 없음')}, "
+            f"관심사: {messager_analysis.get('interests', '알 수 없음')}, "
+        )
 
         user_intent = (
             f"[추출된 조건]\n"
@@ -344,6 +319,7 @@ def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
             f"- 예산: {state['situation_info'].get('price_range')}원\n"
             f"- 친밀도: {state['situation_info'].get('closeness')}\n"
             f"[수령인 정보]\n{recipient_info_str}\n"
+            f"[메시지 분석]\n{msssager_info_str}\n"
             f"[대화 맥락]\n{history_str}"
         )
 
