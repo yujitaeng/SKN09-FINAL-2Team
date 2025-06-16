@@ -10,7 +10,7 @@ from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from django.db.models import Prefetch
 from django.utils import timezone
-from app.utils import extract_products_from_response
+# from app.utils import extract_products_from_response
 
 # Initialize the OpenAI model
 llm = ChatOpenAI(
@@ -88,6 +88,66 @@ def get_state(request):
 def save_state(request, state):
     request.session["chat_state"] = state
     request.session.save()
+    
+def extract_products_from_response(data):
+    import json, re
+
+    # JSON 형식 응답 감지 및 파싱
+    json_match = re.search(r'\[\s*{.*?}\s*\]', data, re.DOTALL)
+    if json_match:
+        try:
+            products_json = json.loads(json_match.group(0))
+            msg = "추천 상품 목록입니다."
+            items = []
+            for prod in products_json:
+                items.append({
+                    "brand": prod.get("BRAND", ""),
+                    "title": prod.get("NAME", ""),
+                    "price": prod.get("PRICE", ""),
+                    "imageUrl": prod.get("IMAGE", ""),
+                    "product_url": prod.get("LINK", ""),
+                    "reason": prod.get("REASON", ""),
+                })
+            return msg, items
+        except Exception as e:
+            print("[JSON 파싱 실패]", e)
+
+    # 기존 markdown 블록 fallback 처리
+    data = re.split(r'\n\d+\.\s*', data.strip())
+    msg = data[0]
+    blocks = data[1:]
+
+    items = []
+    for idx, block in enumerate(blocks):
+        try:
+            brand = re.search(r'-\s*\*?\s*\*?\s*브랜드\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
+            name = re.search(r'-\s*\*?\s*\*?\s*상품명\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
+            price = re.search(r'-\s*\*?\s*\*?\s*가격\s*\*?\s*\*?\s*:\s*₩\s*([\d,]+)', block).group(1)
+            image_match = re.search(
+                r'-\s*\*?\s*\*?\s*이미지\s*\*?\s*\*?\s*:\s*(?:!\[.*?\]\(\s*(.*?)\s*\)|(\S+))', block
+            )
+            image = image_match.group(1) or image_match.group(2) if image_match else None
+
+            link_match = re.search(
+                r'-\s*\*?\s*\*?\s*링크\s*\*?\s*\*?\s*:\s*(?:\[.*?\]\(\s*(.*?)\s*\)|(\S+))', block
+            )
+            product_url = (link_match.group(1) or link_match.group(2))  if link_match else None
+
+            reason = re.search(r'-\s*\*?\s*\*?\s*추천\s*이유\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
+
+            items.append({
+                "brand": brand,
+                "title": name,
+                "price": price,
+                "imageUrl": image,
+                "product_url": product_url,
+                "reason": reason
+            })
+        except:
+            continue
+
+    return msg, items
+
 
 @csrf_exempt
 def chat_start(request):
@@ -194,14 +254,15 @@ def chat_message(request):
             recommend_products = []
             for product in products:
                 if "상품명:" in product["brand"]:
-                    product["brand"] = ""
+                    product["brand"] = "",
                 product_obj, created = Product.objects.get_or_create(
                     name=product["title"],
+                    product_url=product["product_url"],
                     defaults={
                         "brand": product["brand"],
                         "price": int(str(product["price"]).replace(",", "").replace("₩", "").strip()),
                         "image_url": product["imageUrl"],
-                        "product_url": product["product_url"],
+                        
                     }
                 )
                 recommend = ChatRecommend.objects.create(
