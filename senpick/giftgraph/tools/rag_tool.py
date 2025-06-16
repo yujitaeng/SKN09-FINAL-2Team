@@ -21,7 +21,7 @@ vectorstore = QdrantVectorStore(
     embedding=embedding,
 )
 
-def retrieve_from_qdrant(query: str, min_price:int, max_price:int) -> list[dict]:
+def retrieve_from_qdrant(query: str, min_price:int=0, max_price:int=1000000) -> list[dict]:
     try:
         results = vectorstore.similarity_search_with_score(
             query, 
