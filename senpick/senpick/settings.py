@@ -29,7 +29,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['senpick.kr', 'web', '127.0.0.1', 'localhost', os.getenv('ALLOWED_HOSTS')]
+ALLOWED_HOSTS = [ '127.0.0.1', 'localhost']
 
 # SECURE_SSL_REDIRECT = True
 
@@ -117,9 +117,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'senpick_db',  # 데이터베이스 이름
-        'USER': os.getenv('MYSQL_USER'),        # MySQL 사용자
-        'PASSWORD': os.getenv('MYSQL_PASSWORD'), # MySQL 비밀번호
-        'HOST': os.getenv('MYSQL_HOST'),   # 로컬 호스트
+        'USER': "root",        # MySQL 사용자
+        'PASSWORD': "1234", # MySQL 비밀번호
+        'HOST': "localhost",   # 로컬 호스트
         'PORT': '3306',        # MySQL 포트
     }
 } 

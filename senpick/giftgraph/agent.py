@@ -511,7 +511,7 @@ prompt = ChatPromptTemplate.from_messages([
     ("system", system_prompt_text),
     MessagesPlaceholder(variable_name="chat_history"),
     HumanMessagePromptTemplate.from_template(
-        "{input}\n\n{agent_scratchpad}"  # ← 반드시 추가!
+        "{user_intent}\n\n{agent_scratchpad}"  # ← 반드시 추가!
     )
 ])
 

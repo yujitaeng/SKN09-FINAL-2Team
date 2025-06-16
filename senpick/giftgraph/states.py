@@ -3,6 +3,7 @@ import json, ast, re
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor
 from langchain.prompts import PromptTemplate
+import random
 
 # ExtractAction - extract_aciton()
 # aciton 추출 
@@ -288,28 +289,28 @@ def extract_action(state, llm, prompt_template):
             "output": "죄송해요. 다시 한 번 입력해 주실 수 있을까요?"
         }
 
-def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
+def normalize_recipient_info(recipient_info: dict) -> dict:
+    """키 이름을 통일시켜 recipient_info 사용 오류 방지"""
+    return {
+        "gender": recipient_info.get("gender", ""),
+        "age_range": recipient_info.get("age_range") or recipient_info.get("ageGroup", ""),
+        "relationship": recipient_info.get("relationship") or recipient_info.get("relation", ""),
+        "occasion": recipient_info.get("occasion") or recipient_info.get("anniversary", "")
+    }
+
+def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
     history_str = "\n".join(state.get("chat_history", [])[-10:])
+
     try:
-        recipient_info_str = (
-            f"성별: {state['recipient_info'].get('gender')}, "
-            f"연령대: {state['recipient_info'].get('age_range')}, "
-            f"관계: {state['recipient_info'].get('relationship')}, "
-            f"기념일/상황: {state['recipient_info'].get('occasion')}"
-        )
-        # "messager_analysis": {
-        #     "intimacy_level": "unknown",
-        #     "emotional_tone": "unknown",
-        #     "personality": "unknown",
-        #     "interests": "unknown",
-        #     "reason": f"LLM parsing error: {str(e)}"
-        # }
+        recipient_info_raw = state.get("recipient_info", {})
+        recipient_info = normalize_recipient_info(recipient_info_raw)
+
         messager_analysis = state.get("messager_analysis", {})
         msssager_info_str = (
             f"친밀도: {messager_analysis.get('intimacy_level', '알 수 없음')}, "
             f"감정 톤: {messager_analysis.get('emotional_tone', '알 수 없음')}, "
             f"성격: {messager_analysis.get('personality', '알 수 없음')}, "
-            f"관심사: {messager_analysis.get('interests', '알 수 없음')}, "
+            f"관심사: {messager_analysis.get('interests', '알 수 없음')}"
         )
 
         user_intent = (
@@ -318,7 +319,11 @@ def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
             f"- 스타일: {state['situation_info'].get('preferred_style')}\n"
             f"- 예산: {state['situation_info'].get('price_range')}원\n"
             f"- 친밀도: {state['situation_info'].get('closeness')}\n"
-            f"[수령인 정보]\n{recipient_info_str}\n"
+            f"[수령인 정보]\n"
+            f"성별: {recipient_info.get('gender')}, "
+            f"연령대: {recipient_info.get('age_range')}, "
+            f"관계: {recipient_info.get('relationship')}, "
+            f"기념일/상황: {recipient_info.get('occasion')}\n"
             f"[메시지 분석]\n{msssager_info_str}\n"
             f"[대화 맥락]\n{history_str}"
         )
@@ -326,7 +331,7 @@ def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
         stream_result = ""
         if agent_executor:
             for chunk in agent_executor.stream({
-                "input": user_intent,
+                "user_intent": user_intent,
                 "chat_history": state.get("chat_history", [])
             }):
                 value = chunk.get("output") if isinstance(chunk, dict) else str(chunk)
@@ -337,75 +342,18 @@ def call_agent(state, agent_executor: AgentExecutor = None) -> dict:
         else:
             agent_response = "에이전트가 없습니다."
 
-        # ✅ JSON 문자열 파싱 시도 → observation에 저장
-        try:
-            observation = []
-            if "Final Answer:" in agent_response:
-                # Final Answer 이후 부분만 추출
-                lines = agent_response.split("Final Answer:")[-1].strip().splitlines()
-
-                if len(lines) >= 2:
-                    # 안내 문구는 lines[0], JSON은 lines[1:]을 합쳐서 파싱
-                    json_str = "\n".join(lines[1:])
-                    parsed = json.loads(json_str)
-                    if isinstance(parsed, list):
-                        observation = parsed
-            else:
-                # Final Answer 없을 경우 전체 문자열을 시도
-                parsed = json.loads(agent_response)
-                if isinstance(parsed, list):
-                    observation = parsed
-
-        except Exception as e:
-            print(f"[call_agent JSON 파싱 실패]: {e}")
-            observation = []
-
-        prev_urls = {
-            p["product_url"]
-            for p in state.get("recommended_products", [])
-            if isinstance(p, dict) and "product_url" in p
-        }
-
-        # 🔹 중복 제거 (refresh 요청 시)
-        if state.get("refresh_recommend"):
-            observation = [
-                p for p in observation
-                if p.get("LINK") not in prev_urls and p.get("product_url") not in prev_urls
-            ]
-            state.pop("refresh_recommend", None)
-
-        # 🔹 누적 저장
-        existing_urls = {
-            p["product_url"]
-            for p in state.get("recommended_products", [])
-            if isinstance(p, dict)
-        }
-
-        new_items = [
-            {
-                "product_url": p.get("LINK") or p.get("product_url", ""),
-                "title": p.get("NAME") or p.get("title", "")
-            }
-            for p in observation
-            if (p.get("LINK") or p.get("product_url", "")) not in existing_urls
-        ]
-
-        state.setdefault("recommended_products", []).extend(new_items)
-
-        # 🔹 최종 상태 반환
         return {
             **state,
-            "output": agent_response,
-            "observation": observation
+            "output": agent_response
         }
 
     except Exception as e:
         print(f"[call_agent 에러]: {e}")
         return {
             **state,
-            "output": "추천 처리 중 에러가 발생했습니다.",
-            "observation": []
+            "output": "추천 처리 중 에러가 발생했습니다."
         }
+
 
 def final_response(state):
     try:

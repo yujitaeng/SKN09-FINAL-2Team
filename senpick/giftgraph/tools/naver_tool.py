@@ -1,22 +1,18 @@
-#websearch tool
-import os                                     # 환경변수 접근용 (.env)
-import re                                     # HTML 태그 제거용
-import requests                               # HTTP 요청 (Naver API 호출)
-from langchain.tools import Tool              # LangChain Tool 정의
-from langchain_openai import ChatOpenAI  # LLM 호출용
-from dotenv import load_dotenv                # .env 환경변수 로딩
-from pathlib import Path                      # 상대 경로를 사용하기 위함
+import os
 import re
 import requests
+from langchain.tools import Tool
+from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv
+from pathlib import Path
 
 base_path = Path(__file__).resolve().parent.parent  # tools/의 상위 → project/
-env_path = base_path / ".env"   
-load_dotenv()
+env_path = base_path / ".env"
+load_dotenv(env_path)
 
 CLIENT_ID = os.environ['NAVER_CLIENT_ID']
 CLIENT_SECRET = os.environ['NAVER_CLIENT_SECRET']
 OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-               # project/.env
 
 llm = ChatOpenAI(
     model="gpt-4o",
@@ -24,18 +20,39 @@ llm = ChatOpenAI(
     openai_api_key=OPENAI_API_KEY
 )
 
-def naver_shop_search(user_input: str) -> list:
+def naver_shop_search(user_input: str, recipient_info: dict = {}, situation_info: dict = {}) -> list:
     prompt = f"""
-    사용자가 상품을 요청했지만 내부 DB에는 적절한 결과가 없었습니다.
-    아래 문장을 네이버 쇼핑에서 검색하기에 적합한 **간결하고 핵심적인 검색어**로 변환해 주세요.
+    당신은 네이버 쇼핑 검색 키워드 전문가입니다.
 
-    입력: "{user_input}"
-    출력:
+    사용자가 선물 추천을 요청했으며, 아래는 그 배경 정보입니다.
+    이 정보를 바탕으로 네이버 쇼핑에 입력할 **간결하고 핵심적인 검색어 키워드**를 구성해 주세요.
+
+    ⚠️ 반드시 아래 조건을 지키세요:
+    - '풍선', '꽃', '기저귀', '육아' 관련 키워드는 포함하지 마세요.
+    - 수령인의 정보(성별, 나이대, 관계)가 반영되도록 하세요.
+    - 키워드는 문장이 아닌 나열된 단어 형태로 구성하고, 최대 5단어 이내로 출력하세요.
+
+    [입력 문장]
+    {user_input}
+
+    [상황 정보]
+    감정: {situation_info.get('emotion', '')}
+    스타일: {situation_info.get('preferred_style', '')}
+    예산: {situation_info.get('price_range', '')}
+    친밀도: {situation_info.get('closeness', '')}
+
+    [수령인 정보]
+    성별: {recipient_info.get('gender', '')}
+    연령대: {recipient_info.get('age_range', '')}
+    관계: {recipient_info.get('relationship', '')}
+    기념일/상황: {recipient_info.get('occasion', '')}
+
+    출력 (예시): 어머니 생신 선물 실용적인 5만원 이하
     """
     try:
         search_query = llm.invoke(prompt).content.strip()
     except Exception as e:
-        print(f"[naver_tool] 쿼리 정제 중 오류: {e}")
+        print(f"[naver_tool] 코어 검색에서 오류: {e}")
         return []
 
     headers = {
@@ -45,7 +62,7 @@ def naver_shop_search(user_input: str) -> list:
 
     params = {
         "query": search_query,
-        "display": 5,
+        "display": 10,
         "start": 1,
         "sort": "sim"
     }
@@ -60,6 +77,7 @@ def naver_shop_search(user_input: str) -> list:
 
     items = response.json().get("items", [])
     results = []
+
     for item in items:
         try:
             title = re.sub(r'<.*?>', '', item['title']).strip()
@@ -80,14 +98,10 @@ def naver_shop_search(user_input: str) -> list:
 
     return results
 
-
 naver_tool = Tool(
     name="naver_search",
     func=naver_shop_search,
     description="네이버 쇼핑에서 실시간으로 외부 상품을 검색합니다."
-
 )
-
-
 
 __all__ = ["naver_tool"]
