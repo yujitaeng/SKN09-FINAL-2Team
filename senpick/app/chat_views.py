@@ -90,8 +90,6 @@ def save_state(request, state):
     request.session.save()
     
 def extract_products_from_response(data):
-    import json, re
-
     # JSON 형식 응답 감지 및 파싱
     json_match = re.search(r'\[\s*{.*?}\s*\]', data, re.DOTALL)
     if json_match:

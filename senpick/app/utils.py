@@ -1,4 +1,4 @@
-import os, re, boto3, random
+import os, re, boto3, random, json
 from uuid import uuid4
 from django.conf import settings
 from django.core.mail import send_mail
@@ -62,7 +62,7 @@ def extract_products_from_response(data):
             link_match = re.search(
                 r'-\s*\*?\s*\*?\s*링크\s*\*?\s*\*?\s*:\s*(?:\[.*?\]\(\s*(.*?)\s*\)|(\S+))', block
             )
-            product_url = link_match.group(1) or link_match.group(2) if link_match else None
+            product_url = (link_match.group(1) or link_match.group(2))  if link_match else None
 
             reason = re.search(r'-\s*\*?\s*\*?\s*추천\s*이유\s*\*?\s*\*?\s*:\s*(.*)', block).group(1)
 
