@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from app.models import User, UserPrefer, PreferType, Chat
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
+from allauth.socialaccount.models import SocialAccount
 from app.utils import upload_to_s3
 
 def home(request):
@@ -233,6 +234,10 @@ def delete_user_account(request):
 
         user.email = f"deleted_{user_id}_{user.email}"
         user.save()
+        
+        user = request.user
+        # 1. 관련된 SocialAccount 삭제
+        SocialAccount.objects.filter(user=user).delete()
 
         # 세션 삭제 = 로그아웃 처리
         request.session.flush() # 만료된 세션 제거
