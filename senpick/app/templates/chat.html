@@ -34,7 +34,14 @@
         <!-- 질문 다 끝나면 등장하는 채팅 입력창 -->
         <form class="chat-input-form" id="chat-form" autocomplete="off">
           <div class="chat-input-wrap">
-            <input type="text" id="user-input" placeholder="예: '친구 결혼 선물 5만원대 추천해줘'" />
+            <input type="text" id="user-input" placeholder="예: '친구 결혼 선물 5만원대 추천해줘'" maxlength="200"/>
+            {% comment %} <textarea
+              id="user-input"
+              placeholder="예: '친구 결혼 선물 5만원대 추천해줘'"
+              maxlength="200"
+              rows="3"
+              style="width: 100%; resize: none; overflow: auto;"
+            ></textarea> {% endcomment %}
           </div>
           <button type="submit" class="chat-send-btn" aria-label="전송" id="chat-send-btn">
             <svg width="18" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">

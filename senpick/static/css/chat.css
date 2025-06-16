@@ -133,7 +133,7 @@ body {
   position: relative;
 }
 
-.chat-input-wrap input {
+.chat-input-wrap input, .chat-input-wrap textarea {
   border: none;
   outline: none;
   background: transparent;
@@ -143,7 +143,7 @@ body {
   color: #2e2e2e;
 }
 
-.chat-input-wrap input::placeholder {
+.chat-input-wrap input::placeholder, .chat-input-wrap textarea::placeholder {
   color: #b5b5b5;
   font-size: 16px;
 }
