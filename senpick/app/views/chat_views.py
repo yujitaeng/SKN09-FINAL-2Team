@@ -11,6 +11,7 @@ from langchain.prompts import PromptTemplate
 from django.db.models import Prefetch
 from django.utils import timezone
 from app.utils import extract_products_from_response
+from django.db.models import Q
 
 # Initialize the OpenAI model
 llm = ChatOpenAI(
@@ -267,7 +268,11 @@ def chat_history(request):
 
     # query가 있으면 title에 해당 query가 포함된 것만 필터링
     if query and query.strip() != "":
-        chats = chats.filter(title__icontains=query)
+        chats = chats.filter(
+            Q(title__icontains=query) |
+            Q(chatmessage__message__icontains=query)
+        ).distinct()
+
     chats = chats.order_by('-created_at').values('chat_id', 'title', 'created_at')
     
     return JsonResponse({"chatlist": list(chats)})
