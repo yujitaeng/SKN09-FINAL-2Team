@@ -208,7 +208,7 @@ def chat_message(request):
                     chat_id=chat_obj,
                     msg_id=chatMsg,
                     product_id=product_obj,
-                    reason=product["REASON"],
+                    reason=product["reason"],
                 )
                 recommend_products.append({
                     "recommend_id": recommend.rcmd_id,
