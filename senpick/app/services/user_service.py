@@ -39,38 +39,47 @@ def calculate_age(birth: str, current_year: int = 2025):
         return current_year - birth_year
     return None
 
-def build_gift_recommendation_state(user, age, prefer_tags):
+def build_gift_recommendation_state(user, current_year=2025):
+    if not user:
+        return None, "사용자를 찾을 수 없습니다."
+
+    prefer_types = user.preferences.all() if user and user.preferences.exists() else []
+    prefer_styles = [prefer.prefer_type.type_name for prefer in prefer_types if prefer.prefer_type.type == "S"]
+    prefer_categories = [prefer.prefer_type.type_name for prefer in prefer_types if prefer.prefer_type.type == "C"]
+    
+    age = calculate_age(user.birth, current_year)
     situation_info = {
-        "closeness": "본인",
+        "closeness": "나",
         "emotion": "축하, 기쁨",
-        "preferred_style": ",".join(prefer_tags),
-        "price_range": "적당한 가격",
+        "preferred_style": prefer_styles[0],
+        "price_range": "20만원 이하",
     }
 
     recipient_info = {
         'gender': user.gender,
         'ageGroup': age,
-        'relation': "본인",
+        'relation': "나",
         'anniversary': "생일",
     }
 
     return {
-        "chat_history": [],
+        "chat_history": ["user: 생일 선물 추천해줘"],
         "recipient_info": recipient_info,
         "situation_info": situation_info,
+        "messager_analysis": {
+            "intimacy_level": "",
+            "emotional_tone": "",
+            "personality": "",
+            "interests": prefer_categories[0],    
+        },
         "output": "",
     }
 
 def get_birth_recommendations(user_id, current_year=2025):
     user = get_user_with_preferences(user_id)
-    if not user:
-        return None, "사용자를 찾을 수 없습니다."
-
-    prefer_types = user.preferences.all() if user and user.preferences.exists() else []
-    prefer_tags = [prefer.prefer_type.type_name for prefer in prefer_types]
-    age = calculate_age(user.birth, current_year)
     
-    state = build_gift_recommendation_state(user, age, prefer_tags)
+    state = build_gift_recommendation_state(user, current_year)
+    print(state)
     result = gift_fsm.invoke(state)
     
     if not isinstance(result, dict):
@@ -88,6 +97,7 @@ def get_birth_recommendations(user_id, current_year=2025):
             "imageUrl": product.get("imageUrl", ""),
             "brand": product.get("brand", ""),
             "title": product.get("title", ""),
+            "product_url": product.get("product_url", ""),
             "reason": product.get("reason", ""),
         })
 

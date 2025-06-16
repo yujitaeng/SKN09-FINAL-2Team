@@ -26,10 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = [ '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['senpick.kr', 'web', '127.0.0.1', 'localhost', os.getenv('ALLOWED_HOSTS')]
 
 # SECURE_SSL_REDIRECT = True
 
@@ -117,9 +114,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'senpick_db',  # 데이터베이스 이름
-        'USER': "root",        # MySQL 사용자
-        'PASSWORD': "1234", # MySQL 비밀번호
-        'HOST': "localhost",   # 로컬 호스트
+        'USER': os.getenv('MYSQL_USER'),        # MySQL 사용자
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'), # MySQL 비밀번호
+        'HOST': os.getenv('MYSQL_HOST'),   # 로컬 호스트
         'PORT': '3306',        # MySQL 포트
     }
 } 
@@ -216,3 +213,22 @@ AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"  # 또는 C
 # 미디어 경로 커스텀 시 사용
 MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
 
+if os.getenv("ENVIRONMENT") == 'PRODUCTION': # 배포용 환경 변수 설정
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = False
+
+    # CSRF 쿠키도 https에만 전송
+    CSRF_COOKIE_SECURE = True
+
+    # 세션 쿠키도 https에만 전송
+    SESSION_COOKIE_SECURE = True
+
+    # 보안 헤더 (옵션)
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    # X-Forwarded-Proto 헤더 사용 허용 (리버스 프록시 환경일 경우)
+    USE_X_FORWARDED_HOST = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+else:
+    DEBUG = True
