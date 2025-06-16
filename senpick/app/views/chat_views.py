@@ -321,7 +321,7 @@ def chat_detail(request, chat_id):
         # bot 메시지이고 Final Answer가 포함된 경우 상품 정보 추출
         if msg.sender == 'bot':
             try:
-                output, products = extract_message_and_parse_json(msg.message)
+                output, products = extract_products_from_response(msg.message)
                 # Final Answer 이후의 텍스트만 표시
                 message_data['message'] = output.strip().replace("bot: ", "")
             except Exception as e:
