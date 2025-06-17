@@ -3,7 +3,6 @@ import json, ast, re
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor
 from langchain.prompts import PromptTemplate
-import random
 
 # ExtractAction - extract_aciton()
 # aciton 추출 
@@ -84,14 +83,13 @@ CONVERSATION_PROMPT = PromptTemplate(
   자주 연락하며 마음을 나누는 사이
   일정한 거리감을 유지하는 사이
   어색하지만 챙기고 싶은 사이
- 
 
 [예시 질문 출력 형태]
 아래와 같은 형식으로 출력하도록 유도하세요:
 안녕하세요! 😊
 선물 추천을 도와드릴게요.
 
-먼저, 선물을 드릴 분과 얼마나 가까운 사이인지 알려주실 수 있을까요?<br>
+먼저, 선물을 드릴 분과 얼마나 가까운 사이인지 알려주실 수 있을까요?
 예를 들어:
 - 자주 연락하며 마음을 나누는 사이
 - 일정한 거리감을 유지하는 사이
