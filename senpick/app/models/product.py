@@ -15,7 +15,7 @@ class Product(models.Model):
         db_column='NAME'
     )
     image_url = models.CharField(
-        max_length=255,
+        max_length=500,
         db_column='IMAGE_URL',
         null=True,
         blank=True
@@ -47,7 +47,7 @@ class Product(models.Model):
         blank=True
     )
     product_url = models.CharField(
-        max_length=255,
+        max_length=500,
         db_column='PRODUCT_URL',
         null=True,
         blank=True
