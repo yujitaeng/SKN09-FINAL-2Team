@@ -1,6 +1,3 @@
-
-console.log("load script.js");
-
 function createProductCard(wrapper, data) {
     const card = document.createElement("div");
     card.className = "product-card";
@@ -56,10 +53,13 @@ function createProductCard(wrapper, data) {
 
     heartIcon.addEventListener("click", (e) => {
         e.stopPropagation();
-        heartIcon.classList.toggle("active");
-        heartIcon.src = heartIcon.classList.contains("active")
-            ? "/static/images/Heart_red.svg"
-            : "/static/images/Heart_gray.svg";
+        hearts = document.querySelectorAll(`.heart-icon[data-recd_id='` + heartIcon.dataset.recd_id + "']");
+        hearts.forEach((icon) => {
+            icon.classList.toggle("active");
+            icon.src = icon.classList.contains("active")
+                ? "/static/images/Heart_red.svg"
+                : "/static/images/Heart_gray.svg";
+        })
         fetch(`/recommends/${heartIcon.dataset.recd_id}/like`, {
             method: "POST",
             headers: {
@@ -106,10 +106,13 @@ function attachHeartEvents(heartIcon) {
     heartIcon.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
-    heartIcon.classList.toggle('active');
-    heartIcon.src = heartIcon.classList.contains('active')
-        ? '/static/images/Heart_red.svg'
-        : '/static/images/Heart_gray.svg';
+    hearts = document.querySelectorAll(`.heart-icon[data-recd_id='` + heartIcon.dataset.recd_id + "']");
+    hearts.forEach((icon) => {
+        icon.classList.toggle("active");
+        icon.src = icon.classList.contains("active")
+            ? "/static/images/Heart_red.svg"
+            : "/static/images/Heart_gray.svg";
+    })
     
     fetch(`/recommends/${heartIcon.dataset.recd_id}/like`, {
         method: 'POST',
