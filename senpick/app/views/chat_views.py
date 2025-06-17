@@ -224,15 +224,18 @@ def chat_message(request):
             for product in products:
                 if "상품명:" in product["brand"]:
                     product["brand"] = ""
-                product_obj, created = Product.objects.get_or_create(
+                product_obj = Product.objects.filter(
                     name=product["title"],
-                    defaults={
-                        "brand": product["brand"],
-                        "price": int(str(product["price"]).replace(",", "").replace("₩", "").strip()),
-                        "image_url": product["imageUrl"],
-                        "product_url": product["product_url"],
-                    }
-                )
+                    brand=product["brand"]
+                ).first()
+                if not product_obj:
+                    product_obj = Product.objects.create(
+                        name=product["title"],
+                        brand=product["brand"],
+                        price=int(str(product["price"]).replace(",", "").replace("₩", "").strip()),
+                        image_url=product["imageUrl"],
+                        product_url=product["product_url"]
+                    )
                 recommend = ChatRecommend.objects.create(
                     chat_id=chat_obj,
                     msg_id=chatMsg,
