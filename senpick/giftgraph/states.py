@@ -139,7 +139,6 @@ SITUATION_EXTRACTION_PROMPT = """
 - 코드블럭 없이 JSON 형식으로 정확히 출력하세요.
 """
 
-
 # Compare - compare_node()
 # 비교 수행
 compare_prompt = PromptTemplate(
@@ -177,7 +176,6 @@ compare_prompt = PromptTemplate(
 {chat_history}
 """
 )
-
 
 # Refine - refine_node()
 # 거절 메시지, 재질문 등
@@ -222,7 +220,6 @@ def robust_json_extract(text: str):
             return {}
 
 # ===================== 🔹 상태 노드 함수들 🔹 =====================
-
 def extract_situation(state, llm=None, prompt_template=None) -> dict:
     try:
         print("\n==== extract_situation 진입 ====")
@@ -298,7 +295,7 @@ def normalize_recipient_info(recipient_info: dict) -> dict:
 
 def extract_titles_from_history(chat_history: list[str]) -> list[str]:
     """chat_history에서 이전 추천된 상품명들만 추출"""
-    pattern = r"- 상품명\s*:\s*(.*)"
+    pattern = r"(?:- 상품명\s*:\s*|\"NAME\"\s*:\s*\")([^\"]+)"
     titles = []
     for msg in chat_history:
         if msg.startswith("bot:"):

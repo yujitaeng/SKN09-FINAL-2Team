@@ -4,7 +4,7 @@ from django.http import JsonResponse, StreamingHttpResponse
 import json
 from datetime import datetime
 from giftgraph.graph import gift_fsm 
-from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend
+from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend, Feedback
 from collections import defaultdict
 from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
@@ -193,9 +193,6 @@ def chat_message(request):
             Recipient.objects.filter(chat_id=chat_obj).update(relation=msg)
             chat_obj.title = f"{msg}를 위한 선물"
             chat_obj.save()
-
-            
-
         
         state["chat_history"].append(f"user: {msg}")
         ChatMessage.objects.create(
@@ -210,6 +207,7 @@ def chat_message(request):
             state = res
             situation_info = state.get("situation_info", {})
             output = state.get("output", "").replace("bot: ", "")
+            state.get("chat_history").append(output)
             chatMsg = ChatMessage.objects.create(
                 chat_id=chat_obj,
                 sender="bot",
@@ -502,9 +500,6 @@ def chat_feedback(request, msg_id):
         if not msg_id or not feedback:
             return JsonResponse({"error": "chat_id and feedback are required"}, status=400)
 
-        # 피드백 저장 로직 (예: DB에 저장)
-        # 예시로 ChatFeedback 모델을 사용한다고 가정
-        from app.models import Feedback, ChatMessage  # 네 모델명에 맞게 import
         chat_msg = ChatMessage.objects.filter(msg_id=msg_id).first()
         feedback_qs = Feedback.objects.filter(msg_id=chat_msg)
         if feedback_qs.exists():

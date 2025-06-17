@@ -120,22 +120,3 @@ def upload_to_s3(uploaded_file):
         s3_url = f"https://{settings.AWS_S3_CUSTOM_DOMAIN}/{filename}"  # 또는 직접 구성
         return s3_url
     return None
-
-def decode_utf8_escaped(s):
-    return s.encode('latin1').decode('utf-8')
-
-def normalize_message(content):
-    content = content.strip()
-    if '이모티콘' in content:
-        return '(이모티콘)'
-    if '사진' in content:
-        return '(사진)'
-    content = re.sub(r'(!|ㄷ|ㅎ|ㅋ|ㅠ|ㅜ|\?|헐|하|헤|호|흐|허|와우|오오|진짜){2,}', r'\1\1', content)
-    content = re.sub(r'\.{3,}', '...', content)
-    content = re.sub(r'http[s]?://\S+', '(링크)', content)
-    content = re.sub(r'\b\d{10,14}\b', '(계좌번호)', content)
-    content = re.sub(r'\b01[016789]-?\d{3,4}-?\d{4}\b', '(전화번호)', content)
-    content = re.sub(r'\b(0\d{1,2}-?\d{3,4}-?\d{4})\b', '(전화번호)', content)
-    content = re.sub(r'\b\d{4}-\d{4}-\d{4}-\d{4}|\d{16}\b', '(카드번호)', content)
-    content = re.sub(r'\b[\w\.-]+@[\w\.-]+\.\w+\b', '(이메일)', content)
-    return content
