@@ -1,11 +1,11 @@
-from langchain.tools import Tool, StructuredTool
+import os
+from dotenv import load_dotenv
+from langchain.tools import StructuredTool
 from langchain_qdrant import QdrantVectorStore
 from langchain_huggingface import HuggingFaceEmbeddings
 from qdrant_client import QdrantClient
+from qdrant_client.models import Filter, FieldCondition, Range
 from pydantic import BaseModel, Field
-
-import os
-from dotenv import load_dotenv
 
 # 환경 변수 로드
 load_dotenv()
@@ -25,12 +25,18 @@ def retrieve_from_qdrant(query: str, min_price:int=0, max_price:int=10000000) ->
     try:
         results = vectorstore.similarity_search_with_score(
             query, 
-            k=10,
-            filter={
-                "must": [
-                    {"key": "price", "range": {"gte": min_price, "lte": max_price}},  # 기본 가격 범위
-                ],
-            }
+            k=20,
+            # filter=Filter(
+            #     must=[
+            #         FieldCondition(
+            #             key="price",
+            #             range=Range(
+            #                 gte=min_price - 9999,
+            #                 lte=max_price + 50000,
+            #             ),
+            #         )
+            #     ],
+            # )
         )
         if not results:
             return []
