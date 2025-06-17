@@ -2,10 +2,8 @@
 from functools import partial
 from langgraph.graph import StateGraph, END
 from giftgraph.states import (
-# from states import (
     extract_situation,
     call_agent,
-    final_response,
     extract_action,
 
     CONVERSATION_PROMPT,
@@ -55,8 +53,6 @@ graph.add_node(
     partial(call_agent, agent_executor=agent_executor)
 )
 
-graph.add_node("Respond", final_response)
-
 # ✅ 라우팅 노드: action에 따라 분기
 def route_by_action(state):
     return state.get("action", "ask")
@@ -76,10 +72,6 @@ graph.add_conditional_edges("RouteByAction", route_by_action, {
 })
 
 # graph.add_edge("AskQuestion", "ExtractAction")
-graph.add_edge("AskQuestion", "Respond")
-graph.add_edge("AgentCall", "Respond")
-graph.add_edge("Compare", "Respond")
-graph.add_edge("Refine", "Respond")
 
 # ✅ FSM 빌드
 gift_fsm = graph.compile()

@@ -354,36 +354,7 @@ def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
             "output": "추천 처리 중 에러가 발생했습니다."
         }
 
-
-def final_response(state):
-    try:
-        if isinstance(state, str):
-            print("[⚠️ 경고] final_response에 문자열이 넘어옴. dict로 감쌈.")
-            return {
-                "chat_history": [],
-                "situation_info": {},
-                "recipient_info": {},
-                "output": state  # 문자열 그대로 출력
-            }
-
-        return {
-            **state,
-            "output": state.get("output", "")
-        }
-
-    except Exception as e:
-        print(f"[final_response 에러]: {e}")
-        return {
-            "chat_history": [],
-            "situation_info": {},
-            "recipient_info": {},
-            "output": "최종 응답 생성 중 에러가 발생했습니다."
-        }
-
-
-
 def stream_output(state, llm: ChatOpenAI, prompt_template):
-    print("\n==== stream_output 진입 ====")
     try:
         chat_history = state.get("chat_history", [])
         recipient_info = state.get("recipient_info", {})
@@ -412,8 +383,6 @@ def stream_output(state, llm: ChatOpenAI, prompt_template):
                 situation_info=situation_info
             )
 
-        print("\n[stream_output] 📤 최종 prompt:\n", prompt)
-
         output = ""
         for chunk in llm.stream(prompt):
             token = getattr(chunk, "content", "")
@@ -421,15 +390,7 @@ def stream_output(state, llm: ChatOpenAI, prompt_template):
             yield token
 
         print("[stream_output] 🔚 최종 상태 반환 직전")
-        yield {
-            **state,
-            "output": output,
-            "chat_history": chat_history + [output]
-        }
 
     except Exception as e:
         print(f"[stream_output 예외]: {e}")
-        yield {
-            **state,
-            "output": "출력 중 오류가 발생했습니다."
-        }
+        yield f"오류 발생: {str(e)}"
