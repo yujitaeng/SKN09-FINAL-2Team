@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, StreamingHttpResponse
-import json, re
+import json
 from datetime import datetime
 from giftgraph.graph import gift_fsm 
 from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend
@@ -10,7 +10,7 @@ from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from django.db.models import Prefetch
 from django.utils import timezone
-from app.utils import extract_products_from_response
+from app.utils import extract_products_from_response, decode_utf8_escaped, normalize_message
 from django.db.models import Q
 
 # Initialize the OpenAI model
@@ -369,25 +369,6 @@ def chat_detail(request, chat_id):
         'messages': formatted_messages,
         'recipient_info': Recipient.objects.filter(chat_id=chat).first()
     })
-    
-def decode_utf8_escaped(s):
-    return s.encode('latin1').decode('utf-8')
-
-def normalize_message(content):
-    content = content.strip()
-    if '이모티콘' in content:
-        return '(이모티콘)'
-    if '사진' in content:
-        return '(사진)'
-    content = re.sub(r'(!|ㄷ|ㅎ|ㅋ|ㅠ|ㅜ|\?|헐|하|헤|호|흐|허|와우|오오|진짜){2,}', r'\1\1', content)
-    content = re.sub(r'\.{3,}', '...', content)
-    content = re.sub(r'http[s]?://\S+', '(링크)', content)
-    content = re.sub(r'\b\d{10,14}\b', '(계좌번호)', content)
-    content = re.sub(r'\b01[016789]-?\d{3,4}-?\d{4}\b', '(전화번호)', content)
-    content = re.sub(r'\b(0\d{1,2}-?\d{3,4}-?\d{4})\b', '(전화번호)', content)
-    content = re.sub(r'\b\d{4}-\d{4}-\d{4}-\d{4}|\d{16}\b', '(카드번호)', content)
-    content = re.sub(r'\b[\w\.-]+@[\w\.-]+\.\w+\b', '(이메일)', content)
-    return content
 
 @csrf_exempt
 def chat_upload(request):
