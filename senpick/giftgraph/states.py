@@ -298,6 +298,15 @@ def normalize_recipient_info(recipient_info: dict) -> dict:
         "occasion": recipient_info.get("occasion") or recipient_info.get("anniversary", "")
     }
 
+def extract_titles_from_history(chat_history: list[str]) -> list[str]:
+    """chat_history에서 이전 추천된 상품명들만 추출"""
+    pattern = r"- 상품명\s*:\s*(.*)"
+    titles = []
+    for msg in chat_history:
+        if msg.startswith("bot:"):
+            titles.extend(re.findall(pattern, msg))
+    return list(set(titles))[:10]  # 중복 제거 후 최대 10개만
+
 def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
     history_str = "\n".join(state.get("chat_history", [])[-10:])
 
@@ -313,6 +322,11 @@ def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
             f"관심사: {messager_analysis.get('interests', '알 수 없음')}"
         )
 
+        # ✅ 이전 추천 상품명 추출
+        previous_titles = extract_titles_from_history(state.get("chat_history", []))
+        previous_titles_str = ", ".join(previous_titles) if previous_titles else "없음"
+
+        # ✅ 이전 상품까지 포함한 프롬프트 구성
         user_intent = (
             f"[추출된 조건]\n"
             f"- 감정: {state['situation_info'].get('emotion')}\n"
@@ -325,6 +339,7 @@ def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
             f"관계: {recipient_info.get('relationship')}, "
             f"기념일/상황: {recipient_info.get('occasion')}\n"
             f"[메시지 분석]\n{msssager_info_str}\n"
+            f"[이전 추천 상품]\n{previous_titles_str}\n"
             f"[대화 맥락]\n{history_str}"
         )
 

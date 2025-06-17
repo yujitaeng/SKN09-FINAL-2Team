@@ -5,7 +5,7 @@ from langchain.tools import Tool
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from pathlib import Path
-
+import random
 base_path = Path(__file__).resolve().parent.parent  # tools/의 상위 → project/
 env_path = base_path / ".env"
 load_dotenv(env_path)
@@ -28,7 +28,6 @@ def naver_shop_search(user_input: str, recipient_info: dict = {}, situation_info
     이 정보를 바탕으로 네이버 쇼핑에 입력할 **간결하고 핵심적인 검색어 키워드**를 구성해 주세요.
 
     ⚠️ 반드시 아래 조건을 지키세요:
-    - '풍선', '꽃', '기저귀', '육아' 관련 키워드는 포함하지 마세요.
     - 수령인의 정보(성별, 나이대, 관계)가 반영되도록 하세요.
     - 키워드는 문장이 아닌 나열된 단어 형태로 구성하고, 최대 5단어 이내로 출력하세요.
 
@@ -62,7 +61,7 @@ def naver_shop_search(user_input: str, recipient_info: dict = {}, situation_info
 
     params = {
         "query": search_query,
-        "display": 10,
+        "display": 30,
         "start": 1,
         "sort": "sim"
     }
@@ -76,9 +75,14 @@ def naver_shop_search(user_input: str, recipient_info: dict = {}, situation_info
         return []
 
     items = response.json().get("items", [])
-    results = []
+    if not items:
+        return []
 
-    for item in items:
+    # ✅ 10개 중 무작위 4개 선택
+    selected_items = random.sample(items, min(4, len(items)))
+
+    results = []
+    for item in selected_items:
         try:
             title = re.sub(r'<.*?>', '', item['title']).strip()
             price = int(item['lprice'])
