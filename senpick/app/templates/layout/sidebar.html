@@ -139,6 +139,12 @@
     triggerSearch();
   });
 
+  sidebarSearch.addEventListener('keyup', function() {
+    if (sidebarSearch.value.trim() === '') {
+      triggerSearch();
+    }
+  });
+
   // Enter 키 눌렀을 때 검색
   sidebarSearch.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
@@ -149,10 +155,6 @@
 
   // 검색 수행 함수 (공통)
   function triggerSearch() {
-    if (sidebarSearch.value.trim() === '') {
-      return;
-    }
-
     fetch(`/chat/history?query=${encodeURIComponent(sidebarSearch.value)}`)
       .then(response => response.json())
       .then(data => {
