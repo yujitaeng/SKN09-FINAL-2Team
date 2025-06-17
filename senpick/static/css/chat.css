@@ -192,9 +192,9 @@ body {
   border: none;
   border-radius: 72px;
   width:fit-content;
-  height: 44px;
+  /* height: 44px; */
   display: inline-block;
-  padding: 8px 15px;
+  padding: 7px 15px;
   font-size: 14px;
   cursor: pointer;
 }
