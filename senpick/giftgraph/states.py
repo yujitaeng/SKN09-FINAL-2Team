@@ -54,7 +54,6 @@ ACTION_EXTRACTION_PROMPT = PromptTemplate(
 """
 )
 
-
 # AskQuestion-conversation()
 # 상황 정보 채우기 위한 질문 생성
 # CONVERSATION_PROMPT = """
@@ -293,14 +292,19 @@ def normalize_recipient_info(recipient_info: dict) -> dict:
         "occasion": recipient_info.get("occasion") or recipient_info.get("anniversary", "")
     }
 
-def extract_titles_from_history(chat_history: list[str]) -> list[str]:
-    """chat_history에서 이전 추천된 상품명들만 추출"""
-    pattern = r"(?:- 상품명\s*:\s*|\"NAME\"\s*:\s*\")([^\"]+)"
-    titles = []
-    for msg in chat_history:
-        if msg.startswith("bot:"):
-            titles.extend(re.findall(pattern, msg))
-    return list(set(titles))[:10]  # 중복 제거 후 최대 10개만
+# def extract_titles_from_history(chat_history: list[str]) -> list[str]:
+#     """chat_history에서 이전 추천된 상품명들만 추출"""
+#     pattern = r'"NAME"\s*:\s*"([^"]+)"|- 상품명\s*:\s*(.*)'
+#     titles = []
+#     for msg in chat_history:
+#         if msg.startswith("bot:"):
+#             clean_msg = msg.replace('\\"', '"')  # 이스케이프 제거
+#             matches = re.findall(pattern, clean_msg)
+#             for match in matches:
+#                 title = match[0] or match[1]
+#                 if title:
+#                     titles.append(title.strip())
+#     return list(set(titles))[:10]
 
 def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
     history_str = "\n".join(state.get("chat_history", [])[-10:])
@@ -318,8 +322,8 @@ def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
         )
 
         # ✅ 이전 추천 상품명 추출
-        previous_titles = extract_titles_from_history(state.get("chat_history", []))
-        previous_titles_str = ", ".join(previous_titles) if previous_titles else "없음"
+        # previous_titles = extract_titles_from_history(state.get("chat_history", []))
+        # previous_titles_str = ", ".join(previous_titles) if previous_titles else "없음"
 
         # ✅ 이전 상품까지 포함한 프롬프트 구성
         user_intent = (
@@ -334,7 +338,7 @@ def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
             f"관계: {recipient_info.get('relationship')}, "
             f"기념일/상황: {recipient_info.get('occasion')}\n"
             f"[메시지 분석]\n{msssager_info_str}\n"
-            f"[이전 추천 상품]\n{previous_titles_str}\n"
+            # f"[이전 추천 상품]\n{recommended_products_str}\n"
             f"[대화 맥락]\n{history_str}"
             f"\n⚠️ 제약 조건:\n"
             f"- 사용자가 특정 스타일의 상품을 명시하지 않은 경우, 같은 종류(예: 꽃, 무드등, 조명 등)의 상품은 중복 없이 하나씩만 포함되도록 구성하세요.\n"
