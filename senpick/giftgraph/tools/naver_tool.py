@@ -6,7 +6,8 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from pathlib import Path
 import random
-base_path = Path(__file__).resolve().parent.parent  # tools/의 상위 → project/
+
+base_path = Path(__file__).resolve().parent.parent
 env_path = base_path / ".env"
 load_dotenv(env_path)
 
@@ -44,9 +45,9 @@ def naver_shop_search(user_input: str, recipient_info: dict = {}, situation_info
 
     [수령인 정보]
     성별: {recipient_info.get('gender', '')}
-    연령대: {recipient_info.get('age_range', '')}
-    관계: {recipient_info.get('relationship', '')}
-    기념일/상황: {recipient_info.get('occasion', '')}
+    연령대: {recipient_info.get('ageGroup', '')}
+    관계: {recipient_info.get('relation', '')}
+    기념일/상황: {recipient_info.get('anniversary', '')}
 
     출력 (예시): 어머니 생신 선물 실용적인 5만원 이하
     """

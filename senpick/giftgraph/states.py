@@ -1,4 +1,3 @@
-# states.py
 import json, ast, re
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor
@@ -56,59 +55,120 @@ ACTION_EXTRACTION_PROMPT = PromptTemplate(
 
 # AskQuestion-conversation()
 # 상황 정보 채우기 위한 질문 생성
-# CONVERSATION_PROMPT = """
+
+# ✅ states.py 내 PromptTemplate 교체
 CONVERSATION_PROMPT = PromptTemplate(
     input_variables=["chat_history", "recipient_info", "situation_info"],
     template="""
 <시스템 프롬프트>
-당신은 선물 추천 챗봇, '센픽'입니다.
+당신은 선물 추천 챗봇 '센픽'입니다. 
 
-당신의 목적은 사용자가 아직 제공하지 않은 상황 정보 중 하나를 자연스럽고 보기 좋은 질문으로 이끌어내는 것입니다.
-상황 정보에는 다음이 포함됩니다: emotion, preferred_style, price_range, closeness
+당신의 임무는 사용자의 수령인 정보(recipient_info)와 대화 내용을 바탕으로, 
+'세부 상황', '감정', '예산', '스타일', '친밀도'를 자연스럽고 적절한 질문을 통해 유도하는 것입니다.
 
-[질문 작성 규칙]
-- 한 번에 하나의 정보만 질문합니다.
-- 동일한 정보는 두 번 이상 질문하지 않습니다.
-- 질문과 예시에는 반드시 줄바꿈 문자 \n 을 포함합니다.
-  예: "안녕하세요\n선물 추천을 도와드릴게요.\n먼저, ...\n예를 들면:\n- A\n- B\n..."
-- 이모지는 한 문장에 1개 이하로만 사용하며, 중복 없이 자연스럽게 배치합니다.
-- 텍스트 강조 시 마크다운 문법(**굵게**)은 절대 사용하지 않습니다.
-- 실제 마크다운 기호(\n, -, \\, **)나 HTML 태그(<br>)는 출력에 사용하지 않습니다.
-  오직 자연어 표현만 사용합니다.
+[세부 목표]
+- 수령인 정보는 보통 '관계 / 성별 / 연령대 / 기념일' 수준이므로, 그 안에서 가능한 구체적 질문을 던져야 합니다.
+- 예를 들어 '가족 / 여성 / 50대 / 생일' → 어머니, 시어머니, 장모님, 이모 중 누구인지 확인하는 질문 필요
+- '연인 / 기념일'이라면 100일, 1주년, 프로포즈, 결혼기념일 중 어떤 의미인지 묻는 것이 적절
+- '직장 동료 / 남성 / 40대 / 감사'라면 상사인지 동료인지 확인할 질문 필요
+- 질문은 최대 4~5개까지만 던지며, 한 번 질문한 항목은 다시 묻지 않습니다.
 
-[closeness 주의]
-- closeness는 관계가 아니라 친밀도입니다. 관계를 다시 묻지 말고, "얼마나 가까운 느낌인지"를 묻는 질문을 구성하세요.
-- 예시는 다음과 같이 줄바꿈 문자로 출력하세요:
-  자주 연락하며 마음을 나누는 사이
-  일정한 거리감을 유지하는 사이
-  어색하지만 챙기고 싶은 사이
+[질문 예시 가이드 - 조건별 대응]
+- 관계: '가족'이면 어떤 가족인지 / '지인'이면 어떤 관계인지 / '연인'이면 연애/결혼 상태 등
+- 성별: 표현의 어투 조정
+- 연령대: 10대 이하면 보호자, 50대 이상이면 존칭 등 반영
+- 기념일/상황: 생일 외에도 감사, 명절, 축하, 사과, 승진 등 다양한 컨텍스트 파악 필요
+- 관계가 '기타'일 경우 → 어떤 상황인지 자유롭게 묻기
 
-[예시 질문 출력 형태]
-아래와 같은 형식으로 출력하도록 유도하세요:
-안녕하세요! 😊
-선물 추천을 도와드릴게요.
+[질문 스타일 규칙]
+- 반드시 자연어 문장으로 출력하세요.
+- 한 번에 하나의 정보만 질문하고, 동일한 항목에 대한 반복 질문은 하지 마세요.
+- 질문은 최대 5개까지만 허용합니다.
+- 너무 일반적인 질문은 피하고, 수령인 정보 기반으로 구체화하세요.
+- 사용자와 실제 대화하듯 정중하면서 친근한 말투 사용
+- 이모지는 한 문장당 1개 이하로 자연스럽게만 사용하세요.
 
-먼저, 선물을 드릴 분과 얼마나 가까운 사이인지 알려주실 수 있을까요?
-예를 들어:
-- 자주 연락하며 마음을 나누는 사이
-- 일정한 거리감을 유지하는 사이
-- 어색하지만 챙기고 싶은 사이
+[출력 형식 제한 사항 - 매우 중요]
+- 마크다운 문법 기호(예: **굵게**, `- 리스트`, `# 제목`)는 절대 사용하지 마세요.
+- HTML 태그(`<br>`, `<p>`, `<ul>` 등)도 절대 포함하지 마세요.
+- 줄바꿈은 문단 단위 또는 자연스러운 흐름을 위해 1~2줄 간격만 사용하세요.
+- 들여쓰기, 번호 매기기, 코드블록, 따옴표 인용 등의 구조는 사용하지 마세요.
+- 전체 글은 실제 사람이 작성한 것처럼 자연스럽고 정돈된 문장 흐름을 유지하세요.
+- 대신, 아래와 같은 자연어 문장 스타일로 출력하세요:
+예시:
+  제목처럼 보이게 하려면 → 줄바꿈 후 문장을 간결하게 시작하세요.
+  강조하고 싶다면 → "특히", "가장 중요한 건", "꼭 기억해 주세요" 등등 같은 표현을 사용하세요.
+  리스트처럼 보이게 하려면 → "1. ~", "2. ~" 또는 "첫째, ~ 둘째, ~" 식의 자연스러운 표현을 쓰세요.
+  줄바꿈은 문단 단위로 1~2줄 간격만 사용하세요.
 
-
-어떤 느낌에 가까우신가요?
-
-[입력으로 활용할 변수들]
-- 실제 추천은 당신이 하지 않고, 외부 시스템(agent)이 수행합니다. 직접 상품 이름이나 추천 문구를 출력하지 마세요.
-다음은 사용자와 챗봇 간의 대화입니다:
+[사용자 입력 내역]
+- 최근 대화 내용:
 {chat_history}
 
-현재 채워진 수령인 정보는 다음과 같습니다.
+- 현재 수령인 정보:
 {recipient_info}
 
-채워야하는 상황 정보는 다음과 같습니다.
+- 지금까지 파악된 상황 정보:
 {situation_info}
+
+출력: 위 내용을 바탕으로 지금 시점에서 부족한 상황정보를 채울수 있는 **가장 적절한 질문 하나만 자연스럽게 출력하세요.**
 """
 )
+
+
+# CONVERSATION_PROMPT = PromptTemplate(
+#     input_variables=["chat_history", "recipient_info", "situation_info"],
+#     template="""
+# <시스템 프롬프트>
+# 당신은 선물 추천 챗봇, '센픽'입니다.
+
+# 당신의 목적은 사용자가 아직 제공하지 않은 상황 정보 중 하나를 자연스럽고 보기 좋은 질문으로 이끌어내는 것입니다.
+# 상황 정보에는 다음이 포함됩니다: emotion, preferred_style, price_range, closeness
+
+# [질문 작성 규칙]
+# - 한 번에 하나의 정보만 질문합니다.
+# - 동일한 정보는 두 번 이상 질문하지 않습니다.
+# - 질문과 예시에는 반드시 줄바꿈 문자 \n 을 포함합니다.
+#   예: "안녕하세요\n선물 추천을 도와드릴게요.\n먼저, ...\n예를 들면:\n- A\n- B\n..."
+# - 이모지는 한 문장에 1개 이하로만 사용하며, 중복 없이 자연스럽게 배치합니다.
+# - 텍스트 강조 시 마크다운 문법(**굵게**)은 절대 사용하지 않습니다.
+# - 실제 마크다운 기호(\n, -, \\, **)나 HTML 태그(<br>)는 출력에 사용하지 않습니다.
+#   오직 자연어 표현만 사용합니다.
+
+# [closeness 주의]
+# - closeness는 관계가 아니라 친밀도입니다. 관계를 다시 묻지 말고, "얼마나 가까운 느낌인지"를 묻는 질문을 구성하세요.
+# - 예시는 다음과 같이 줄바꿈 문자로 출력하세요:
+#   자주 연락하며 마음을 나누는 사이
+#   일정한 거리감을 유지하는 사이
+#   어색하지만 챙기고 싶은 사이
+#   감사한 마음이 드는 사이
+
+# [예시 질문 출력 형태]
+# 아래와 같은 형식으로 출력하도록 유도하세요:
+# 안녕하세요! 😊
+# 선물 추천을 도와드릴게요.
+
+# 먼저, 선물을 드릴 분과 얼마나 가까운 사이인지 알려주실 수 있을까요?<br>
+# 예를 들어:
+# - 자주 연락하며 마음을 나누는 사이
+# - 일정한 거리감을 유지하는 사이
+# - 어색하지만 챙기고 싶은 사이
+# - 감사한 마음이 드는 사이
+
+# 어떤 느낌에 가까우신가요?
+
+# [입력으로 활용할 변수들]
+# - 실제 추천은 당신이 하지 않고, 외부 시스템(agent)이 수행합니다. 직접 상품 이름이나 추천 문구를 출력하지 마세요.
+# 다음은 사용자와 챗봇 간의 대화입니다:
+# {chat_history}
+
+# 현재 채워진 수령인 정보는 다음과 같습니다.
+# {recipient_info}
+
+# 채워야하는 상황 정보는 다음과 같습니다.
+# {situation_info}
+# """
+# )
 
 # ExtractSituation - extract_situation()
 # 상황 정보 추출 
@@ -118,6 +178,8 @@ SITUATION_EXTRACTION_PROMPT = """
 2. 추론이나 임의 해석 금지
 3. 언급되지 않은 필드는 빈 문자열로 유지
 
+참고: 수령인 정보는 {recipient_info} 입니다.
+
 대화 내용:
 {chat_history}
 
@@ -126,15 +188,31 @@ SITUATION_EXTRACTION_PROMPT = """
 
 
 사용자의 응답에서 다음과 같은 정보를 추론하여 추출하세요.
-[추론해야하는 정보]
-"closeness" : 친밀도 수준 (가까움, 어색함, 친해지고 싶음, 애매함 등으로 요약)
-"emotion" : 선물의 동기나 배경이 된 감정 상태
-"preferred_style" : 희망하는 선물의 스타일 (~한 느낌, ~한 스타일로 요약)
-"price_range" : 예산 범위 (예: 상관 없음, 7만원대, 3만원 이하 등등)
+[추론해야 하는 정보]
+"closeness" : 친밀도 수준 (가까움, 어색함, 예의상 등)
+"emotion" : 감정 상태 또는 선물의 배경
+"preferred_style" : 희망하는 선물 스타일
+"price_range" : 예산 범위 (예: 3만원 이하, 5만원대 등)
+
+[또한 아래 수령인 정보가 새로 명확해졌다면 기존 값을 덮어씌워 주세요:]
+"relation" : 가족 → 어머니, 친구 → 동창 등
+"ageGroup" : 20대, 50대 등
+"gender" : 남성, 여성 등
+"anniversary" : 생일, 승진, 집들이 등
+
+[출력 형식]
+JSON 딕셔너리 하나로 묶어서 출력하세요. 예:
+{{
+    "emotion": "감사",
+    "preferred_style": "고급스러운",
+    "relation": "어머니",
+    "anniversary": "생신"
+}}
 
 [규칙]
 - 정보 추론은 응답이 명확할 때에만 진행해야 합니다.
 - 사용자 답변에 포함된 내용만 current_info에서 수정하여 출력합니다.
+- 기존 정보보다 더 구체적인 표현이 있다면 반드시 덮어쓰기 하세요.
 - 코드블럭 없이 JSON 형식으로 정확히 출력하세요.
 """
 
@@ -152,6 +230,19 @@ compare_prompt = PromptTemplate(
 - 이모지(✔️, 🎯 등)는 적절하게 활용해도 좋습니다.
 - 객관적인 특징 비교와 함께, 사용자의 상황이나 감정을 고려한 설명을 넣어주세요.
 - 결론을 단정적으로 내리지 말고, 선택은 사용자에게 맡기되, 방향을 제안하는 톤을 유지하세요.
+
+[출력 형식 제한 사항 - 매우 중요]
+- 마크다운 문법 기호(예: **굵게**, `- 리스트`, `# 제목`)는 절대 사용하지 마세요.
+- HTML 태그(`<br>`, `<p>`, `<ul>` 등)도 절대 포함하지 마세요.
+- 줄바꿈은 문단 단위 또는 자연스러운 흐름을 위해 1~2줄 간격만 사용하세요.
+- 들여쓰기, 번호 매기기, 코드블록, 따옴표 인용 등의 구조는 사용하지 마세요.
+- 전체 글은 실제 사람이 작성한 것처럼 자연스럽고 정돈된 문장 흐름을 유지하세요.
+- 대신, 아래와 같은 자연어 문장 스타일로 출력하세요:
+예시:
+  제목처럼 보이게 하려면 → 줄바꿈 후 문장을 간결하게 시작하세요.
+  강조하고 싶다면 → "특히", "가장 중요한 건", "꼭 기억해 주세요" 등등 같은 표현을 사용하세요.
+  리스트처럼 보이게 하려면 → "1. ~", "2. ~" 또는 "첫째, ~ 둘째, ~" 식의 자연스러운 표현을 쓰세요.
+  줄바꿈은 문단 단위로 1~2줄 간격만 사용하세요.
 
 예시:
 데스크패드는 사무실 책상에서 바로 쓸 수 있어서 실용적이에요. 깔끔한 디자인 덕분에 전문적인 분위기를 줄 수 있고, 승진을 축하하는 의미로도 잘 어울려요.
@@ -189,6 +280,20 @@ refine 액션은 사용자의 "입력 문장"만을 기준으로 판단하세요
 - 존재하지 않는 브랜드나 잘못된 정보를 언급 (예: 센픽 전자 제품으로 찾아줘 등)
 - 과한 오타, 유행어, 은어, 뜻을 알 수 없거나 부정확한 표현이 포함된 경우 (예: 느좋 선물 추천해줘 등)
 
+[출력 형식 제한 사항 - 매우 중요]
+- 마크다운 문법 기호(예: **굵게**, `- 리스트`, `# 제목`)는 절대 사용하지 마세요.
+- HTML 태그(`<br>`, `<p>`, `<ul>` 등)도 절대 포함하지 마세요.
+- 줄바꿈은 문단 단위 또는 자연스러운 흐름을 위해 1~2줄 간격만 사용하세요.
+- 들여쓰기, 번호 매기기, 코드블록, 따옴표 인용 등의 구조는 사용하지 마세요.
+- 전체 글은 실제 사람이 작성한 것처럼 자연스럽고 정돈된 문장 흐름을 유지하세요.
+- 대신, 아래와 같은 자연어 문장 스타일로 출력하세요:
+예시:
+  제목처럼 보이게 하려면 → 줄바꿈 후 문장을 간결하게 시작하세요.
+  강조하고 싶다면 → "특히", "가장 중요한 건", "꼭 기억해 주세요" 등등 같은 표현을 사용하세요.
+  리스트처럼 보이게 하려면 → "1. ~", "2. ~" 또는 "첫째, ~ 둘째, ~" 식의 자연스러운 표현을 쓰세요.
+  줄바꿈은 문단 단위로 1~2줄 간격만 사용하세요.
+
+[참고]
 거절 메시지와 함께 사용자가 정보를 보완하거나 다시 입력할 수 있도록 친절하게 안내 + 질문을 함께 출력하세요.
 
 단, 사용자가 "무난한 느낌, 고급스러운 느낌 등"과 같이 추상적인 표현으로 선물 추천을 요구할 때에는 refine 하지 말고 선물 추천을 진행하세요.
@@ -223,8 +328,15 @@ def extract_situation(state, llm=None, prompt_template=None) -> dict:
     try:
         print("\n==== extract_situation 진입 ====")
         chat_str = "\n".join(state["chat_history"][-10:])
-        current_info = "\n".join(f"{k}: {v}" for k, v in state["situation_info"].items())
-        prompt = prompt_template.format(chat_history=chat_str, current_info=current_info)
+        current_info = json.dumps(state["situation_info"], ensure_ascii=False)
+        recipient_info = json.dumps(state.get("recipient_info", {}), ensure_ascii=False)
+
+        prompt = prompt_template.format(
+            chat_history=chat_str,
+            current_info=current_info,
+            recipient_info=recipient_info
+        )
+
         llm_response = llm.invoke(prompt)
         print("\n--- [LLM 응답 원문] ---")
         print(llm_response)
@@ -234,17 +346,28 @@ def extract_situation(state, llm=None, prompt_template=None) -> dict:
         print("--- [파싱 결과] ---")
         print(extracted)
         print("-----------------------")
+
         if not isinstance(extracted, dict):
             print(f"[extract_situation] dict 아님! extracted={extracted}")
             extracted = {}
-        if not extracted:
-            print("⚠️ 추출된 정보 없음 — 기존 situation_info 유지")
-            return state  # 아무 것도 수정하지 않고 종료
+
+        # ✅ 상황 정보 업데이트
         for k in state["situation_info"]:
             if extracted.get(k):
                 state["situation_info"][k] = extracted[k].strip()
+
+        # ✅ 수령인 정보 업데이트 (덮어쓰기)
+        recipient_keys = ["relation", "ageGroup", "gender", "anniversary"]
+        if "recipient_info" not in state:
+            state["recipient_info"] = {}
+
+        for key in recipient_keys:
+            if extracted.get(key):
+                state["recipient_info"][key] = extracted[key].strip()
+
         print("==== extract_situation 종료 ====\n")
         return state
+
     except Exception as e:
         print(f"[extract_situation 전체 예외]: {e}")
         return state
@@ -283,15 +406,6 @@ def extract_action(state, llm, prompt_template):
             "output": "죄송해요. 다시 한 번 입력해 주실 수 있을까요?"
         }
 
-def normalize_recipient_info(recipient_info: dict) -> dict:
-    """키 이름을 통일시켜 recipient_info 사용 오류 방지"""
-    return {
-        "gender": recipient_info.get("gender", ""),
-        "age_range": recipient_info.get("age_range") or recipient_info.get("ageGroup", ""),
-        "relationship": recipient_info.get("relationship") or recipient_info.get("relation", ""),
-        "occasion": recipient_info.get("occasion") or recipient_info.get("anniversary", "")
-    }
-
 # def extract_titles_from_history(chat_history: list[str]) -> list[str]:
 #     """chat_history에서 이전 추천된 상품명들만 추출"""
 #     pattern = r'"NAME"\s*:\s*"([^"]+)"|- 상품명\s*:\s*(.*)'
@@ -310,16 +424,8 @@ def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
     history_str = "\n".join(state.get("chat_history", [])[-10:])
 
     try:
-        recipient_info_raw = state.get("recipient_info", {})
-        recipient_info = normalize_recipient_info(recipient_info_raw)
-
+        recipient_info = state.get("recipient_info", {})
         messager_analysis = state.get("messager_analysis", {})
-        msssager_info_str = (
-            f"친밀도: {messager_analysis.get('intimacy_level', '알 수 없음')}, "
-            f"감정 톤: {messager_analysis.get('emotional_tone', '알 수 없음')}, "
-            f"성격: {messager_analysis.get('personality', '알 수 없음')}, "
-            f"관심사: {messager_analysis.get('interests', '알 수 없음')}"
-        )
 
         # ✅ 이전 추천 상품명 추출
         # previous_titles = extract_titles_from_history(state.get("chat_history", []))
@@ -327,37 +433,24 @@ def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
 
         # ✅ 이전 상품까지 포함한 프롬프트 구성
         user_intent = (
-            f"[추출된 조건]\n"
-            f"- 감정: {state['situation_info'].get('emotion')}\n"
-            f"- 스타일: {state['situation_info'].get('preferred_style')}\n"
-            f"- 예산: {state['situation_info'].get('price_range')}원\n"
-            f"- 친밀도: {state['situation_info'].get('closeness')}\n"
-            f"[수령인 정보]\n"
+            f"[추출된 조건]"
+            f"- 감정: {state['situation_info'].get('emotion')}"
+            f"- 스타일: {state['situation_info'].get('preferred_style')}"
+            f"- 예산: {state['situation_info'].get('price_range')}원"
+            f"- 친밀도: {state['situation_info'].get('closeness')}"
+            f"[수령인 정보]"
             f"성별: {recipient_info.get('gender')}, "
-            f"연령대: {recipient_info.get('age_range')}, "
-            f"관계: {recipient_info.get('relationship')}, "
-            f"기념일/상황: {recipient_info.get('occasion')}\n"
-            f"[메시지 분석]\n{msssager_info_str}\n"
-            # f"[이전 추천 상품]\n{recommended_products_str}\n"
+            f"연령대: {recipient_info.get('ageGroup')}, "
+            f"관계: {recipient_info.get('relation')}, "
+            f"기념일/상황: {recipient_info.get('anniversary')}"
+            f"[메시지 분석]"
+            f"친밀도: {messager_analysis.get('intimacy_level', '알 수 없음')}, "
+            f"감정 톤: {messager_analysis.get('emotional_tone', '알 수 없음')}, "
+            f"성격: {messager_analysis.get('personality', '알 수 없음')}, "
+            f"관심사: {messager_analysis.get('interests', '알 수 없음')}"
+            # f"[이전 추천 상품]\n{previous_titles_str}\n"
             f"[대화 맥락]\n{history_str}"
-            f"\n⚠️ 제약 조건:\n"
-            f"- 사용자가 특정 스타일의 상품을 명시하지 않은 경우, 같은 종류(예: 꽃, 무드등, 조명 등)의 상품은 중복 없이 하나씩만 포함되도록 구성하세요.\n"
-            f"- 비슷한 느낌의 상품이 여러 개 나오는 것을 피하고, 다양한 유형의 선물로 구성해 주세요."
         )
-        latest_user_msg = next((line for line in reversed(state["chat_history"]) if line.startswith("user:")), "")
-        if "다른상품 추천해줘" in latest_user_msg:
-            user_intent += """
-            ⚠️ 추가 조건:
-            - 이번에는 이전에 추천한 상품과 겹치지 않는 선물을 추천해주세요.
-            - 동일한 카테고리(예: 무드등, 꽃다발, 비누꽃 등)의 상품은 하나만 포함되도록 하세요.
-            - 중복된 브랜드나 상품 이름도 피해주세요.
-            """
-        else:
-            user_intent += """
-            ⚠️ 참고:
-            - 사용자가 특정 상품 유형을 지정하지 않은 경우, 같은 종류(예: 무드등, 꽃다발 등)의 선물은 중복 없이 다양하게 구성해주세요.
-            """
-
 
         stream_result = ""
         if agent_executor:

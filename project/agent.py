@@ -59,7 +59,7 @@ You have access to the following tools:
 
 2. `rag_tool`:  
    Recommends products with similar emotional or contextual qualities based on review data.  
-   _Use this when the user's request is centered on sentiment, occasion, or human context and RDS search failed._  
+   _Use this when the user's request is centered on sentiment, anniversary, or human context and RDS search failed._  
    👉 Example: "결혼기념일에 아내에게 주고 싶은 따뜻한 분위기의 선물 추천해줘."  
    👉 Example: "감동적인 메시지가 담긴 선물을 찾고 싶어요."
 
