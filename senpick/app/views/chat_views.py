@@ -132,7 +132,13 @@ def chat_start(request):
             "messager_analysis": messager_analysis
         }
         
-        request.session["chat_state"] = state  # 초기 상태 저장
+        request.session["chat_state"] = state
+        if recipient_info["relation"] == "가족":
+            return JsonResponse({
+        "bot": "가g을까요? 😊 (예: 어머니, 아버지, 여동생 등)",
+        "chat_id": chat_obj.chat_id
+        })
+  # 초기 상태 저장
         
         # 스트림 처리 
         res = gift_fsm.invoke(state)
@@ -168,6 +174,28 @@ def chat_message(request):
         # chat_id로 Chat 인스턴스 가져오기
         chat_obj = Chat.objects.get(chat_id=chat_id)
         state = get_state(request)
+        recipient_info = state.get("recipient_info", {})
+
+        FAMILY_MEMBERS = {
+            "어머니", "아버지", "엄마", "아빠", "형", "오빠", "여동생", "남동생",
+            "할머니", "할아버지", "삼촌", "이모", "고모", "누나", "언니"
+        }
+
+        # ✅ 1. 가족관계 명시 질문 응답 처리
+        if recipient_info.get("relation") == "가족" and msg in FAMILY_MEMBERS:
+            recipient_info["relation"] = msg
+            state["recipient_info"] = recipient_info
+            request.session["chat_state"] = state
+
+            chat_obj = Chat.objects.get(chat_id=chat_id)
+
+            # relation 업데이트
+            Recipient.objects.filter(chat_id=chat_obj).update(relation=msg)
+            chat_obj.title = f"{msg}를 위한 선물"
+            chat_obj.save()
+
+            
+
         
         state["chat_history"].append(f"user: {msg}")
         ChatMessage.objects.create(

@@ -77,9 +77,25 @@ def naver_shop_search(user_input: str, recipient_info: dict = {}, situation_info
     items = response.json().get("items", [])
     if not items:
         return []
+    
+    # ✅ 중복 링크 제거
+    unique_items = []
+    seen_links = set()
+    seen_names = set()
+    for item in items:
+        link = item.get("link")
+        raw_title = item.get("title", "")
+        title = re.sub(r'<.*?>', '', raw_title).strip()
 
-    # ✅ 10개 중 무작위 4개 선택
-    selected_items = random.sample(items, min(4, len(items)))
+        if not link or not title or link in seen_links or title in seen_names:
+            continue
+
+        seen_links.add(link)
+        seen_names.add(title)
+        unique_items.append(item)
+
+    # ✅ 중복 제거된 것 중 무작위 4개 선택
+    selected_items = random.sample(unique_items, min(4, len(unique_items)))
 
     results = []
     for item in selected_items:
