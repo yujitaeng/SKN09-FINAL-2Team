@@ -451,6 +451,19 @@ def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
             # f"[이전 추천 상품]\n{previous_titles_str}\n"
             f"[대화 맥락]\n{history_str}"
         )
+        latest_user_msg = next((line for line in reversed(state["chat_history"]) if line.startswith("user:")), "")
+        if "다른상품" in latest_user_msg or "더 고급" in latest_user_msg:
+            user_intent += """
+            ⚠️ 추가 조건:
+            - 이번에는 이전에 추천한 상품과 겹치지 않는 선물을 추천해주세요.
+            - 동일한 카테고리(예: 무드등, 꽃다발, 비누꽃 등)의 상품은 하나만 포함되도록 하세요.
+            - 중복된 브랜드나 상품 이름도 피해주세요.
+            """
+        else:
+            user_intent += """
+            ⚠️ 참고:
+            - 사용자가 특정 상품 유형을 지정하지 않은 경우, 같은 종류(예: 무드등, 꽃다발 등)의 선물은 중복 없이 다양하게 구성해주세요.
+            """
 
         stream_result = ""
         if agent_executor:
