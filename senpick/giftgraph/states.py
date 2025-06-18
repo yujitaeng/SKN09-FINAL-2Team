@@ -116,7 +116,7 @@ CONVERSATION_PROMPT = PromptTemplate(
 - 지금까지 파악된 상황 정보:
 {situation_info}
 
-출력: 위 내용을 바탕으로 지금 시점에서 부족한 상황정보를 채울수 있는 **가장 적절한 질문 하나만 자연스럽게 출력하세요.**
+출력: 위 내용을 바탕으로 지금 시점에서 부족한 상황정보를 채울수 있는 **가장 적절한 질문 1~2개만 자연스럽게 출력하세요.**
 """
 )
 
@@ -303,6 +303,14 @@ refine 액션은 사용자의 "입력 문장"만을 기준으로 판단하세요
 """
 )
 
+def format_output_text(text: str) -> str:
+    """
+    마침표/물음표/느낌표 뒤에 자연스러운 줄바꿈을 삽입하여 사용자에게 더 읽기 쉬운 응답을 제공
+    """
+    sentences = re.split(r'(?<=[.!?])\s+(?=[^a-z\s])', text.strip())
+    return "\n\n".join([s.strip() for s in sentences if s.strip()])
+
+
 # ===================== 🔹 공통 도구 🔹 =====================
 
 def robust_json_extract(text: str):
@@ -343,6 +351,10 @@ def extract_situation(state, llm=None, prompt_template=None) -> dict:
         print(llm_response)
         llm_text = getattr(llm_response, "content", str(llm_response))
         print(f"[LLM 최종 텍스트 응답]: {llm_text}")
+
+        llm_text = format_output_text(llm_text)
+        state["output"] = llm_text
+
         extracted = robust_json_extract(llm_text)
         print("--- [파싱 결과] ---")
         print(extracted)
@@ -385,8 +397,11 @@ def extract_action(state, llm, prompt_template):
         )
         response = llm.invoke(prompt)
         message = getattr(response, "content", "").strip()
+
+        message = format_output_text(message)
         print("[ExtractAction LLM 응답]:")
         print(message)
+        
         parsed = robust_json_extract(message)
         print("[Parsed JSON]:", parsed)
         if not isinstance(parsed, dict):
@@ -394,7 +409,7 @@ def extract_action(state, llm, prompt_template):
             return {
                 **state,
                 "action": "ask",
-                "output": "조금 더 구체적으로 말씀해 주실 수 있을까요?"
+                "output": format_output_text("조금 더 구체적으로 말씀해 주실 수 있을까요?")
             }
         action = parsed.get("action", "ask")
         print(f"👉 결정된 action: {action}")
@@ -404,7 +419,7 @@ def extract_action(state, llm, prompt_template):
         return {
             **state,
             "action": "ask",
-            "output": "죄송해요. 다시 한 번 입력해 주실 수 있을까요?"
+            "output": format_output_text("죄송해요. 다시 한 번 입력해 주실 수 있을까요?")
         }
 
 # def extract_titles_from_history(chat_history: list[str]) -> list[str]:
