@@ -24,12 +24,7 @@ def normalize_message(content):
 
 def extract_products_from_response(data):
     # JSON 형식 응답 감지 및 파싱
-    pattern = r"Final Answer:\s*(.*?)\s*\["
-    match = re.search(pattern, data, re.DOTALL)
-    if match:
-        msg = match.group(1).strip()
-    else:
-        msg = data.split('[')[0].replace("Final Answer:", "").strip()
+    msg = data.split('[')[0].replace("Final Answer:", "").replace("```json", "").strip()
     json_match = re.search(r'\[\s*{.*?}\s*\]', data, re.DOTALL)
     if json_match:
         try:
