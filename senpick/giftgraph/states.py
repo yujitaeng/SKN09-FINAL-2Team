@@ -444,6 +444,7 @@ def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
             f"연령대: {recipient_info.get('ageGroup')}, "
             f"관계: {recipient_info.get('relation')}, "
             f"기념일/상황: {recipient_info.get('anniversary')}"
+            f"위의 정보들은 모두 수령인과 선물 간의 감정적/상황적 연결을 형성하며, 선물 카테고리 및 추천 이유에 반드시 반영되어야 합니다."
             f"[메시지 분석]"
             f"친밀도: {messager_analysis.get('intimacy_level', '알 수 없음')}, "
             f"감정 톤: {messager_analysis.get('emotional_tone', '알 수 없음')}, "

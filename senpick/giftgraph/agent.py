@@ -19,6 +19,7 @@ llm = ChatOpenAI(
 system_prompt_text= """
 [역할]
 - 당신은 선물 추천 전문 에이전트입니다. 반드시 아래의 절차와 규칙을 따르세요.
+- 사용자의 감정(emotion), 상황(anniversary), 관계(relation), 성별(gender), 연령대(ageGroup), 스타일(preferred_style), 예산(price_range), 친밀도(closeness) 정보는 선물의 카테고리 및 상품 선택에 **직접 반영되어야 합니다**.
 
 [Observation 결과 활용 방법]
 - Observation(도구 결과)에는 실제 상품 정보(dict 또는 list)가 올 수 있습니다.
@@ -97,6 +98,7 @@ Final Answer:
 - 예산대에 어울리지 않는 상품 금지
 - 추천 이유에는 반드시 수령인 정보(관계, 나이, 성별, 기념일 등)를 반영한 "감정적인 연결 이유"를 포함하세요.
   예: "딸과의 생일을 기념하며 따뜻한 분위기를 전할 수 있는", "감사의 의미를 담아 상사에게 드릴 수 있는 품격 있는 느낌의" 등.
+- 감정(emotion), 기념일/상황(anniversary), 스타일(preferred_style), 예산(price_range), 친밀도(closeness)는 추천 상품의 선택과 추천 이유에 **구체적으로 드러나야 하며**, 이 정보가 상품과 연결되지 않을 경우 잘못된 추천으로 간주됩니다.
 - 중복된 브랜드, 종류, 유형의 상품은 2개 이상 포함하지 말 것
 - 추천 상품 4개는 **서로 다른 CATEGORY** 값을 가져야 합니다
 - 동일 CATEGORY의 상품이 여러 개라면 최대 1개까지만 선택하세요
@@ -111,7 +113,7 @@ Final Answer:
 - 이전 추천 목록은 chat_history에 포함되어 있으며, 이를 기반으로 비교해 **이름이 동일하거나 유사한 상품**은 모두 제외해야 합니다.
 - 수령인 정보 + 상황정보의 값이 비어 있을 경우, 유도 질문을 통해 보완하세요.
 - 다양한 카테고리내에서 다양한 상품들을 중복없이 추천해주세요.
-- Final Answer 이전에는 수령인 요약, 추천 이유, 선물 팁, 다음 유도 문구를 포함하세요.
+- Final Answer 이전에는 수령인 요약, 추천 이유, 선물 팁, 다음 추천에 반영할 수 있는 세부 질문 유도 문구를 포함하세요.
 
 [예산 관련 표현 처리 규칙]
 - 사용자가 "저렴한 가격대", "적당한 수준", "중간", "가성비" 등의 표현을 사용할 경우:
@@ -217,6 +219,7 @@ def create_agent():
     return AgentExecutor(agent=agent, tools=tools, verbose=True, streaming=True)
 
 def call_agent(input_text, agent_executor, state=None):
+    header_cleaned = header_text.strip().replace("```json", "").replace("```", "")
     print("== Running agent call ==")
     stream_result = agent_executor.invoke({"input": input_text})
 
@@ -224,17 +227,30 @@ def call_agent(input_text, agent_executor, state=None):
     print(stream_result)
 
     try:
-        match = re.search(r"\[\s*{.+?}\s*\]", stream_result, re.DOTALL)
-        if match:
-            json_string = match.group()
-            parsed = json.loads(json_string)
+        # ✅ Final Answer 앞 문단과 JSON 리스트를 분리
+        if "Final Answer:" in stream_result:
+            header_text, answer_block = stream_result.split("Final Answer:", 1)
         else:
             raise ValueError("Final Answer block not found")
+
+        # ✅ JSON 리스트 추출
+        match = re.search(r"\[\s*{.+?}\s*]", answer_block.strip(), re.DOTALL)
+        if not match:
+            raise ValueError("상품 JSON 리스트 파싱 실패")
+        json_string = match.group()
+        parsed = json.loads(json_string)
     except Exception as e:
         print("❌ JSON 파싱 실패:", e)
         return []
 
     result = []
+
+    header_cleaned = header_text.strip()
+    if header_cleaned:
+        result.append({
+            "EXPLANATION": header_cleaned  # 프론트에서 카드 상단 설명으로 사용할 수 있음
+        })
+
     seen = set()
     for item in parsed:
         brand = item.get("BRAND", "").strip()
@@ -251,25 +267,9 @@ def call_agent(input_text, agent_executor, state=None):
             "LINK": item.get("LINK", ""),
             "REASON": item.get("REASON", "")
         })
-        if len(result) >= 4:
+        if len(result) >= 5:
             break
-
-    if state and "recipient_info" in state and "situation_info" in state:
-        recipient = state["recipient_info"]
-        situation = state["situation_info"]
-
-        summary = f"{recipient.get('ageGroup', '')} {recipient.get('gender', '')} {recipient.get('relation', '')}에게 드리는 {recipient.get('anniversary', '')} 선물이에요."
-        reasoning = f"'{situation.get('emotion', '감정')}'이라는 감정과 '{situation.get('preferred_style', '스타일')}'의 분위기, 그리고 {situation.get('price_range', '예산')}에 어울리는 상품을 골랐어요."
-        tip = "선물할 때 카드나 포장에 마음을 담으면 감동이 배가 돼요."
-        next_q = "혹시 다른 분위기의 선물이나 수령인의 취향에 대해 조금 더 알려주시면 더 정교한 추천도 가능해요!"
-
-        result.insert(0, {
-            "SUMMARY": summary,
-            "REASONING": reasoning,
-            "TIP": tip,
-            "FOLLOW_UP": next_q
-        })
-
+        
     return result
 
 # 외부에서 사용할 수 있도록 export
