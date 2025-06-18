@@ -201,10 +201,9 @@ def generate_response(user_input):
                 "input": f"{user_input}\n\n검색 키워드: {query}",
                 "chat_history": memory.chat_memory.messages
             })
-            if agent_response and 'output' in agent_response:
-                return f"\n💬 에이전트 응답:\n{agent_response['output']}"
-            else:
-                return "적절한 추천을 찾지 못했습니다."
+            if not agent_response or not agent_response.get("output") or "[]" in str(agent_response["output"]):
+                return "조건에 맞는 새로운 상품을 찾는 데 어려움이 있습니다. 조건을 조금 완화해보시겠어요? 예: 예산을 늘리거나 다른 스타일을 선택해 보세요."
+            return f"\n💬 에이전트 응답:\n{agent_response['output']}"
             # 에이전트 응답 처리
             # if agent_response and 'output' in agent_response:
             #     docs = retriever.invoke(f"query: {query}")

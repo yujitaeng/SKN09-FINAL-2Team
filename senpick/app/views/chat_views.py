@@ -208,6 +208,21 @@ def chat_message(request):
             situation_info = state.get("situation_info", {})
             output = state.get("output", "").replace("bot: ", "")
             state.get("chat_history").append(output)
+
+            ready = all(situation_info.get(k, "").strip() for k in ["emotion", "preferred_style", "price_range"])
+            recipient_info = state.get("recipient_info", {})
+
+    # ✅ 조건이 갖춰졌으면 DB 동기화 (relation, title 등)
+            if ready:
+                Chat.objects.filter(chat_id=chat_obj.chat_id).update(
+                title=f"{recipient_info.get('relation', '수령인')}를 위한 선물"
+        )
+            Recipient.objects.filter(chat_id=chat_obj).update(
+            relation=recipient_info.get("relation", ""),
+            gender=recipient_info.get("gender", ""),
+            age_group=recipient_info.get("ageGroup", ""),
+            anniversary=recipient_info.get("anniversary", "")
+        )
             chatMsg = ChatMessage.objects.create(
                 chat_id=chat_obj,
                 sender="bot",
