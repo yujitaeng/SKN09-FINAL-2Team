@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", function () {
     remainingTime = 300;
     updateTimer();
     timerText.style.display = "block";
-    // resendText.style.display = "none";
 
     timerInterval = setInterval(() => {
       remainingTime--;

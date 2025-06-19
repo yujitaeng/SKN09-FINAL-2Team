@@ -4,7 +4,7 @@ from langchain.tools import StructuredTool
 from langchain_qdrant import QdrantVectorStore
 from langchain_huggingface import HuggingFaceEmbeddings
 from qdrant_client import QdrantClient
-from qdrant_client.models import Filter, FieldCondition, Range
+from qdrant_client.models import Filter, FieldCondition, Range, MatchValue
 from pydantic import BaseModel, Field
 
 # 환경 변수 로드

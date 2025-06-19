@@ -1,6 +1,5 @@
-from django.contrib.auth.hashers import check_password
-from app.models.user import User
 from django.utils import timezone
+from django.contrib.auth.hashers import check_password
 from app.models import User
 from giftgraph.graph import gift_fsm
 from app.utils import extract_products_from_response

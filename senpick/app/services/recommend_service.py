@@ -1,4 +1,4 @@
-from app.models import ChatRecommend, Product
+from app.models import Product, ChatRecommend
 
 def get_recommended_products(chat_id):
     recommend_products = ChatRecommend.objects.filter(chat_id=chat_id)

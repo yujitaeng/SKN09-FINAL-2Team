@@ -190,7 +190,6 @@ Final Answer 형식 예시:
 - 중복 상품군 존재 시 `rag_tool` 또는 `naver_tool`을 다시 호출해 교체  
 
 이 규칙을 엄격하게 반드시 지키세요.
-
 """
 
 # 프롬프트 구성 (최신 LangChain 방식)
@@ -198,11 +197,11 @@ prompt = ChatPromptTemplate.from_messages([
     ("system", system_prompt_text),
     MessagesPlaceholder(variable_name="chat_history"),
     HumanMessagePromptTemplate.from_template(
-        "{user_intent}\n\n{agent_scratchpad}"  # ← 반드시 추가!
+        "{user_intent}\n\n{agent_scratchpad}"
     )
 ])
 
-# 도구 리스트 (이미 Tool 객체면 그대로 사용)
+# 도구 리스트
 tools = [rag_tool, naver_tool]
 
 # 에이전트 생성 함수
@@ -212,7 +211,6 @@ def create_agent():
         tools=tools,
         prompt=prompt
     )
-    # AgentExecutor로 래핑
     return AgentExecutor(agent=agent, tools=tools, verbose=True, streaming=True)
 
 def call_agent(input_text, agent_executor, state=None):
@@ -224,13 +222,13 @@ def call_agent(input_text, agent_executor, state=None):
     print(stream_result)
 
     try:
-        # ✅ Final Answer 앞 문단과 JSON 리스트를 분리
+        # Final Answer 앞 문단과 JSON 리스트를 분리
         if "Final Answer:" in stream_result:
             header_text, answer_block = stream_result.split("Final Answer:", 1)
         else:
             raise ValueError("Final Answer block not found")
 
-        # ✅ JSON 리스트 추출
+        # JSON 리스트 추출
         match = re.search(r"\[\s*{.+?}\s*]", answer_block.strip(), re.DOTALL)
         if not match:
             raise ValueError("상품 JSON 리스트 파싱 실패")
@@ -271,5 +269,4 @@ def call_agent(input_text, agent_executor, state=None):
         
     return result
 
-# 외부에서 사용할 수 있도록 export
 __all__ = ["create_agent", "llm"]

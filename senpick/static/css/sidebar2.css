@@ -4,9 +4,6 @@
   width: 400px;
   min-width: 400px;
   height: 100vh;
-  /* position: fixed; */
-  /* top: 0; */
-  /* left: 0; */
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -27,7 +24,6 @@
   user-select: none;
 
   -webkit-user-drag: none;
-  user-drag: none;
 }
 
 .sidebar-right.collapsed {
@@ -39,7 +35,6 @@
   display: none;
 }
 
-/* 기본적으로 숨김 */
 .floating-history {
   right: 20px;
   top: 28px;
@@ -47,7 +42,6 @@
   display: none;
 }
 
-/* 사이드바가 접혔을 때 보이게 */
 .sidebar-right.collapsed + .floating-history {
   display: block;
 }
@@ -59,7 +53,6 @@
     padding: 8px 10px;
     font-size: 16px;
 
-
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -68,7 +61,6 @@
     border-radius: 10px;
 
     -webkit-user-drag: none;
-    user-drag: none;
 }
 .floating-history .sidebar-history{
     background-color: #F5F5F8;
@@ -81,10 +73,8 @@
 
 .sidebar-right .card-wrapper {
   overflow-y: auto;
-  /* scrollbar-width: none; */
   justify-content: center;;
   -ms-overflow-style: none;
   flex-shrink: 0;
-  /* Adjust height based on header */
   max-height: calc(100vh - 100px);
 }

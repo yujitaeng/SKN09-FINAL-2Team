@@ -1,6 +1,6 @@
 from django.db import models
-from .product import Product
-from .user import User
+from app.models.product import Product
+from app.models.user import User
 
 class Chat(models.Model):
     chat_id = models.AutoField(
@@ -8,7 +8,7 @@ class Chat(models.Model):
         db_column='CHAT_ID'
     )
     user_id = models.ForeignKey(
-        User,  # Assuming User model is defined in the same app
+        User,
         on_delete=models.CASCADE,
         db_column='USER_ID'
     )

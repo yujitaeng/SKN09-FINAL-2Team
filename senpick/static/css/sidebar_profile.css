@@ -1,4 +1,9 @@
-/* ===== sidebar_profile.html 전용 스타일 ===== */
+body {
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  color: #2E2E2E;
+  letter-spacing: 0;
+}
+
 .sidebar-wrapper {
   position: sticky;
 }
@@ -17,7 +22,6 @@
   font-size: 30px;
   font-weight: bold;
   color: #2E2E2E;
-  /* margin-bottom: 30px; */
 }
 
 .sub-sidebar-menu {
@@ -61,8 +65,6 @@
   object-fit: contain;
 }
 
-
-/* ===== 회원 탈퇴 전용 스타일 ===== */
 .withdraw-link-wrapper {
   margin-left: 15px;
   margin-top: 5px;
@@ -93,11 +95,4 @@
 
 .withdraw-link:hover img {
   filter: brightness(0);
-}
-
-/* 텍스트 통일 스타일 */
-body {
-  font-family: 'Spoqa Han Sans Neo', sans-serif;
-  color: #2E2E2E;
-  letter-spacing: 0;
 }

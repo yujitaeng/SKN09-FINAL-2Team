@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
     clearError(password);
     clearError(nickname);
     clearError(birth);
-    jobError.style.display = "none"; // Clear job error message
+    jobError.style.display = "none"; // 직업 오류 메시지 초기화
 
     const pwRegex = /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$^*()_\+\-=\[\]{}])[a-z0-9!@#$^*()_\+\-=\[\]{}]{8,15}$/;
 
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (!isValid) {
-      e.preventDefault(); // Prevent form submission if validation fails
+      e.preventDefault(); // 폼 제출 방지
     }
   });
 
@@ -185,10 +185,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function validateJob() {
     if (!jobInput.value || jobInput.value.trim() === "") {
-      jobError.style.display = "block"; // Show job error message
+      jobError.style.display = "block"; // 직업 선택 오류 메시지 표시
       jobError.textContent = "직업을 선택해주세요.";
     } else {
-      jobError.style.display = "none"; // Clear job error message
+      jobError.style.display = "none"; // 직업 선택 오류 메시지 숨김
     }
   }
   jobInput.addEventListener("input", validateJob);
@@ -220,9 +220,6 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       let msg = document.createElement("p");
       msg.className = "error-message";
-      // msg.style.color = "#EB1C24";
-      // msg.style.fontSize = "13px";
-      // msg.style.marginTop = "6px";
       msg.textContent = message;
       msg.style.display = "block";
       el.insertAdjacentElement("afterend", msg);

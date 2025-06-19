@@ -55,8 +55,6 @@ ACTION_EXTRACTION_PROMPT = PromptTemplate(
 
 # AskQuestion-conversation()
 # 상황 정보 채우기 위한 질문 생성
-
-# ✅ states.py 내 PromptTemplate 교체
 CONVERSATION_PROMPT = PromptTemplate(
     input_variables=["chat_history", "recipient_info", "situation_info"],
     template="""
@@ -119,61 +117,6 @@ CONVERSATION_PROMPT = PromptTemplate(
 출력: 위 내용을 바탕으로 지금 시점에서 부족한 상황정보를 채울수 있는 **가장 적절한 질문 1~2개만 자연스럽게 출력하세요.**
 """
 )
-
-
-# CONVERSATION_PROMPT = PromptTemplate(
-#     input_variables=["chat_history", "recipient_info", "situation_info"],
-#     template="""
-# <시스템 프롬프트>
-# 당신은 선물 추천 챗봇, '센픽'입니다.
-
-# 당신의 목적은 사용자가 아직 제공하지 않은 상황 정보 중 하나를 자연스럽고 보기 좋은 질문으로 이끌어내는 것입니다.
-# 상황 정보에는 다음이 포함됩니다: emotion, preferred_style, price_range, closeness
-
-# [질문 작성 규칙]
-# - 한 번에 하나의 정보만 질문합니다.
-# - 동일한 정보는 두 번 이상 질문하지 않습니다.
-# - 질문과 예시에는 반드시 줄바꿈 문자 \n 을 포함합니다.
-#   예: "안녕하세요\n선물 추천을 도와드릴게요.\n먼저, ...\n예를 들면:\n- A\n- B\n..."
-# - 이모지는 한 문장에 1개 이하로만 사용하며, 중복 없이 자연스럽게 배치합니다.
-# - 텍스트 강조 시 마크다운 문법(**굵게**)은 절대 사용하지 않습니다.
-# - 실제 마크다운 기호(\n, -, \\, **)나 HTML 태그(<br>)는 출력에 사용하지 않습니다.
-#   오직 자연어 표현만 사용합니다.
-
-# [closeness 주의]
-# - closeness는 관계가 아니라 친밀도입니다. 관계를 다시 묻지 말고, "얼마나 가까운 느낌인지"를 묻는 질문을 구성하세요.
-# - 예시는 다음과 같이 줄바꿈 문자로 출력하세요:
-#   자주 연락하며 마음을 나누는 사이
-#   일정한 거리감을 유지하는 사이
-#   어색하지만 챙기고 싶은 사이
-#   감사한 마음이 드는 사이
-
-# [예시 질문 출력 형태]
-# 아래와 같은 형식으로 출력하도록 유도하세요:
-# 안녕하세요! 😊
-# 선물 추천을 도와드릴게요.
-
-# 먼저, 선물을 드릴 분과 얼마나 가까운 사이인지 알려주실 수 있을까요?<br>
-# 예를 들어:
-# - 자주 연락하며 마음을 나누는 사이
-# - 일정한 거리감을 유지하는 사이
-# - 어색하지만 챙기고 싶은 사이
-# - 감사한 마음이 드는 사이
-
-# 어떤 느낌에 가까우신가요?
-
-# [입력으로 활용할 변수들]
-# - 실제 추천은 당신이 하지 않고, 외부 시스템(agent)이 수행합니다. 직접 상품 이름이나 추천 문구를 출력하지 마세요.
-# 다음은 사용자와 챗봇 간의 대화입니다:
-# {chat_history}
-
-# 현재 채워진 수령인 정보는 다음과 같습니다.
-# {recipient_info}
-
-# 채워야하는 상황 정보는 다음과 같습니다.
-# {situation_info}
-# """
-# )
 
 # ExtractSituation - extract_situation()
 # 상황 정보 추출 
@@ -310,9 +253,6 @@ def format_output_text(text: str) -> str:
     sentences = re.split(r'(?<=[.!?])\s+(?=[^a-z\s])', text.strip())
     return "\n\n".join([s.strip() for s in sentences if s.strip()])
 
-
-# ===================== 🔹 공통 도구 🔹 =====================
-
 def robust_json_extract(text: str):
     candidates = re.findall(r'```(?:json)?(.*?)```', text, re.DOTALL)
     if candidates:
@@ -332,7 +272,6 @@ def robust_json_extract(text: str):
         except Exception:
             return {}
 
-# ===================== 🔹 상태 노드 함수들 🔹 =====================
 def extract_situation(state, llm=None, prompt_template=None) -> dict:
     try:
         print("\n==== extract_situation 진입 ====")
@@ -364,12 +303,12 @@ def extract_situation(state, llm=None, prompt_template=None) -> dict:
             print(f"[extract_situation] dict 아님! extracted={extracted}")
             extracted = {}
 
-        # ✅ 상황 정보 업데이트
+        # 상황 정보 업데이트
         for k in state["situation_info"]:
             if extracted.get(k):
                 state["situation_info"][k] = extracted[k].strip()
 
-        # ✅ 수령인 정보 업데이트 (덮어쓰기)
+        # 수령인 정보 업데이트
         recipient_keys = ["relation", "ageGroup", "gender", "anniversary"]
         if "recipient_info" not in state:
             state["recipient_info"] = {}
@@ -422,32 +361,14 @@ def extract_action(state, llm, prompt_template):
             "output": format_output_text("죄송해요. 다시 한 번 입력해 주실 수 있을까요?")
         }
 
-# def extract_titles_from_history(chat_history: list[str]) -> list[str]:
-#     """chat_history에서 이전 추천된 상품명들만 추출"""
-#     pattern = r'"NAME"\s*:\s*"([^"]+)"|- 상품명\s*:\s*(.*)'
-#     titles = []
-#     for msg in chat_history:
-#         if msg.startswith("bot:"):
-#             clean_msg = msg.replace('\\"', '"')  # 이스케이프 제거
-#             matches = re.findall(pattern, clean_msg)
-#             for match in matches:
-#                 title = match[0] or match[1]
-#                 if title:
-#                     titles.append(title.strip())
-#     return list(set(titles))[:10]
-
 def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
     history_str = "\n".join(state.get("chat_history", [])[-10:])
 
     try:
         recipient_info = state.get("recipient_info", {})
         messager_analysis = state.get("messager_analysis", {})
-
-        # ✅ 이전 추천 상품명 추출
-        # previous_titles = extract_titles_from_history(state.get("chat_history", []))
-        # previous_titles_str = ", ".join(previous_titles) if previous_titles else "없음"
-
-        # ✅ 이전 상품까지 포함한 프롬프트 구성
+        
+        # 프롬프트 구성
         user_intent = (
             f"[추출된 조건]"
             f"- 감정: {state['situation_info'].get('emotion')}"
@@ -465,10 +386,11 @@ def call_agent(state: dict, agent_executor: AgentExecutor = None) -> dict:
             f"감정 톤: {messager_analysis.get('emotional_tone', '알 수 없음')}, "
             f"성격: {messager_analysis.get('personality', '알 수 없음')}, "
             f"관심사: {messager_analysis.get('interests', '알 수 없음')}"
-            # f"[이전 추천 상품]\n{previous_titles_str}\n"
             f"[대화 맥락]\n{history_str}"
         )
+        
         latest_user_msg = next((line for line in reversed(state["chat_history"]) if line.startswith("user:")), "")
+        
         if "다른상품" in latest_user_msg or "더 고급" in latest_user_msg:
             user_intent += """
             ⚠️ 추가 조건:
@@ -518,7 +440,7 @@ def stream_output(state, llm: ChatOpenAI, prompt_template):
 
         input_vars = set(prompt_template.input_variables)
 
-        # ✅ input_variables에 따라 다르게 format 처리
+        # input_variables에 따라 다르게 처리
         if {"user_input", "chat_history", "situation_info", "recipient_info"}.issubset(input_vars):
             if not chat_history:
                 raise ValueError("[stream_output] chat_history가 비어 있음")

@@ -43,8 +43,6 @@ body {
   position: relative; 
 }
 
-
-/* ========= Step Indicator ========= */
 .step-indicator {
   position: relative;
   display: flex;
@@ -59,9 +57,7 @@ body {
   width: 105px;
   content: "";
   position: absolute;
-  /* top: 50%; */
   left: 0;
-  /* right: 0; */
   height: 2px;
   background-color: var(--gray-light);
   z-index: 3;
@@ -87,7 +83,6 @@ body {
   justify-content: flex-start;
   align-items: center;
   margin-left: 110px;
-  /* margin-bottom: 20px; */
 }
 
 
@@ -197,7 +192,6 @@ input[type="terms"].error {
   display: flex;
   align-items: center;
   gap: 8px;
-  /* margin-bottom: 12px; */
   font-size: 14px;
 }
 
@@ -238,9 +232,6 @@ input[type="terms"].error {
   color: var(--text);
 }
 
-/* =======================
-   공통 버튼 스타일
-======================= */
 .next-btn,
 .verify-btn {
   width: 100%;
@@ -252,7 +243,7 @@ input[type="terms"].error {
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   margin-top: 20px;
 }
 
@@ -263,9 +254,6 @@ input[type="terms"].error {
   font-weight: bold;
 }
 
-/* =======================
-   모달
-======================= */
 .modal-overlay {
   display: none;
   position: fixed; 
@@ -278,9 +266,11 @@ input[type="terms"].error {
   align-items: center;
   z-index: 200;
 }
+
 .modal-overlay.open {
   display: flex;
 }
+
 .modal-content {
   background: var(--white);
   border-radius: 15px;
@@ -291,7 +281,6 @@ input[type="terms"].error {
   overflow: hidden; 
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   padding: 24px;
-
   display: flex;
   flex-direction: column;
 }
@@ -347,7 +336,6 @@ input[type="terms"].error {
   font-size: 14px;
 }
 
-/* 네모 노란 체크박스 */
 .step-option input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
@@ -361,13 +349,15 @@ input[type="terms"].error {
   cursor: pointer;
   position: relative;
   vertical-align: middle;
-  transition: border-color 0.13s, background 0.13s;
+  transition: border-color 0.13s, background-color 0.13s;
   display: inline-block;
 }
+
 .step-option input[type="checkbox"]:checked {
   background: #ffe900;
   border: 2px solid #ffe900;
 }
+
 .step-option input[type="checkbox"]:checked::after {
   content: "";
   position: absolute;
@@ -381,10 +371,6 @@ input[type="terms"].error {
   display: block;
 }
 
-
-/* =======================
-   Step 2: 인증
-======================= */
 .verify-description {
   font-size: 16px;
   padding: 0 0 20px 0;
@@ -413,14 +399,17 @@ input[type="terms"].error {
   font-size: 30px !important;
   font-weight: bold;
 }
+
 .verify-input:focus {
   border-color: var(--info);
   box-shadow: 0 0 0 3px rgba(0, 91, 172, 0.2);
 }
+
 .verify-input.error {
   border-color: var(--error) !important;
   box-shadow: none !important;
 }
+
 .resend-container {
   display: flex;
   flex-direction: column;
@@ -428,11 +417,13 @@ input[type="terms"].error {
   gap: 4px;
   align-self: flex-end;
 }
+
 .timer-text,
 .resend-code {
   font-size: 14px;
   color: var(--gray-dark);
 }
+
 .resend-code {
   text-decoration: underline;
   cursor: pointer;
@@ -444,10 +435,6 @@ input[type="terms"].error {
   color: var(--text);
   font-weight: bold;
 }
-
-/* =======================
-   Step 3: 기본 정보 입력
-======================= */
 
 .outer-wrapper.scrollable-step3-content {
   overflow-y: auto; 
@@ -522,7 +509,7 @@ input[type="terms"].error {
   z-index: 10;
   list-style: none;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  display: none; /* Initially hidden */
+  display: none;
 }
 
 .job-dropdown li {
@@ -541,7 +528,6 @@ input[type="terms"].error {
 #job-error {
   font-size: 12px;
   color: var(--error);
-  /* line-height: 1.4; */
   margin-top: -10px;
 }
 .gender-group {
@@ -642,17 +628,12 @@ input[type="terms"].error {
 .signup-form-area.step4 #category-error {
   font-size: 12px;
   color: var(--error);
-  /* line-height: 1.4; */
   margin-top: -15px;
 }
 
-/* =======================
-   Step 5: 서브타이틀
-======================= */
 .signup-form-header.step5 .title-group {
   display: flex;
   flex-direction: column;
-  /* align-items: center;  */
   text-align: left;
   margin-bottom: 24px;
 }
@@ -678,7 +659,7 @@ input[type="terms"].error {
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   margin: 20px auto;
   width: 470px;
 }

@@ -1,18 +1,13 @@
-#rdstool
-import traceback                      # 예외 트레이스백 출력
-import mysql.connector                # MySQL DB 연결
-from typing import Type              # args_schema 타입 힌트용
-from pydantic import BaseModel        # Tool 입력 타입 정의용
-from langchain.tools import BaseTool  # LangChain 사용자 정의 Tool 기반 클래스
+import os, json, traceback
+import mysql.connector
+from typing import Type
+from pydantic import BaseModel
+from langchain.tools import BaseTool
 from pathlib import Path
 from dotenv import load_dotenv
-import os
-import json
-
 
 env_path = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(dotenv_path=env_path)
-
 
 class MySQLQueryInput(BaseModel):
     query: str
@@ -61,10 +56,7 @@ class MySQLQueryTool(BaseTool):
             result = [dict(zip(column_names, row)) for row in rows]
             if not result:
                 return "결과 없음"
-            # ✅ JSON 형식으로 문자열 출력
             return json.dumps(result, ensure_ascii=False, indent=2, default=str)
-
-            # return result or "결과 없음"
 
         except Exception as e:
             return f"오류 발생: {e}\n{traceback.format_exc()}"
@@ -77,9 +69,8 @@ class MySQLQueryTool(BaseTool):
     def _arun(self, query: str):
         raise NotImplementedError("비동기 버전은 지원하지 않습니다.")
     
-
 rds_tool = MySQLQueryTool(
-    name="rds_tool",  # 반드시 rds_tool로!
+    name="rds_tool",
     host="localhost",
     user="root",
     password=os.getenv("DB_PASSWORD"),

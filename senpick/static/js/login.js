@@ -81,40 +81,5 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!valid) {
       e.preventDefault();
     }
-
-    // // 서버로 AJAX 요청
-    // fetch("/login/", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "X-CSRFToken": getCookie("csrftoken")
-    //   },
-    //   body: JSON.stringify({
-    //     username: email,
-    //     password: password
-    //   })
-    // })
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     if (data.success) {
-    //       window.location.href = "/chat";
-    //     } else {
-    //       if (data.email_error) {
-    //         emailInput.classList.add("error");
-    //         emailError.textContent = data.email_error;
-    //         emailError.style.display = "block";
-    //       }
-    //       if (data.password_error) {
-    //         pwInput.classList.add("error");
-    //         pwError.textContent = data.password_error;
-    //         pwError.style.display = "block";
-    //       }
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.error("로그인 요청 실패", err);
-    //     pwError.textContent = "서버 통신 오류. 다시 시도해 주세요.";
-    //     pwError.style.display = "block";
-    //   });
   });
 });

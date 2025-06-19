@@ -1,21 +1,20 @@
-from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse, StreamingHttpResponse
-import json
+import json, uuid
 from datetime import datetime
-from giftgraph.graph import gift_fsm 
-from app.models import Chat, Recipient, ChatMessage, Product, ChatRecommend, Feedback
 from collections import defaultdict
-from langchain_openai import ChatOpenAI
-from langchain.prompts import PromptTemplate
 from django.db.models import Prefetch
 from django.utils import timezone
-from app.utils import extract_products_from_response, decode_utf8_escaped, normalize_message
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render, redirect
+from django.http import JsonResponse, StreamingHttpResponse
+from langchain_openai import ChatOpenAI
+from langchain.prompts import PromptTemplate
+from giftgraph.graph import gift_fsm 
+from app.models import User, Chat, Recipient, ChatMessage, Product, ChatRecommend, Feedback
+from app.utils import extract_products_from_response, decode_utf8_escaped, normalize_message
 
-# Initialize the OpenAI model
 llm = ChatOpenAI(
-    model="gpt-4o",  # 원하는 모델로 사용 가능
+    model="gpt-4o",
     temperature=0,
 )
 
@@ -111,7 +110,7 @@ def chat_start(request):
         }
         
         messager_analysis = data.get("messager_analysis")
-        # insert recipient_info into db recipient table
+
         chat_obj = Chat.objects.create(
             user_id_id=request.session.get("user_id", None),
             title=f"{recipient_info['relation']}를 위한 선물",
@@ -133,14 +132,7 @@ def chat_start(request):
         }
         
         request.session["chat_state"] = state
-        # if recipient_info["relation"] == "가족":
-        #     return JsonResponse({
-        # "bot": "가족분께 드릴 선물이군요! , 혹시 어떤 분께 드릴 선물인지 알려주실 수 있을까요? 😊 (예: 어머니, 아버지, 여동생 등)",
-        # "chat_id": chat_obj.chat_id
-        # })
-  # 초기 상태 저장
-        
-        # 스트림 처리 
+
         res = gift_fsm.invoke(state)
         
         if isinstance(res, dict):
@@ -171,28 +163,9 @@ def chat_message(request):
         data = json.loads(request.body)
         msg = data["message"]
         chat_id = data["chat_id"]  # 클라이언트가 보내는 chat_id 사용
-        # chat_id로 Chat 인스턴스 가져오기
+
         chat_obj = Chat.objects.get(chat_id=chat_id)
         state = get_state(request)
-        # recipient_info = state.get("recipient_info", {})
-
-        # FAMILY_MEMBERS = {
-        #     "어머니", "아버지", "엄마", "아빠", "형", "오빠", "여동생", "남동생",
-        #     "할머니", "할아버지", "삼촌", "이모", "고모", "누나", "언니","부모님"
-        # }
-
-        # # ✅ 1. 가족관계 명시 질문 응답 처리
-        # if recipient_info.get("relation") == "가족" and msg in FAMILY_MEMBERS:
-        #     recipient_info["relation"] = msg
-        #     state["recipient_info"] = recipient_info
-        #     request.session["chat_state"] = state
-
-        #     chat_obj = Chat.objects.get(chat_id=chat_id)
-
-        #     # relation 업데이트
-        #     Recipient.objects.filter(chat_id=chat_obj).update(relation=msg)
-        #     chat_obj.title = f"{msg}를 위한 선물"
-        #     chat_obj.save()
         
         state["chat_history"].append(f"user: {msg}")
         ChatMessage.objects.create(
@@ -212,11 +185,10 @@ def chat_message(request):
             ready = all(situation_info.get(k, "").strip() for k in ["emotion", "preferred_style", "price_range"])
             recipient_info = state.get("recipient_info", {})
 
-    # ✅ 조건이 갖춰졌으면 DB 동기화 (relation, title 등)
             if ready:
                 Chat.objects.filter(chat_id=chat_obj.chat_id).update(
-                title=f"{recipient_info.get('relation', '수령인')}를 위한 선물"
-        )
+                    title=f"{recipient_info.get('relation', '수령인')}를 위한 선물"
+                )
             Recipient.objects.filter(chat_id=chat_obj).update(
             relation=recipient_info.get("relation", ""),
             gender=recipient_info.get("gender", ""),
@@ -272,7 +244,7 @@ def chat_message(request):
                 output_parts = []
                 for chunk in res:
                     output_parts.append(chunk)
-                    yield chunk  # str or bytes 확인 필요
+                    yield chunk
                 
                 # 최종 출력 누적해서 chat_history 에 기록
                 output = "".join(output_parts)
@@ -290,7 +262,6 @@ def chat_message(request):
 
         save_state(request, state if isinstance(res, dict) else state)
         
-        #TODO: 추천 질문 내용 생성
         recommend_inputs = []
         if recommend_products != []:
             recommend_inputs = [
@@ -306,8 +277,7 @@ def chat_message(request):
     return JsonResponse({"error": "POST only"})
 
 def chat_history(request):
-    query = request.GET.get("query", None)  # GET 요청에서 user_id 가져오기
-    # 기본 쿼리셋 (user_id에 해당하는 chat만 조회)
+    query = request.GET.get("query", None)
     chats = Chat.objects.filter(user_id_id=request.session.get("user_id", None))
 
     # query가 있으면 title에 해당 query가 포함된 것만 필터링
@@ -329,7 +299,6 @@ def chat_detail(request, chat_id):
     if not chat:
         return JsonResponse({"error": "Chat not found"}, status=404)
     
-    # 1. ChatRecommend + Product 조인 설정
     recommend_qs = ChatRecommend.objects.select_related('product_id')
     messages = ChatMessage.objects.filter(chat_id=chat)\
     .select_related('feedback')\
@@ -351,7 +320,7 @@ def chat_detail(request, chat_id):
 
         # 추천 상품
         for rec in getattr(msg, 'recommends', []):
-            if rec.product_id:  # product_id는 Product 객체
+            if rec.product_id:
                 message_data['products'].append({
                     'recommend_id': rec.rcmd_id,
                     'brand': rec.product_id.brand,
@@ -464,7 +433,6 @@ def chat_upload(request):
                     "reason": f"LLM parsing error: {str(e)}"
                 }
 
-            # 최종 결과 반환
             return JsonResponse({
                 "message": "File uploaded and analyzed successfully",
                 "llm_analysis": llm_result
@@ -481,27 +449,24 @@ def chat_guest_start(request):
         if request.session.get("user_id") is not None:
             return redirect('chat')
         
-        import uuid
         guest_user_id = uuid.uuid4().hex
 
-        # USER 테이블에 guest 계정 insert
-        from app.models import User  # 네 User 모델명에 맞게 import
-
+        # USER 테이블에 guest 계정 더미 데이터 insert
         User.objects.create(
             user_id=guest_user_id,
-            email=f"{guest_user_id}@guest.senpick.kr",  # 더미 이메일
-            password="",  # 비회원은 password 없음
-            nickname="게스트",  # 기본값
-            birth="19000101",  # 기본값 (있으면 넣고 아니면 null 가능)
-            gender="unknown",  # 기본값
-            type="guest",  # 핵심 → guest로 명시
+            email=f"{guest_user_id}@guest.senpick.kr",
+            password="", 
+            nickname="게스트",
+            birth="19000101",
+            gender="unknown",
+            type="guest",  
             is_email_verified=False
         )
 
-        # 세션에 user_id 저장 → chat()에서도 그대로 사용 가능
+        # 세션에 게스트 user_id 저장
         request.session["user_id"] = guest_user_id
         request.session["nickname"] = "게스트"
-        request.session["type"] = "guest"  # guest 타입으로 설정
+        request.session["type"] = "guest" # guest 타입으로 설정
 
         return redirect('chat')
     

@@ -1,25 +1,18 @@
-/* ===== profile_info.css ===== */
 .profile-main-wrapper {
     flex-grow: 1;
     padding: 150px 0;
     overflow-y: scroll;
     scrollbar-width: none;
-    /* padding: 26px; */
 }
 .profile-main {
   flex-grow: 1;
   background: white;
   border-radius: 24px;
   padding: 48px 70px;
-  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.03); */
   max-width: 760px;
-  /* margin-top: 150px; */
-  /* margin-bottom: 50px; */
-  /* height: fit-content; */
 }
 
 .profile-form {
-  /* max-width: 700px; */
   margin: 0 auto;
 }
 
@@ -67,12 +60,7 @@
 .profile-form input.error:hover,
 .profile-form input.error:focus {
   border: 2px solid #EB1C24;
-  /* background-color: #FFF5F5; */
 }
-
-/* .profile-form input:hover:not([readonly]) {
-  border: 1px solid #999;
-} */
 
 .profile-form select {
   width: 100%;
@@ -184,30 +172,6 @@
   z-index: 1;
 }
 
-/* .camera-icon {
-  position: absolute;
-  bottom: -4px;
-  right: -4px;
-  background: white;
-  border-radius: 50%;
-  padding: 4px;
-  border: 1px solid #E0E0E0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  z-index: 2;
-  cursor: pointer;
-}
-
-.camera-icon img {
-  width: 18px;
-  height: 18px;
-  display: block;
-  z-index: 2;
-} */
-
 .profile-image-buttons {
   display: flex;
   flex-direction: column;
@@ -260,9 +224,6 @@
   margin-left: 2px;
 }
 
-
-/* === 직업 토글 === */
-
 .job-input {
   position: relative;
   display: flex;
@@ -297,7 +258,7 @@
   z-index: 10;
   list-style: none;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  display: none; /* Initially hidden */
+  display: none;
 }
 
 .job-dropdown li {
@@ -316,7 +277,6 @@
   padding: 14px;
   width: 100%;
   font-size: 16px;
-  /* font-weight: bold; */
   color: #2e2e2e;
   background-color: #F5F5F8;
   border: none;
@@ -331,7 +291,6 @@
   background-color: #F5F5F8;
   border: none;
   border-radius: 12px;
-  /* font-weight: bold; */
   font-size: 15px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -343,7 +302,6 @@
   font-weight: bold;
 }
 
-/* current-password 전용 스타일 */
 #current-password:disabled {
   background-color: #F5F5F8; 
   color: #2E2E2E;               

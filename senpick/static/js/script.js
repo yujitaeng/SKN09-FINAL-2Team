@@ -192,7 +192,6 @@ function renderChatList(chatList) {
         document.querySelector('.chat-list li.selected')?.classList.remove('selected');
         li.classList.add('selected');
 
-        // 필요시 chat_id 를 활용해서 채팅 불러오기 등 추가 동작 가능
         console.log('Selected chat_id:', li.dataset.chatId);
         window.currentChatId = li.dataset.chatId; // 현재 선택된 chat_id 저장
         window.location.href = `/chat/${li.dataset.chatId}`; // 채팅 페이지로 이동

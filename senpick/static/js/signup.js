@@ -465,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
           styleErrorEl.style.display = "block";
         }
 
-        // ⚠️ 선택이 3개 미만이면 무조건 에러 메시지 숨김 (초기화)
+        // 선택이 3개 미만이면 무조건 에러 메시지 숨김 (초기화)
         if (selectedStyles.length < 3) {
           styleErrorEl.style.display = "none";
           if (styleErrorEl.textContent.includes("최대")) {
@@ -507,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let hasError = false;
       let firstErrorElement = null;
 
-      // 4-1) 스타일 검증: 최소 1개 선택 여부
+      // 스타일 검증: 최소 1개 선택 여부
       if (selectedStyles.length === 0) {
         styleErrorEl.textContent = "최소 1개 이상의 선호 스타일을 선택해주세요.";
         styleErrorEl.style.display = "block";
@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
         styleErrorEl.style.display = "none";
       }
 
-      // 4-2) 카테고리 검증: 최소 1개 선택 여부
+      // 카테고리 검증: 최소 1개 선택 여부
       if (selectedCategories.length === 0) {
         categoryErrorEl.textContent = "최소 1개 이상의 선호 카테고리를 선택해주세요.";
         categoryErrorEl.style.display = "block";
@@ -531,12 +531,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (hasError) {
         if (firstErrorElement) {
-          const scrollableContainer = document.querySelector('.outer-wrapper.scrollable-content'); // Step4도 이 클래스를 사용한다고 가정
+          const scrollableContainer = document.querySelector('.outer-wrapper.scrollable-content'); 
           if (scrollableContainer) {
             firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
         }
-        return; // 에러가 있으므로 함수 실행을 중단합니다.
+        return;
       }
 
       const allIds = [...selectedStyles, ...selectedCategories];
@@ -548,20 +548,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-
-  // ✅ step5 자리 확보
   else if (path.includes("signup/step5")) {
     const startBtn = document.getElementById('startBtn');
     if (startBtn) {
       startBtn.addEventListener('click', () => {
-        // 로그인 페이지 URL로 수정
+        // 로그인 페이지로 이동
         window.location.href = "/login/";
       });
     }
   }
 });
-
-
-
-
-

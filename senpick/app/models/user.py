@@ -1,9 +1,8 @@
+# Create your models here.
 import uuid
+from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils import timezone
-
-# Create your models here.
-from django.db import models
 
 class UserManager(BaseUserManager):
     def create_user(self, email, nickname, password=None, **extra_fields):
@@ -47,10 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_column='REASON'
     )
 
-    # MySQL이 INSERT 시 CURRENT_TIMESTAMP를 넣도록 두고,
-    # Django는 값을 지정하지 않음.
     created_at = models.DateTimeField(auto_now_add=True, db_column='CREATED_AT')
-    # INSERT 당시엔 NULL, 이후 UPDATE 시 MySQL이 자동으로 채워 주도록 둠.
     updated_at = models.DateTimeField(null=True, blank=True, db_column='UPDATED_AT')
     deleted_at = models.DateTimeField(null=True, blank=True, db_column='DELETED_AT')
 
@@ -71,7 +67,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_table = 'user'
 
     def save(self, *args, **kwargs):
-        # user_id(UUID) 가 없으면, 하이픈 없는 32자리 hex 문자열 생성
         if not self.user_id:
             self.user_id = uuid.uuid4().hex
         super().save(*args, **kwargs)
@@ -116,7 +111,7 @@ class UserPrefer(models.Model):
         auto_now_add=True,
         db_column='CREATED_AT'
     )
-    # UPDATE 시에만 MySQL의 ON UPDATE CURRENT_TIMESTAMP가 동작하게 두려면 auto_now 제거
+
     updated_at  = models.DateTimeField(
         null=True,
         blank=True,

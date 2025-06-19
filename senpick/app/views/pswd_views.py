@@ -1,11 +1,11 @@
+import json
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from app.models import User 
-import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
+from app.models import User 
 from app.utils import send_pswd_verification_code
 
 def pswd(request):
@@ -93,13 +93,9 @@ def pswd_gen(request):
 def set_new_password(request):
     if request.method == "POST":
         data = json.loads(request.body)
-        # print("받은 데이터: ", data)
+        
         new_password = data.get("new_password", "").strip()
-
-        # print("받은 새 비밀번호:", new_password)
-
         email = request.session.get("verification_email")
-        # print("세션 이메일:", email)
 
         if not email:
             return JsonResponse({"success": False, "message": "세션 만료 또는 인증되지 않은 사용자입니다."})
@@ -112,7 +108,7 @@ def set_new_password(request):
 
             user.password = make_password(new_password)
             user.save()
-            # print("비밀번호 변경 성공")
+
             return JsonResponse({"success": True})
         except User.DoesNotExist:
             return JsonResponse({"success": False, "message": "해당 이메일의 사용자를 찾을 수 없습니다."})

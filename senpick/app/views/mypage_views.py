@@ -27,14 +27,13 @@ def home(request):
     ).order_by('-created_at')
 
     for chat in chats:
-        # recipient 정보 (이미 select_related로 가져옴)
         recipient = chat.recipient
 
-        # 추천 상품 목록 (prefetch_related로 가져옴)
+        # 추천 상품 목록
         recommends = chat.chatrecommend_set.filter(product_id__isnull=False, is_liked=True)
         products = [
             {
-                'rcmd_id': rec.rcmd_id,                    # 키 이름을 맞춰야 JS에서 인식 가능
+                'rcmd_id': rec.rcmd_id, 
                 'brand': rec.product_id.brand,
                 'title': rec.product_id.name,
                 'imageUrl': rec.product_id.image_url,
@@ -62,7 +61,6 @@ def profile_info(request):
         return redirect("login")
     
     if request.method == "GET":
-        # GET 요청 시 사용자 정보, 선호 태그 불러오기
         preferences = UserPrefer.objects.filter(user=user).select_related("prefer_type")
         style_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "S"]
         category_ids = [p.prefer_type.prefer_id for p in preferences if p.prefer_type.type == "C"]
@@ -184,7 +182,7 @@ def profile_password(request):
 @csrf_exempt
 def password_check(request):
     if request.method == "POST":
-        data = json.loads(request.body)  # JSON 데이터 파싱
+        data = json.loads(request.body)
         current_password = data.get("password", "").strip()
         user_id = request.session.get("user_id")
         if not user_id:
@@ -236,14 +234,13 @@ def delete_user_account(request):
         user.save()
         
         user = request.user
-        # 1. 관련된 SocialAccount 삭제
+        # SocialAccount 삭제
         SocialAccount.objects.filter(user=user).delete()
 
-        # 세션 삭제 = 로그아웃 처리
-        request.session.flush() # 만료된 세션 제거
+        # 로그아웃 처리
+        request.session.flush()
         request.session["nickname"] = "게스트"
 
-        # 성공 응답 + 리디렉트 경로 전달
         return JsonResponse({"success": True, "message": "계정이 성공적으로 삭제되었습니다."}, status=200)
     except Exception as e:
         return JsonResponse({"success": False, "message": str(e)}, status=400)

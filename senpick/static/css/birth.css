@@ -46,8 +46,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* height: 100vh; */
-    /* overflow-y: hidden; */
 
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -55,7 +53,6 @@
     user-select: none;
 
     -webkit-user-drag: none;
-    user-drag: none;
 }
 
 .birth-container p {
@@ -87,27 +84,24 @@
     justify-content: center;
     align-items: center;
     margin: 50px auto 25px;
-    height: 53vh; /* 원하는 높이로 조절 */
+    height: 53vh;
     overflow: hidden;
 }
 
 .birth-inner-container .img-wrapper img {
-    height: 100%;       /* 부모 높이에 맞춤 */
-    width: auto;        /* 비율 유지 */
+    height: 100%;
+    width: auto;
     display: block;
-    object-fit: contain; /* 비율 유지하면서 전체 보이게 */
+    object-fit: contain;
 }
 
 .snap-container {
-    position: relative; /* 중요! */
-    /* scroll-snap-type: y mandatory; */
-    /* overflow-y: scroll; */
-    /* height: 100vh; */
+    position: relative;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    -ms-overflow-style: none; /* IE 10+ */
-      /* ✅ 정중앙 정렬 핵심 */
+    -ms-overflow-style: none;
+
     height: 100vh;
     overflow: scroll;
     scroll-snap-type: y mandatory;
@@ -118,12 +112,12 @@
     height: 100vh;
     min-height: 100vh;
     overflow: hidden;
-    /* padding: 40px 0; */
+
     box-sizing: border-box;
     margin: auto;
     display: flex;
-    justify-content: center;   /* 가로 중앙 */
-    flex-direction: column;    /* 콘텐츠들을 세로로 나열 */
+    justify-content: center;
+    flex-direction: column;
 }
 
 /* fade-up 초기 상태 */
@@ -140,9 +134,8 @@
     transform: translateY(0);
 }
 
-/* 👇 화살표를 snap-container 기준 아래 가운데에 배치 */
 .scroll-arrow {
-    position: fixed; /* 👈 포인트! */
+    position: fixed;
     bottom: 10%;
     left: 50%;
     transform: translateX(-50%);
@@ -163,15 +156,7 @@
         transform: translateX(-50%) translateY(10px);
     }
 }
-/* skeleton 상태일 때 wrapper 스타일 추가 (선택사항) */
-.card-wrapper.skeleton {
-  /* 원하는 경우 흐림 효과 줄 수도 있음 */
-  /* opacity: 0.8; */
-  /* pointer-events: none; */
-  
-}
 
-/* Skeleton 전용 스타일 */
 .product-card.skeleton {
   animation: pulse 1.5s infinite;
 }

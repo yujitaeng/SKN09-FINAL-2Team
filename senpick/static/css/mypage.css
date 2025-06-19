@@ -1,5 +1,3 @@
-/* mypage.css */
-
 body {
   font-family: 'Spoqa Han Sans Neo', sans-serif;
   margin: 0;
@@ -11,7 +9,6 @@ body {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  /* padding: 26px; */
 }
 
 .mypage-container {
@@ -46,7 +43,7 @@ body {
 
 @media (max-width: 768px) {
   .profile-section {
-    width: 100%;  /* 모바일에서는 전체로 */
+    width: 100%;
   }
 }
 
@@ -55,10 +52,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* overflow-y: scroll; */
 }
 
-/* 수평 정렬을 위한 래퍼 */
 .profile-content-horizontal {
   display: flex;
   align-items: center;
@@ -67,7 +62,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* 수평 구조에 맞춘 이미지 스타일 */
 .profile-image-horizontal {
   width: 64px;
   height: 64px;
@@ -131,7 +125,6 @@ body {
   padding: 4px 10px;
   border-radius: 10px;
   font-size: 12px;
-  /* color: #666; */
   color: #2E2E2E;
 }
 
@@ -274,7 +267,6 @@ a {
   color: #888;
 }
 
-/* 가로 스크롤 영역 */
 .product-scroll-wrapper {
   background: #E0E0E0;
   padding: 16px 20px;
@@ -297,7 +289,6 @@ a {
   width: max-content; 
 }
 
-/* ===== sidebar2.html 상품 카드 복사 ===== */
 .product-card {
   width: 156px;
   min-width: 156px;
@@ -336,6 +327,7 @@ a {
   color: #999;
   margin-bottom: 2px;
   display: -webkit-box;
+  line-clamp: 1;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -348,6 +340,7 @@ a {
   line-height: 1.4;
   color: #2E2E2E;
   display: -webkit-box;
+  line-clamp: 1;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;

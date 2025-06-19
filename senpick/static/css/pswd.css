@@ -16,7 +16,6 @@
 .outer-pswd-wrapper{
   flex: 1;
   display: flex;
-  /* justify-content: center; */
   padding-top: 30px;
 }
 
@@ -25,7 +24,6 @@
   max-width: 450px;
   display: flex;
   flex-direction: column;
-  /* gap: 15px; */
   margin: 0 auto;
 }
 
@@ -35,8 +33,6 @@
   z-index: 2;
 }
 
-
-/* ========= Input Fields ========= */
 input[name="username"],
 input[name="new_password"],
 input[name="confirm_password"] {
@@ -55,13 +51,10 @@ input.error {
   border: 1.5px solid var(--error);
 }
 
-/* ========= Error Messages ========= */
 .error-message,
 .password-message {
   font-size: 12px;
-  /* line-height: 18px; */
   color: var(--error);
-  /* height: 10px; */
   margin-top: 5px;
   font-family: 'Spoqa Han Sans Neo';
   font-weight: 400;
@@ -75,7 +68,6 @@ input.error {
   display: block;
 }
 
-/* ========= Buttons ========= */
 .pswd-next,
 .verif-comp-btn {
   width: 100%;
@@ -83,8 +75,6 @@ input.error {
   margin-top: 24px;
   font-size: 16px;
   font-weight: 400;
-  /* line-height: 30px; */
-  /* letter-spacing: -0.3px; */
   background: #eee;
   border: 2px solid transparent;
   border-radius: 10px;
@@ -104,14 +94,11 @@ input.error {
   font-weight: bold;
 }
 
-/* ========= Step Indicator ========= */
 .step-indicator {
   position: relative;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  /* width: 56px; */
-  /* height: 15px; */
   gap: 15px;
   padding: 20px 0;
   margin-left: 125px;
@@ -121,7 +108,6 @@ input.error {
   width: 75px;
   content: "";
   position: absolute;
-  /* top: 50%; */
   left: 0;
   right: 0;
   height: 2px;
@@ -142,7 +128,6 @@ input.error {
   border-color: var(--primary);
 }
 
-/* ========= Text Elements ========= */
 .main-title,
 .sub-title,
 .text {
@@ -155,15 +140,12 @@ input.error {
 .main-title {
   font-size: 26px;
   font-weight: 700;
-  /* line-height: 44px; */
   margin: 0;
-  /* letter-spacing: -0.5px; */
   text-align: left;
 }
 
 .sub-title {
   font-size: 16px;
-  /* line-height: 28px; */
   margin: 5px 0;
   color: var(--gray-dark);
   text-align: left;
@@ -177,11 +159,8 @@ input.error {
   font-size: 16px;
   font-weight: 500;
   margin: 8px 0;
-  /* line-height: 30px; */
-  /* letter-spacing: -0.3px; */
 }
 
-/* ========= Verification Area ========= */
 .verification-container {
   width: 526px;
   height: 99px;
@@ -200,7 +179,6 @@ input.error {
   display: none;
 }
 
-/* ========= Timer ========= */
 .verif-timer-group {
   width: 100%;
   text-align: right;
@@ -234,12 +212,14 @@ input.error {
   line-height: 26px;
   color: var(--text);
 }
+
 .verification-input-group {
   width: 100%;
   display: flex;
   justify-content: space-between;
   margin-top: 15px;
 }
+
 .verify-input {
   width: calc(100% / 5 - 8px);
   aspect-ratio: 1 / 1;
@@ -254,10 +234,12 @@ input.error {
   font-size: 40px;
   font-weight: 500;
 }
+
 .verify-input:focus {
   border-color: var(--info);
   box-shadow: 0 0 0 3px rgba(0, 91, 172, 0.2);
 }
+
 .verify-input.error {
   border-color: var(--error) !important;
   box-shadow: none !important;

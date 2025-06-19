@@ -19,7 +19,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -27,10 +26,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 ALLOWED_HOSTS = ['senpick.kr', 'web', '127.0.0.1', 'localhost', os.getenv('ALLOWED_HOSTS')]
-
-# SECURE_SSL_REDIRECT = True
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,8 +41,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.naver',
-    # 'allauth.socialaccount.providers.kakao', # 제외
-    'app', # 앱 이름 추가
+    'app',
 ]
 
 # 소셜 로그인 내용
@@ -139,7 +133,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -151,11 +144,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-# STATIC_URL = 'static/'
 STATIC_URL = '/static/'
 if os.getenv("ENVIRONMENT") == 'PRODUCTION': # 배포용 환경 변수 설정
     STATIC_ROOT = os.path.join(BASE_DIR, 'static') # 배포용 세팅
@@ -167,38 +158,26 @@ else:
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 # 이메일 인증 관련
 # 1. 이메일 백엔드 설정
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # 테스트 용
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # 2. SMTP 서버 호스트 (예: Gmail SMTP, Naver SMTP 등)
 # EMAIL_HOST = 'email-smtp.ap-northeast-2.amazonaws.com'       
-EMAIL_HOST = 'smtp.gmail.com' # Gmail을 쓰는 경우
-# EMAIL_HOST = 'smtp.naver.com'     # 네이버 SMTP를 쓰는 경우
+EMAIL_HOST = 'smtp.gmail.com'
 
 # 3. SMTP 서버 포트
-#    └– 대부분 TLS(STARTTLS) 사용 시 587, SSL(SSL/TLS)을 직접 사용할 때는 465
 EMAIL_PORT = 587
 
 # 4. TLS/SSL 설정
-EMAIL_USE_TLS = True   # STARTTLS(업그레이드 보안)를 쓰는 경우
-# EMAIL_USE_SSL = False   # SSL 연결을 바로 여는 경우 (이 둘을 동시에 True로 두지는 않습니다)
+EMAIL_USE_TLS = True 
 
-# 5. SMTP 서버 로그인 계정(아이디)
-#    └– 실제 메일을 발송할 계정(이메일주소)을 적어야 합니다.
+# 5. SMTP 서버 로그인 계정
 EMAIL_HOST_USER = os.getenv('YOUR_EMAIL')
-
-# 6. SMTP 서버 로그인 비밀번호
-#    └– 위 계정의 비밀번호 또는 “앱 비밀번호”(2차 인증을 켠 경우) 등을 입력
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
 # 7. 기본 발신자 주소
-#    └– send_mail() 호출 시, “From” 에 기본으로 들어갈 이메일/문자열
 DEFAULT_FROM_EMAIL = 'Senpick <no-reply@senpick.com>'
-
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -208,26 +187,21 @@ AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_REGION = "ap-northeast-2"
 
 AWS_STORAGE_BUCKET_NAME = "senpickbucket"
-AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"  # 또는 CloudFront 도메인
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 
-# 미디어 경로 커스텀 시 사용
 MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
 
 if os.getenv("ENVIRONMENT") == 'PRODUCTION': # 배포용 환경 변수 설정
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = False
 
-    # CSRF 쿠키도 https에만 전송
     CSRF_COOKIE_SECURE = True
 
-    # 세션 쿠키도 https에만 전송
     SESSION_COOKIE_SECURE = True
 
-    # 보안 헤더 (옵션)
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
 
-    # X-Forwarded-Proto 헤더 사용 허용 (리버스 프록시 환경일 경우)
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 else:

@@ -3,7 +3,6 @@ sudo yum update -y
 
 # 2. Docker 설치
 sudo yum install -y docker libxcrypt-compat git # docker-compose
-# sudo apt-get install -y docker libxcrypt-compat git # docker-compose
 
 # 3. Docker 서비스 시작
 sudo systemctl start docker
@@ -32,11 +31,9 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 # 5. 설치 확인
 docker-compose --version
 
-scp -i ./senpick.pem -r ./qdrant_ad/qdrant_storage/  ubuntu@52.4.21.137:/home/ubuntu/
+scp -i ./senpick.pem -r ./qdrant_ad/qdrant_storage/  ec2-user@{ec2_host}:/home/ec2-user/
 
 sudo yum update
 sudo yum install certbot python3-certbot-nginx -y
 
 sudo certbot certonly --standalone -d senpick.kr
-
-# cat your-private-key.pem | base64

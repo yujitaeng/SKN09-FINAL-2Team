@@ -1,11 +1,8 @@
-import os
-import re
-import requests
+import os, re, requests, random
 from langchain.tools import Tool
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 from pathlib import Path
-import random
 
 base_path = Path(__file__).resolve().parent.parent
 env_path = base_path / ".env"

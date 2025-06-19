@@ -1,9 +1,4 @@
-CREATE USER 'user123'@'%' IDENTIFIED BY 'user123';
-
-CREATE DATABASE `senpick_db` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-GRANT ALL PRIVILEGES ON `senpick_db`.* TO 'user123'@'%';
-FLUSH PRIVILEGES;
-
+CREATE DATABASE `senpick_db`;
 USE senpick_db;
 
 DROP TABLE IF EXISTS `user`;

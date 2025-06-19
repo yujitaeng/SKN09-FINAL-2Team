@@ -8,10 +8,9 @@ from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
-from app.models import User, PreferType, UserPrefer
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
-from app.models import User
+from app.models import User, PreferType, UserPrefer
 
 @login_required
 def social_redirect_view(request):
@@ -37,18 +36,18 @@ def login_view(request):
 
 def signup_step1(request):
     base = os.path.join(settings.BASE_DIR, "app", "templates", "signup")
-    # 서비스 이용약관
+    
+    # 서비스 이용약관 불러오기
     with open(os.path.join(base, "service_term.txt"), encoding="utf-8") as f:
         md = f.read()
     service_html = markdown.markdown(md)
-    # service_html = f.read() # 마크다운이 아니라 그냥 텍스트 파일 출력하려면 이 코드 사용
-    # 개인정보 수집·이용 약관
+
+    # 개인정보 수집·이용 약관 불러오기
     with open(os.path.join(base, "personal_term.txt"), encoding="utf-8") as f:
         md = f.read()
     personal_html = markdown.markdown(md)
 
     if request.method == "GET":
-        # 단순 GET: 약관 렌더링
         return render(request, "signup/signup_step1.html", {
             "service_content": service_html,
             "personal_content": personal_html,
@@ -91,7 +90,6 @@ def signup_step1(request):
                 "errors": errors,
                 "email": email,
                 "nickname": nickname,
-                # (password는 보안상 재표시하지 않음)
             })
 
         # 2) 세션에 회원가입 기본정보 저장
@@ -151,7 +149,7 @@ def signup_step3(request):
             "job": job,
         })
 
-    # ✅ 소셜 유저일 경우 DB에 직접 저장
+    # 소셜 유저일 경우 DB에 직접 저장
     if is_social_incomplete(request.user):
         user = request.user
         user.birth = birth
@@ -177,16 +175,7 @@ def signup_step4(request):
     preference_ids_str = request.POST.get("preference_ids", "")
     preference_ids = preference_ids_str.split(",") if preference_ids_str else []
 
-    # ✅ 디버깅: user_id 출력 및 DB 존재 여부 확인
-    print("🟡 [DEBUG] request.user =", request.user)
-    print("🟡 [DEBUG] request.user.id =", getattr(request.user, "id", None))
-
-    db_user = User.objects.filter(user_id=request.user.id).first()
-    if db_user:
-        print("🟢 [DEBUG] DB에서 조회된 유저:", db_user.email)
-    else:
-        print("❌ [DEBUG] DB에 해당 유저 없음! → 외래키 오류 발생 가능")
-    # ✅ 소셜가입자 처리
+    # 소셜 회원가입 처리
     if is_social_incomplete(request.user):
         user = request.user
         user.is_email_verified = True
@@ -216,12 +205,11 @@ def signup_step4(request):
         return redirect("signup_step1")
 
     for pid in preference_ids:
-        # (2-b) POST로 넘어온 “preference_ids” (예: "1,3,7,13,15")
+        # POST로 넘어온 “preference_ids” (예: "1,3,7,13,15")
         pref_ids_str = request.POST.get("preference_ids", "").strip()
-        # 콤마로 분리 → 숫자로만 이루어진 ID 리스트
         pref_ids = [pid for pid in pref_ids_str.split(",") if pid.isdigit()]
 
-        # (2-c) User 객체 생성 및 저장
+        # User 객체 생성 및 저장
         guest_user_id = request.session.get("user_id", None)  # 세션에 user_id가 있으면 가져옴
 
         user_qs = User.objects.filter(user_id=guest_user_id) if guest_user_id else None
@@ -238,7 +226,7 @@ def signup_step4(request):
             user.type     = "member"  # guest → member 전환
             user.is_email_verified=False
         else:
-            # 새 user 생성 (guest_user_id 유지 필요)
+            # 새 user 생성
             user = User(
                 email=email,
                 password=make_password(password),
@@ -246,14 +234,14 @@ def signup_step4(request):
                 birth=birth,
                 gender=gender,
                 job=job,
-                type="member",  # 명확하게 넣기
+                type="member",
                 is_email_verified=False
             )
 
     # 최종 저장
     user.save()
 
-    # (2-e) 하나씩 UserPrefer 레코드 생성
+    # UserPrefer 레코드 생성
     for pid in pref_ids:
         try:
             prefer_obj = PreferType.objects.get(prefer_id=int(pid))
@@ -266,7 +254,7 @@ def signup_step4(request):
             prefer_type=prefer_obj
         )
 
-    # (2-f) 세션 정리 (민감 정보 삭제)
+    # 세션 정리 (민감 정보 삭제)
     for key in [
         "signup_email", "signup_password", "signup_nickname",
         "signup_birth", "signup_gender", "signup_job"
@@ -274,7 +262,7 @@ def signup_step4(request):
         if key in request.session:
             del request.session[key]
 
-    # (2-g) 가입 완료 후 Step5로 리다이렉트
+    # 가입 완료 후 Step5로 리다이렉트
     return redirect("signup_step5")
 
 def signup_step5(request):
@@ -323,7 +311,7 @@ def verify_code(request):
         }, status=400)
 
     if code_input == stored_code:
-        # 검증 성공 시, 세션에서 인증 코드를 지워 보안 강화
+        # 검증 성공 시, 세션에서 인증 코드를 삭제
         del request.session["email_verification_code"]
         return JsonResponse({"valid": True})
     else:
