@@ -190,6 +190,10 @@
   height: 12px;
 }
 
+.birth-container .heart{
+  display: none;
+}
+
 /* Pulse animation */
 @keyframes pulse {
   0% {
