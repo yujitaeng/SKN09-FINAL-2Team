@@ -139,8 +139,15 @@
 
 
 #  WBS
+<details>
+ <summary>WBS</summary>
+ 
+ ![image](https://github.com/user-attachments/assets/5c2b0f10-e901-4541-9090-600982fafccd)
+ 
+</details>
 
-![9기-2팀_WBS_page-0001](https://github.com/user-attachments/assets/6d37a57b-b68e-4e07-99eb-06900ed28b2b)
+
+
 
 #  테스트 계획 및 결과 보고서 
 <details>
