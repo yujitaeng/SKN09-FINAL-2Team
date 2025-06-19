@@ -131,10 +131,11 @@
 
 ![9기-2팀_화면 설계서_page-0020](https://github.com/user-attachments/assets/a6cf7b77-dcd6-4caf-bc9e-325d9f3eadfa)
 
-</details>
 
 
 [화면설계서 자세히 보러가기 ](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%ED%99%94%EB%A9%B4%20%EC%84%A4%EA%B3%84%EC%84%9C.pdf)
+
+</details>
 
 
 
@@ -168,10 +169,9 @@
 ![9기-2팀_모델 테스트 계획 및 결과 보고서_page-0009](https://github.com/user-attachments/assets/8760f02a-3fc5-491c-b8b0-83f34b8ec9e2)
 
 
-</details>
-
 [테스트 계획 및 결과 보고서 자세히 보러가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EB%AA%A8%EB%8D%B8%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EA%B3%84%ED%9A%8D%20%EB%B0%8F%20%EA%B2%B0%EA%B3%BC%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf)
 
+</details>
 
 #  수행결과(테스트/시연 페이지)
 
