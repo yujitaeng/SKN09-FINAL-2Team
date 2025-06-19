@@ -1,0 +1,309 @@
+.profile-main-wrapper {
+    flex-grow: 1;
+    padding: 150px 0;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+.profile-main {
+  flex-grow: 1;
+  background: white;
+  border-radius: 24px;
+  padding: 48px 70px;
+  max-width: 760px;
+}
+
+.profile-form {
+  margin: 0 auto;
+}
+
+.profile-form input,
+.profile-form .gender-toggle,
+.profile-form .job-input,
+.profile-form .tag-group,
+.profile-form .submit-button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.profile-form label {
+  display: block;
+  margin: 24px 0 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #2e2e2e;
+}
+
+.profile-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form input[type="password"] {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  background-color: #FFFFFF;
+  transition: all 0.2s ease;
+}
+
+.profile-form input[readonly] {
+  background-color: #F5F5F8;
+  border: 1px solid #E0E0E0;
+  cursor: not-allowed;
+}
+
+.profile-form input:focus {
+  outline: none;
+}
+
+.profile-form input.error,
+.profile-form input.error:hover,
+.profile-form input.error:focus {
+  border: 2px solid #EB1C24;
+}
+
+.profile-form select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  border: 1px solid #E0E0E0;
+  background-color: #F5F5F8;
+  color: #2e2e2e;
+  appearance: none;
+  cursor: pointer;
+}
+
+.gender-toggle {
+  display: flex;
+  gap: 12px;
+}
+
+.gender-toggle .gender {
+  flex: 1;
+  padding: 12px 0;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 15px;
+  cursor: pointer;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+}
+
+.gender-toggle .gender:hover {
+  border: 2px solid #FFE900;
+  font-weight: bold;
+  background-color: #FFFBEA;
+}
+
+.gender-toggle .active {
+  border: 2px solid #FFE900;
+  font-weight: bold;
+  background-color: #FFFBEA;
+}
+
+.preference-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.preference-tags .tag {
+  padding: 8px 14px;
+  border: 1px solid #CCCCCC;
+  border-radius: 24px;
+  background-color: white;
+  color: #2e2e2e;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  box-sizing: border-box
+}
+
+.preference-tags .tag:hover {
+  border: 2px solid #FFE900;
+  font-weight: bold;
+  background-color: #FFFBEA;
+}
+
+.preference-tags .tag.active {
+  border: 2px solid #FFE900;
+  font-weight: bold;
+  background-color: #FFFBEA;
+}
+
+.hint {
+  font-size: 13px;
+  color: #EB1C24;
+  margin-left: 4px;
+}
+
+.profile-image-section {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.profile-image {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: visible;
+  background-color: #F4F4F4;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-image-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.image-button-row {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.profile-image-buttons button {
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  border: none;
+  background-color: #F4F4F4;
+  color: #2e2e2e;
+  transition: all 0.2s ease;
+}
+
+.profile-image-buttons button:hover {
+  background-color: #FFE900;
+  font-weight: bold;
+}
+
+.profile-image-buttons button.selected {
+  background-color: #FFE900;
+  font-weight: bold;
+}
+
+.profile-image-buttons button.delete-btn {
+  background-color: transparent;
+}
+
+.profile-image-buttons button.delete-btn:hover {
+  background-color: #F4F4F4;
+}
+
+.profile-img-note {
+  font-size: 13px;
+  color: #005BAC;
+  margin-top: 6px;
+  margin-left: 2px;
+}
+
+.job-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.job-input input {
+  width: 100%;
+  background-color: #FFFFFF;
+  cursor: pointer;
+}
+
+.job-input img {
+  position: absolute;
+  top: 16px;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.job-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 4px;
+  padding: 0;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  background-color: #fff;
+  z-index: 10;
+  list-style: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: none;
+}
+
+.job-dropdown li {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+}
+
+.job-dropdown li:hover {
+  background-color: #F4F4F4;
+}
+
+.submit-button {
+  margin-top: 40px;
+  padding: 14px;
+  width: 100%;
+  font-size: 16px;
+  color: #2e2e2e;
+  background-color: #F5F5F8;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+}
+
+.submit-button button {
+  width: 100%;
+  background-color: #F5F5F8;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+}
+
+.submit-button:hover, .submit-button:hover button {
+  background-color: #FFDE00;
+  font-weight: bold;
+}
+
+#current-password:disabled {
+  background-color: #F5F5F8; 
+  color: #2E2E2E;               
+  border: 1px solid #E0E0E0;  
+}

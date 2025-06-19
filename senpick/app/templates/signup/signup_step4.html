@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>회원가입 Step 4 | 선호 스타일·카테고리 선택</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+  <link rel="stylesheet" href="{% static 'css/slide.css' %}">
+</head>
+<body>
+  <div class="background signup-background">
+    <div class="signup-card">
+      <div class="logo-wrapper">
+        <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
+      </div>
+      <div class="step-indicator">
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+      </div>
+      <div class="signup-form-header">
+        <h2 class="signup-title">당신을 알아갈수록,<br>더 센스있는 선물을 고를 수 있어요.</h2>
+      </div>
+
+      <div class="scrollable-step4-content">
+        <div class="login-wrapper">
+          <div class="form-block">
+            <form method="post" action="{% url 'signup_step4' %}" class="signup-form profile-form signup-form-area step4">
+              {% csrf_token %}
+              <p class="section-title">
+                선호 스타일 <span class="subtext">(최대 3개 선택)</span>
+              </p>
+              <div class="options-group style-group">
+                {% for opt in style_options %}
+                  <button
+                    type="button"
+                    class="option-btn"
+                    data-id="{{ opt.prefer_id }}"
+                  >
+                    {{ opt.type_name }}
+                  </button>
+                {% endfor %}
+              </div>
+              <div id="style-error" class="error-message"></div>
+
+              <p class="section-title">
+                선호 카테고리 <span class="subtext">(최대 3개 선택)</span>
+              </p>
+              <div class="options-group category-group">
+                {% for opt in category_options %}
+                  <button
+                    type="button"
+                    class="option-btn"
+                    data-id="{{ opt.prefer_id }}"
+                  >
+                    {{ opt.type_name }}
+                  </button>
+                {% endfor %}
+              </div>
+              <div id="category-error" class="error-message"></div>
+
+              <input type="hidden" name="preference_ids" id="preference-ids" value="">
+
+              <button type="submit" id="completeBtn" class="verify-btn">
+                회원가입 완료
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 오른쪽 슬라이드 영역 -->
+    {% include "slide.html" %}
+  </div>
+  <!-- JS 로드 -->
+  <script src="{% static 'js/signup.js' %}" defer></script>
+  <script src="{% static 'js/slide.js' %}" defer></script>
+</body>
+</html>

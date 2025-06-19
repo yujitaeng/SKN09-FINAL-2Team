@@ -1,0 +1,96 @@
+@font-face {
+  font-family: 'Cafe24Supermagic';
+  src: url("../fonts/Cafe24Supermagic-Bold-v1.0.woff") format('woff');
+}
+
+.right-slide {
+  position: relative;
+  width: 48vw;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFDE7;
+}
+
+.slider-wrapper {
+  display: flex;
+  height: 100%;
+  transition: transform 1s ease-in-out;
+  will-change: transform;
+}
+
+
+.slide-content {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+
+.slide-content h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #2E2E2E;
+  margin: 0;
+  margin-bottom: 14px;
+}
+
+.font-a {
+  font-family: 'Spoqa Han Sans Neo';
+}
+
+.font-b {
+  font-family: 'Cafe24Supermagic';
+}
+
+.slide-content p {
+  font-weight: 400;
+  font-size: 16px;
+  color: #666666;
+  margin: 0;
+}
+
+.slide-content img {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  max-height: 45vh; 
+  object-fit: contain;
+  margin: 0;
+  margin-top: 80px;
+
+}
+
+.slide-indicator {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.slide-indicator .dot {
+  width: 10px;
+  height: 10px;
+  background: #FFE900;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  opacity: 30%;
+  cursor: pointer;
+}
+
+.slide-indicator .dot.active {
+  width: 35px;
+  border-radius: 60px;
+  opacity: 80%;
+}

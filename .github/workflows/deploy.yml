@@ -4,7 +4,7 @@ on:
   push:
     branches: 
       - main
-
+      - dev
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,7 +20,8 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          cd SKN09-FINAL-2Team/senpick/  # 서버에서 실제 프로젝트 위치로 이동
+          cd SKN09-FINAL-2Team/  # 서버에서 실제 프로젝트 위치로 이동
           git pull
-          git checkout main
+          git checkout dev
+          cd senpick/ 
           docker-compose up --build -d

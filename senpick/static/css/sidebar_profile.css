@@ -1,0 +1,98 @@
+body {
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  color: #2E2E2E;
+  letter-spacing: 0;
+}
+
+.sidebar-wrapper {
+  position: sticky;
+}
+
+.sub-sidebar {
+  width: 240px;
+  background-color: #F5F5F8;
+  border-radius: 16px;
+  padding: 67px 22px;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.sub-sidebar-title {
+  font-size: 30px;
+  font-weight: bold;
+  color: #2E2E2E;
+}
+
+.sub-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  gap: 2px;
+}
+
+.sub-sidebar-menu li {
+  list-style: none;
+}
+
+.sub-sidebar-menu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #2E2E2E;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.sub-sidebar-menu a:hover {
+  background-color: #E0E0E0;
+}
+
+.sub-sidebar-menu .active a {
+  background-color: #E0E0E0;
+  font-weight: 500;
+}
+
+.sub-sidebar-menu a img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.withdraw-link-wrapper {
+  margin-left: 15px;
+  margin-top: 5px;
+}
+
+.withdraw-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #666666;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.withdraw-link img {
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+  transition: filter 0.2s ease;
+}
+
+.withdraw-link:hover {
+  color: #2E2E2E;
+  font-weight: 600;
+}
+
+.withdraw-link:hover img {
+  filter: brightness(0);
+}

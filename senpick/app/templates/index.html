@@ -1,0 +1,16 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}Senpick{% endblock %}
+
+{# 사이드바를 비우고 싶다면 해당 블록을 비워버리면 됩니다 #}
+{% block sidebar %}
+    {% include "layout/sidebar.html" %}
+{% endblock %}
+{% block content %}
+    <h1>Welcome to Django Home!</h1>
+{% endblock %}
+{% block sidebar2 %}
+    {% include "layout/sidebar2.html" %}
+{% endblock %}
+

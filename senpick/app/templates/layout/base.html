@@ -1,0 +1,31 @@
+{% load static %}
+<!-- templates/layout/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Senpick{% endblock %}</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sidebar2.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Spoqa+Han+Sans+Neo:wght@400;500;700&display=swap" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
+    <script src="{% static 'js/script.js' %}"></script>
+</head>
+<body>
+    <div style="display: flex;">
+        {% block sidebar %}
+            {% include "layout/sidebar.html" %}
+        {% endblock %}
+
+        <div class="main-content">
+            {% block content %}{% endblock %}
+        </div>
+
+        {% block sidebar2 %}
+            {% include "layout/sidebar2.html" %}
+        {% endblock %}
+    </div>
+</body>
+</html>

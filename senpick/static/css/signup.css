@@ -1,0 +1,670 @@
+:root {
+  --card-bg: #FFFDE7;
+  --white: #FFFFFF;
+  --gray-light: #F5F5F8;
+  --gray-medium: #CCCCCC;
+  --gray-dark: #666666;
+  --text: #2E2E2E;
+  --primary: #FFE900;
+  --info: #005BAC;
+  --error: #EB1C24;
+  --soft-gray: #E0E0E0;
+  --form-offset-x: 26px;
+  --form-offset-y: 27px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--card-bg);
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text);
+}
+
+.signup-background {
+  align-items: stretch;
+  min-height: 100vh;
+}
+
+.signup-card {
+  max-width: 700px;
+  min-width: 600px;
+  background: #fff;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  z-index: 1;
+  flex: 0 0 44vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative; 
+}
+
+.step-indicator {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 0;
+  margin-left: 110px;
+}
+
+.step-indicator::before {
+  width: 105px;
+  content: "";
+  position: absolute;
+  left: 0;
+  height: 2px;
+  background-color: var(--gray-light);
+  z-index: 3;
+}
+
+.step-indicator .dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--gray-light);
+  z-index: 4;
+}
+
+.step-indicator .dot.active {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+
+.signup-form-header {
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 110px;
+}
+
+
+.outer-wrapper.scrollable-content {
+  overflow-y: auto; 
+  padding: 30px 30px 30px 30px;
+  -webkit-overflow-scrolling: touch; 
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.outer-wrapper.scrollable-content::-webkit-scrollbar {
+  display: none;
+}
+
+.signup-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 0;
+  margin-top: 0; 
+}
+
+.signup-form-area {
+  width: 100%;
+  background: var(--white); 
+  display: flex;
+  flex-direction: column;
+  gap: 16px; 
+  flex-grow: 1; 
+}
+
+.label-email, .label-password, .label-nickname, .label-terms {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: -10px;
+}
+
+.input-email, .input-password, .input-nickname {
+  width: 100%;
+  height: 44px;
+}
+
+input[type="email"], input[type="password"], input[type="text"] {
+  height: 44px;
+  padding: 14px;
+  font-size: 14px;
+  border: 1px solid var(--soft-gray);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="text"]::placeholder {
+  color: var(--gray-medium); 
+}
+
+input[type="email"].error,
+input[type="password"].error,
+input[type="text"].error,
+input[type="terms"].error {
+  border-color: var(--error) !important;
+  box-shadow: none !important;
+}
+
+.error-message {
+    color: var(--error); 
+    margin-top: 5px; 
+    margin-bottom: 10px; 
+    display: none;;
+    overflow: hidden; 
+    transition: height 0.3s ease-out; 
+}
+
+
+#email-error, #password-error, #nickname-error {
+  color: var(--error);
+  font-size: 12px;
+  margin-top: -15px;
+}
+
+.terms-box #terms-error {
+  color: var(--error);
+  font-size: 12px;
+  margin-top: 3px; 
+}
+
+.terms-box {
+  width: 100%;
+  background: var(--white);
+  border: 1px solid var(--soft-gray);
+  border-radius: 15px;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.checkbox-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0x;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.checkbox-all input, .checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.terms-box hr {
+  margin: 0;
+  border-top: 1px solid var(--soft-gray);
+}
+
+.required {
+  margin-left: auto;
+  color: var(--error);
+}
+
+.checkbox-label a {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+.checkbox-label a:visited,
+.checkbox-label a:hover,
+.checkbox-label a:active {
+  color: var(--text);
+}
+
+.next-btn,
+.verify-btn {
+  width: 100%;
+  height: 44px;
+  font-size: 16px;
+  font-weight: 400;
+  background: var(--gray-light);
+  color: var(--text);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin-top: 20px;
+}
+
+.next-btn:hover,
+.next-btn.active,
+.verify-btn:hover {
+  background: var(--primary);
+  font-weight: bold;
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--white);
+  border-radius: 15px;
+  width: 80%;
+  max-width: 700px;
+  min-width: 400px;
+  max-height: 80%;
+  overflow: hidden; 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  width: 20px;
+  height: auto;
+}
+
+.modal-header span {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.modal-body {
+  overflow-y: auto; 
+  max-height: 70vh; 
+  border-radius: 5px;
+  background-color: #F5F5F8;
+  padding: 20px;
+}
+
+.modal-body h1 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+}
+
+.modal-body h2 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+}
+
+.modal-body p {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+}
+
+.modal-body ol,
+.modal-body ul {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+}
+
+.step-option input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  border: 2px solid #F5F5F8;
+  background: #fff;
+  border-radius: 5px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  transition: border-color 0.13s, background-color 0.13s;
+  display: inline-block;
+}
+
+.step-option input[type="checkbox"]:checked {
+  background: #ffe900;
+  border: 2px solid #ffe900;
+}
+
+.step-option input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: -1px;
+  width: 6px;
+  height: 12px;
+  border: solid #ffffff;
+  border-width: 0 2.2px 2.2px 0;
+  transform: rotate(45deg);
+  display: block;
+}
+
+.verify-description {
+  font-size: 16px;
+  padding: 0 0 20px 0;
+  color: var(--text);
+}
+
+.verification-input-group {
+  width: 100%;
+  height: 99px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px
+}
+
+.verify-input {
+  width: calc(100% / 5 - 8px);
+  height: 99px !important;
+  aspect-ratio: 1 / 1;
+  background: var(--white);
+  border: 1px solid var(--gray-medium);
+  border-radius: 10px;
+  text-align: center;
+  color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  outline: none;
+  font-size: 30px !important;
+  font-weight: bold;
+}
+
+.verify-input:focus {
+  border-color: var(--info);
+  box-shadow: 0 0 0 3px rgba(0, 91, 172, 0.2);
+}
+
+.verify-input.error {
+  border-color: var(--error) !important;
+  box-shadow: none !important;
+}
+
+.resend-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  align-self: flex-end;
+}
+
+.timer-text,
+.resend-code {
+  font-size: 14px;
+  color: var(--gray-dark);
+}
+
+.resend-code {
+  text-decoration: underline;
+  cursor: pointer;
+  user-select: none;
+  font-weight: normal;
+  transition: color 0.2s ease, font-weight 0.2s ease;
+}
+.resend-code:hover {
+  color: var(--text);
+  font-weight: bold;
+}
+
+.outer-wrapper.scrollable-step3-content {
+  overflow-y: auto; 
+  padding: 70px 30px 30px 30px;
+  -webkit-overflow-scrolling: touch; 
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+  flex-grow: 1;
+}
+
+.outer-wrapper.scrollable-step3-content::-webkit-scrollbar {
+  display: none;
+}
+
+.label-birth,
+.label-gender,
+.label-job {
+  font-size: 18px !important;
+  font-weight: bold;
+  margin-bottom: 0 !important;
+}
+.input-birth,
+.input-job {
+  width: 100%;
+  height: 64px;
+  padding: 0 12px;
+  font-size: 14px;
+  border: 1px solid var(--gray-medium);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-birth:focus,
+.input-job:focus {
+  border-color: var(--info);
+  box-shadow: 0 0 0 3px rgba(0, 91, 172, 0.2);
+  outline: none;
+}
+
+.job-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.job-input input {
+  width: 100%;
+  background-color: #FFFFFF;
+  cursor: pointer;
+}
+
+.job-input img {
+  position: absolute;
+  top: 16px;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.job-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 4px;
+  padding: 0;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  background-color: #fff;
+  z-index: 10;
+  list-style: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: none;
+}
+
+.job-dropdown li {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+}
+
+.job-dropdown li:hover {
+  background-color: #F4F4F4;
+}
+
+#birth-error,
+#gender-error,
+#job-error {
+  font-size: 12px;
+  color: var(--error);
+  margin-top: -10px;
+}
+.gender-group {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+.gender-btn {
+  width: calc(50% - 10px);
+  height: 44px;
+  background: var(--white);
+  border: 1px solid var(--soft-gray);
+  border-radius: 10px;
+  font-size: 16px;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.gender-btn:hover {
+  background-color: #FFFBEA;
+  color: var(--text);
+  border: 2px solid var(--primary);
+  font-weight: bold;
+}
+
+.gender-btn.selected {
+  background-color: #FFFBEA;
+  color: var(--text);
+  border: 2px solid var(--primary);
+  font-weight: bold;
+}
+
+/* =======================
+   Step 4: 스타일·카테고리 선택
+======================= */
+.scrollable-step4-content {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-y: auto; 
+  padding: 40px 30px 30px 30px;
+  -webkit-overflow-scrolling: touch; 
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+  flex-grow: 1;
+}
+
+.scrollable-step4-content::-webkit-scrollbar {
+  display: none;
+}
+
+.signup-form-area.step4 .section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.subtext {
+  margin-left: auto;
+  color: var(--error);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.signup-form-area.step4 .style-group,
+.signup-form-area.step4 .category-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+.signup-form-area.step4 .option-btn {
+  width: calc(25% - 8px);
+  height: 38px;
+  background: var(--white);
+  border: 1px solid var(--gray-medium);
+  border-radius: 90px;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap; 
+}
+
+.signup-form-area.step4 .option-btn:hover,
+.signup-form-area.step4 .option-btn.selected {
+  background-color: #FFFBEA;
+  color: var(--text);
+  border: 2px solid var(--primary);
+  font-weight: bold;
+}
+
+.signup-form-area.step4 #style-error,
+.signup-form-area.step4 #category-error {
+  font-size: 12px;
+  color: var(--error);
+  margin-top: -15px;
+}
+
+.signup-form-header.step5 .title-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.signup-form-header.step5 .signup-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0 0 8px 0; 
+}
+
+.signup-form-area.step5 .signup-subtitle {
+  font-size: 16px;
+  color: var(--gray-dark);
+  margin: 0;
+}
+
+.step5-verify-btn {
+  height: 44px;
+  font-size: 16px;
+  font-weight: 400;
+  background: var(--gray-light);
+  color: var(--text);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 20px auto;
+  width: 470px;
+}
+
+.step5-verify-btn:hover {
+  background: var(--primary);
+  font-weight: bold;
+}

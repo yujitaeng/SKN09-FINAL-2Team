@@ -1,0 +1,238 @@
+body {
+  background: #f5f5f8;
+  font-family: 'Spoqa Han Sans Neo', 'sans-serif';
+  margin: 0;
+  min-height: 100vh;
+}
+
+.center-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  justify-content: center;
+}
+
+.talk-card {
+  width: 340px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 22px 22px 20px 22px;
+  margin: 30px auto 5px;
+  font-size: 18px;
+  color: #2e2e2e;
+  font-weight: 500;
+  line-height: 1.6;
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.step-card {
+  width: 340px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 22px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s;
+  margin-right: auto;
+  margin-left: 0;
+  position: relative;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(25px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+.step-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #2e2e2e;
+  margin-bottom: 4px;
+}
+
+.step-question {
+  font-size: 16px;
+  color: #2e2e2e;
+  font-weight: 400;
+}
+
+.step-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.step-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #FFF;
+  font-size: 15px;
+  font-weight: 400;
+  cursor: pointer;
+  border: 1.2px solid #E0E0E0;
+  margin-bottom: 0;
+  transition: background-color 0.13s, border 0.13s;
+  box-sizing: border-box;
+  position: relative;
+  color: #666666;
+}
+
+.step-card .step-options .step-option {
+  margin-top: 5px !important;
+}
+
+.step-option.skip-option {
+  margin-top: 7px !important;
+}
+
+.step-option.selected,
+.step-option:hover {
+  background: #fffde8;
+  border: 1.5px solid #ffe900;
+}
+
+.step-option input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  border: 2px solid #E0E0E0;
+  background: #fff;
+  border-radius: 5px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  transition: border-color 0.13s, background-color 0.13s;
+  display: inline-block;
+}
+.step-option input[type="checkbox"]:checked {
+  background: #ffe900;
+  border: 2px solid #ffe900;
+}
+.step-option input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: -1px;
+  width: 6px;
+  height: 12px;
+  border: solid #ffffff;
+  border-width: 0 2.2px 2.2px 0;
+  transform: rotate(45deg);
+  display: block;
+}
+.step-option input[type="checkbox"]:focus {
+  box-shadow: 0 0 0 2px #ffe90044;
+}
+
+.step-option input[type="radio"] {
+  accent-color: #ffe900;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.step-next-btn {
+  width: 100%;
+  border: none;
+  background: #F5F5F8;
+  color: #2e2e2e;
+  font-size: 16px;
+  border-radius: 10px;
+  padding: 12px 0;
+  cursor: pointer;
+  margin-top: 12px;
+  box-shadow: none;
+  transition: background-color 0.16s;
+}
+.step-next-btn:hover { 
+  background: #ffe600; 
+  font-weight: 600;
+}
+
+#stepper-box {
+  max-width: 420px;
+  margin: 48px auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.file-upload-form { width: 100%; }
+.file-dropzone {
+  min-height: 90px;
+  border: 2px dashed #E0E0E0;
+  border-radius: 14px;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 16px 0 14px 0;
+  font-size: 16px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.file-dropzone:hover { 
+  border: 2px solid #ffe900; 
+  background: #FFFDE7;
+}
+
+.file-drop-content {
+  text-align:center; 
+  color:#666666; 
+  font-size:15px;
+}
+
+.file-drop-text {
+  font-weight: 500;
+}
+
+.file-hint { 
+  color: #666666; 
+  font-size:12px; 
+  font-weight: 400;
+}
+
+.file-actions { 
+  display: flex; 
+  justify-content: space-between; 
+  width: 92%; 
+  gap: 10px; 
+}
+
+.skip-btn {
+  flex: 1 1 0;
+  background: #fff;
+  color: #888;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 15px;
+  cursor: pointer;
+  transition: border 0.13s, color 0.13s;
+}
+.skip-btn:hover { border: 1.5px solid #ffe900; color: #ffe900; }
+
+.step-card-file .step-next-btn:hover { background: #ffe900; }
+
+.file-dropzone.error {
+  border-color: #EB1C24 !important;
+  border-style: dashed !important;
+}
+
+.file-drop-error {
+  color: #EB1C24;
+  font-size: 12px;
+  margin: 5px 0 0 0;
+  min-height: 16px;
+}

@@ -1,0 +1,364 @@
+body {
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  margin: 0;
+  background-color: #F5F5F8;
+}
+
+.layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mypage-container {
+  flex-grow: 1;
+  padding: 48px 64px;
+  max-width: 1600px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  overflow-y: scroll;
+}
+
+.mypage-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.mypage-subtitle {
+  font-size: 18px;
+  color: #666;
+  margin-top: 0;
+  margin-bottom: 40px;
+}
+
+.mypage-grid {
+  display: flex;
+  gap: 32px;
+}
+
+@media (max-width: 768px) {
+  .profile-section {
+    width: 100%;
+  }
+}
+
+.profile-section {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.profile-content-horizontal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.profile-image-horizontal {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 25px;
+  margin-bottom: 20px;
+}
+
+.profile-info-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+  margin-top: 15px;
+}
+
+.profile-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px; 
+  width: 320px;
+  text-align: center;
+  margin: 0; 
+}
+
+.profile-image {
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+}
+
+.profile-name {
+  font-weight: bold;
+  font-size: 18px;
+  margin: 0;
+}
+
+.profile-email {
+  color: #666;
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.tag {
+  background: #F5F5F8;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #2E2E2E;
+}
+
+a {
+  text-decoration: none;
+}
+
+
+.edit-btn {
+  border: 1px solid #E0E0E0;
+  color: #2E2E2E;
+  background: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%; 
+  margin: 0 auto;
+  display: block;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: #FFE900; 
+  color: #2E2E2E;
+  font-weight: bold;
+  border-color: #FFE900;
+}
+
+.edit-btn:active {
+  background-color: #FFE900; 
+  color: #2E2E2E;
+  font-weight: bold;
+  transform: translateY(1px);
+  border-color: #FFE900;
+}
+
+.like-section {
+  width: 600px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.like-block {
+  width: 100%;
+  max-width: 100%;   
+  border-radius: 16px;
+  overflow: visible;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  margin-bottom: 24px;
+}
+
+.like-block:hover {
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12); 
+  border-radius: 16px; 
+}
+
+.like-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding: 20px 24px;
+  border-radius: 16px;
+  cursor: pointer;
+  width: 100%; 
+  box-sizing: border-box;
+}
+
+
+.like-card.selected {
+  box-shadow: none;
+}
+
+/* 펼쳐진 상태 */
+.like-block.active .like-card {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.like-row {
+  display: flex;
+  justify-content: space-between; 
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap; 
+}
+
+.like-count {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.left {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px; 
+}
+
+.like-title-text {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+}
+
+.like-tags {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.like-tags span {
+  font-size: 14px;
+  background: #F5F5F8;
+  padding: 4px 10px;
+  border-radius: 10px;
+  margin-right: 6px;
+  color: #666;
+}
+
+.like-meta {
+  font-size: 13px;
+  color: #888;
+}
+
+.product-scroll-wrapper {
+  background: #E0E0E0;
+  padding: 16px 20px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  overflow-x: auto;    
+  overflow-y: hidden;
+  white-space: nowrap;  
+}
+
+.product-scroll-wrapper.hidden {
+  display: none;
+}
+
+.card-wrapper {
+  display: flex; 
+  gap: 12px;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  width: max-content; 
+}
+
+.product-card {
+  width: 156px;
+  min-width: 156px;
+  border-radius: 12px;
+  font-family: 'Spoqa Han Sans Neo', sans-serif;
+  background: #FFFFFF;
+  padding: 12px;
+  flex-shrink: 0;
+}
+
+.product-card:hover {
+  background-color: #F5F5F8;
+}
+
+.image-wrapper {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f6f6f6;
+}
+
+.image-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.product-info {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 2px;
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #2E2E2E;
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+  white-space: normal;
+  height: auto;
+}
+
+.product-card a {
+  text-decoration: none;
+  color: inherit;
+} 
+
+@media (max-width: 1024px) {
+  .mypage-container {
+    padding: 24px;
+  }
+  .card-wrapper {
+    flex-direction: row;
+  }
+}

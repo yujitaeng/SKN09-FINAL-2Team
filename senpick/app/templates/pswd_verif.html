@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>이메일 인증</title>
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'css/slide.css' %}">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pswd.css' %}">
+  <link rel="stylesheet" href="https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css">
+  <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css' rel='stylesheet' type='text/css'>
+  <script src="{% static 'js/slide.js' %}" defer></script>
+  <script src="{% static 'js/pswd_verif.js' %}" defer></script>
+</head>
+<body>
+  {% comment %} <input id="hidden-input" type="text" maxlength="5" inputmode="numeric" pattern="\d*" autocomplete="one-time-code" tabindex="-1"/> {% endcomment %}
+  <div class="background">
+    <!-- 왼쪽 카드 (배경 역할만) -->
+    <div class="left-card">
+      <div class="logo-wrapper">
+        <img src="{% static 'images/senpick_logo.svg' %}" alt="Senpick 로고" class="logo">
+      </div>
+      <div class="step-indicator">
+        <span class="dot active"></span>
+        <span class="dot active"></span>
+        <span class="dot"></span>
+      </div>
+      <div class="outer-pswd-wrapper">
+        <div class="pswd-wrapper">
+          <div class="text-block">
+            <h2 class="main-title">이메일 인증</h2>
+            <p class="sub-title">이메일로 받은 인증번호 5자리를 입력해주세요.</p>
+          </div>
+          <div class="verification-input-group">
+            <input type="text" maxlength="1" class="verify-input" id="code1" autofocus="">
+            <input type="text" maxlength="1" class="verify-input" id="code2">
+            <input type="text" maxlength="1" class="verify-input" id="code3">
+            <input type="text" maxlength="1" class="verify-input" id="code4">
+            <input type="text" maxlength="1" class="verify-input" id="code5">
+          </div>
+
+          <div id="verif-error-msg" class="error-message"></div>
+          
+          <div class="verif-timer-group">
+            <div id="timer-text">00:00</div>
+            <div id="resend-text">인증코드 재전송</div>
+          </div>
+          
+          <button class="verif-comp-btn">이메일 인증 완료</button>
+        </div>
+      </div>
+    </div>
+    <!-- 슬라이드 포함 -->
+    {% include "slide.html" %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,172 @@
+{% load static %}
+<div class="sidebar" id="sidebar">
+  <!-- 메인: 검색, New Chat, Chat, 채팅리스트 -->
+  <div class="sidebar-main">
+    <!-- 상단 헤더 (브랜드/토글) -->
+    <div class="sidebar-header">
+      <img src="{% static 'images/top_logo.svg' %}" alt="Senpick Logo" class="logo-img">
+      <button class="menu-btn tooltip" id="sidebar-toggle-btn">
+        <span class="tooltip-text">사이드바 접기</span>
+        <img src="{% static 'images/sidebar_toggle.png' %}" alt="사이드바 토글">
+      </button>
+    </div>
+    <div class="divider-line"></div>
+    <label class="search-row" id="sidebar-search-row">
+      <img src="{% static 'images/search.svg' %}" alt="검색">
+      <input id="sidebarSearch" type="text" placeholder="검색어를 입력해주세요.">
+    </label>
+    <div class="menu-btn-row" id="newchat-btn" onclick="location.href=`{% url 'chat' %}`">
+      <img src="{% static 'images/plus.svg' %}" alt="새 채팅">
+      <span class="btn-label">New Chat</span>
+    </div>
+    <div class="menu-btn-row selected" id="chat-btn">
+      <img src="{% static 'images/chat_logo.png' %}" alt="Chat">
+      <span class="btn-label">Chat</span>
+    </div>
+    {% if request.session.type != "guest" %}
+    <ul class="chat-list"></ul>
+    {% else %}
+    <div class="guest-message">
+      <div><span>아직 회원이 아니시군요!</span></div>
+      <div><span>지금 이 대화는 저장되지 않아요.</span></div>
+      <p>로그인하시면, 지난 추천을 다시 꺼내보고, 선물 히스토리를 한눈에 확인할 수 있어요.</p>
+      <p>센픽이 그 모든 선물들과 담긴 마음들을 따뜻하게 기억해둘게요.</p>
+    </div>
+    {% endif %}
+    {% if request.session.is_birth %}
+    <div class="menu-btn-row" id="gift-btn" onclick="location.href=`{% url 'birth' %}`">
+      <img src="{% static 'images/gift.svg' %}" alt="Gift">
+      <span class="btn-label">Happy Birthday</span>
+    </div>
+    {% endif %}
+  </div>
+  <!-- 하단: 마이페이지/브랜드바 -->
+  <div class="sidebar-bottom">
+    <div class="divider-line"></div>
+    <div class="brand-bar">
+      <a href="{% url 'mypage' %}" style="display: flex; align-items: center; text-decoration: none;">
+        {% if request.session.type == "guest" %}
+        <img src="{% static 'images/bottom_logo_white.svg' %}" alt="Brand" class="profile-img">
+        {% else %}
+          {% if request.session.profile_image %}
+            <img src="{{ request.session.profile_image }}" alt="프로필 이미지" class="profile-img">
+          {% else %}
+            <img src="{% static 'images/bottom_logo.svg' %}" alt="프로필" class="profile-img">
+          {% endif %}
+        {% endif %}
+        <span class="brand-label">{{request.session.nickname}}</span>
+      </a>
+      <a href="{% url 'logout' %}" class="brand-link tooltip">
+        <span class="tooltip-text">
+          {% if request.session.nickname|default:"게스트" == "게스트" %}로그인하기{% else %}로그아웃{% endif %}
+        </span>
+        <img src="{% static 'images/logout.svg' %}" alt="로그아웃">
+      </a>
+    </div>
+  </div>
+</div>
+<script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    const searchRow = document.getElementById('sidebar-search-row');
+    const chatHistoryEl = document.querySelector('.chat-list');
+
+    if (chatHistoryEl) {
+      // 채팅 히스토리 가져오기
+      fetch("/chat/history")
+        .then(response => response.json())
+        .then(data => {
+          if (data?.chatlist) {
+            renderChatList(data.chatlist);
+          }
+        })
+        .catch(error => console.error('Error fetching chat history:', error));
+
+      
+      // chatHistoryEl.firstElementChild?.classList.add('selected');
+    }
+
+    // 접힘/펼침 상태에 따른 토글 버튼 표시
+    function showToggleIfOpen() {
+      toggleBtn.style.display = sidebar.classList.contains('mini') ? 'none' : '';
+    }
+
+    // 채팅 기록 불러오기 및 렌더링
+    fetch("/chat/history")
+      .then(res => res.ok ? res.json() : Promise.reject("채팅 기록을 가져오는 데 실패했습니다."))
+      .then(data => {
+        if (data && Array.isArray(data.chat_history)) {
+          const chatElements = data.chat_history.map(chat => {
+            const li = document.createElement('li');
+            const span = document.createElement('span');
+            span.className = 'chat-title';
+            span.textContent = chat.title;
+
+            li.appendChild(span);
+
+            return li;
+          });
+
+          chathistory.append(...chatElements);
+          chathistory.firstElementChild?.classList.add('selected');
+        }
+      })
+      .catch(error => console.error("채팅 기록을 가져오는 중 오류 발생:", error));
+
+  // 초기 상태 설정
+  showToggleIfOpen();
+  document.querySelector('.logo-img').addEventListener('click', function() {
+    if (sidebar.classList.contains('mini')) {
+      sidebar.classList.remove('mini');
+      showToggleIfOpen();
+    }
+  });
+  searchRow.addEventListener('click', function() {
+    if (sidebar.classList.contains('mini')) {
+      sidebar.classList.remove('mini');
+      sidebarSearch.focus();
+      showToggleIfOpen();
+    }
+  });
+  toggleBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    sidebar.classList.add('mini');
+    showToggleIfOpen();
+  });
+
+  // blur 시 검색
+  sidebarSearch.addEventListener('blur', function() {
+    triggerSearch();
+  });
+
+  sidebarSearch.addEventListener('keyup', function() {
+    if (sidebarSearch.value.trim() === '') {
+      triggerSearch();
+    }
+  });
+
+  // Enter 키 눌렀을 때 검색
+  sidebarSearch.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();  // form submit 방지 (있다면)
+      triggerSearch();
+    }
+  });
+
+  // 검색 수행 함수 (공통)
+  function triggerSearch() {
+    fetch(`/chat/history?query=${encodeURIComponent(sidebarSearch.value)}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data && Array.isArray(data.chatlist)) {
+          renderChatList(data.chatlist);
+        } else {
+          console.error("채팅 기록을 가져오는 데 실패했습니다.");
+        }
+      })
+      .catch(error => console.error('Error fetching chat history:', error));
+  }
+
+  const observer = new MutationObserver(showToggleIfOpen);
+  observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+</script>
