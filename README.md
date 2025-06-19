@@ -18,24 +18,7 @@
 >      <td align=center><b>유지은</b></td>
 >       <td align=center><b>허정윤</b></td>
 >    </tr>
->    <tr>
->      <td align="center">
->          <img alt="Image" width="200px;" alt="김우중"/>
->      <td align="center">
->          <img alt="Image"  width="200px;" alt="박주은"/>
->      </td>
->      <td align="center">
->        <img alt="Image"  width="200px;"alt="서예찬" />
->      </td>
->      <td align="center">
->        <img alt="Image"  width="200px;" alt="유지은"/>
->      </td>
->       <td align="center">
->        <img alt="Image"  width="200px; alt="허정윤"/>
->      </td>
-  
-  
->    </tr>
+>    
 >    <tr>
 >      <td><a href="https://github.com/YUJINDL01"><div align=center>@kwj9942</div></a></td>
 >      <td><a href="https://github.com/syc9811"><div align=center>@pprain1999</div></a></td>
