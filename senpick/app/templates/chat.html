@@ -304,22 +304,30 @@
                   chatHistory.appendChild(botMsgDiv);
 
                   function read() {
-                      reader.read().then(({ done, value }) => {
-                          if (done) {
-                              console.log('Stream complete');
-                              chatHistory.scrollTop = chatHistory.scrollHeight;
-                              return;
-                          }
+                    reader.read().then(({ done, value }) => {
+                      if (done) {
+                        console.log('Stream complete');
+                        return;
+                      }
 
-                          const chunk = decoder.decode(value, { stream: true });
-                          console.log('Received chunk:', chunk);
+                      const chunk = decoder.decode(value, { stream: true });
+                      console.log('Received chunk:', chunk);
 
-                          botMsgDiv.innerHTML += chunk;
+                      // 스트리밍 효과: 한 글자씩 출력
+                      let index = 0;
+                      const interval = setInterval(() => {
+                        if (index < chunk.length) {
+                          botMsgDiv.innerHTML += chunk[index++];
                           chatHistory.scrollTop = chatHistory.scrollHeight;
+                        } else {
+                          clearInterval(interval);
+                          // 다음 chunk 요청
                           setTimeout(() => {
-                            read(); // 계속 읽기
+                            read();
                           }, 50);
-                      });
+                        }
+                      }, 20); // 글자 간 간격(ms)
+                    });
                   }
 
                   read();
@@ -522,24 +530,30 @@
                   chatHistory.appendChild(botMsgDiv);
 
                   function read() {
-                      reader.read().then(({ done, value }) => {
-                          if (done) {
-                              console.log('Stream complete');
-                              const loadingDiv = document.getElementById('chat-loading-spin');
-                              return;
-                          }
+                    reader.read().then(({ done, value }) => {
+                      if (done) {
+                        console.log('Stream complete');
+                        return;
+                      }
 
-                          const chunk = decoder.decode(value, { stream: true });
-                          console.log('Received chunk:', chunk);
+                      const chunk = decoder.decode(value, { stream: true });
+                      console.log('Received chunk:', chunk);
 
-                          // 화면에 실시간 추가
-                          botMsgDiv.innerHTML += chunk;
-
+                      // 스트리밍 효과: 한 글자씩 출력
+                      let index = 0;
+                      const interval = setInterval(() => {
+                        if (index < chunk.length) {
+                          botMsgDiv.innerHTML += chunk[index++];
                           chatHistory.scrollTop = chatHistory.scrollHeight;
+                        } else {
+                          clearInterval(interval);
+                          // 다음 chunk 요청
                           setTimeout(() => {
-                            read(); // 계속 읽기
+                            read();
                           }, 50);
-                      });
+                        }
+                      }, 20); // 글자 간 간격(ms)
+                    });
                   }
 
                   read();
