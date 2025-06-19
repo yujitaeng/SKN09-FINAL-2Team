@@ -133,6 +133,16 @@ def profile_info(request):
         request.session["nickname"] = user.nickname
         request.session["birth"] = user.birth
         request.session["profile_image"] = user.profile_image or ""
+        birth = request.session.get("birth", None)
+        if birth:
+            # 오늘 날짜 → 'MMDD'만 추출
+            today_mmdd = timezone.now().strftime('%m%d')
+
+            # 생일에서 'MMDD'만 추출
+            birth_mmdd = birth[4:] if birth else ''
+
+            is_birth_today = (birth_mmdd == today_mmdd)
+            request.session['is_birth'] = is_birth_today  # 세션에 저장
 
         # 선호 태그 갱신
         UserPrefer.objects.filter(user=user).delete()
