@@ -1,7 +1,7 @@
 # SKN09-FINAL-2Team
-> SK Networks AI Camp 9기
+> SK Networks AI Camp 9기 2팀
 > 
-> 개발기간: 25.04.23 - 25.06.20
+> 프로젝트 기간: 25.04.23 - 25.06.20
 <br>
 
 #  팀 소개
@@ -50,16 +50,44 @@
 # 프로젝트 개요
 
 >### 프로젝트 명
->- **Senpick**:LLM기반 상품 추천 서비스 
+>- **Senpick**:LLM기반 상품 추천 서비스
+>> **Senpick** 은 선물 선택이 막막한 순간, 사용자의 감정과 상황을 이해하고 적절한 선물을 추천하여 고민을 줄여주는 **대화형 상품 추천 서비스**입니다.
+>> 단순한 필터 기반 추천이 아닌, **LLM 기반 대화 흐름을 통해 맞춤형 상황 정보를 추론하고 공감 기반의 추천**을 제공합니다.
 
 >### 목표
->- 대화형 인터페이스를 통해 사용자 입력에서 정서적 뉘앙스를 추론
->- 수집된 사용자의 상황및 수령인 정보를 기반으로 초개인화 추천 리스트 제공
->- 각 상품에 대한 추천 사유 제공으로 신뢰도 향상
->- 빠르고 직관적인 UI/UX로 선물 고민 시간 단축
+>- 대화를 통해 감정과 상황을 파악 
+>- 수집된 정보를 기반으로 개인화 추천 제공
+>-상품에 대한 추천 사유 제공으로 신뢰도 향상
+>- 빠르고 직관적인 UI/UX로 선물 고민 시간 단축
 
 >### 프로젝트 배경
->
+<details>
+>  <summary>관련 기사</summary>
+  
+![10명 중 6명 “OO데이는 커뮤니케이션 도구” - 시사타임즈_page-0001](https://github.com/user-attachments/assets/e880d887-75e4-4579-a0dd-f093c8384af7)
+  
+![파이낸셜뉴스_page-0001](https://github.com/user-attachments/assets/12a3fd04-3e0c-4982-a7d3-2118d1676ead)
+
+![어린이집 보내지도 못하는데…스승의날 선물 고민되는 부모들 _ 연합뉴스_page-0001](https://github.com/user-attachments/assets/d5ad873c-a629-469e-b9dd-ac23fdbe486f)
+  </details>
+
+생일, 기념일, 어버이날, 크리스마스, 입학과 승진 등 선물을 해야 하는 순간은 예상보다 훨씬 자주 찾아옵니다.
+그러나 부담스럽지 않으면서도 진심이 전해지는 선물을 고르는 일은 쉽지 않아,
+매번 고민 끝에 결국 아쉬운 선택에 그치거나, 선물 자체가 스트레스가 되기도 합니다.
+
+대중은 이제 고민 없이 센스 있는 선물을 하고 싶어하며,
+이에 따라 추천 시스템의 필요성이 커지고 있습니다.
+기업들 역시 이러한 흐름에 맞춰 선물 고민을 덜어줄 AI 추천 서비스 개발에 적극적으로 나서고 있습니다.
+
+<p align="center"> <img src="https://github.com/user-attachments/assets/b975715c-e7d0-4217-b708-6df43a59093a" width="600"/><br/> 
+  <img src="https://github.com/user-attachments/assets/214ceb47-7fdc-4d3c-bf7c-a2a0dce0c59d" width="600"/> </p>
+하지만 현재 대부분의 선물 추천 시스템은
+감정이나 관계, 상황 맥락을 제대로 반영하지 못한 채 단순한 조건에만 의존하고 있어
+사용자의 만족도가 낮다는 한계가 있습니다.
+
+이에 저희는 챗봇과의 자연스러운 대화를 통해 사용자의 말투, 맥락, 관계에서 감정 기반 정보를 추출하고 감정과 상황에 어울리는 선물을 제안하며 추천 사유를 제공해 사용자의 공감을 이끌어내고
+이를 통해 신뢰를 확보, 사용자 만족도를 높이는 맞춤형 선물 추천 챗봇을 구현하고자 합니다.
+
 
 
 # 2. 기술 스택
@@ -75,19 +103,67 @@
 | **협업 및 형상관리** | ![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=Discord&logoColor=white) ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white) |
 #  시스템 구성도
 
+![시스템 아키텍처](docs/9기-2팀_시스템아키텍쳐%20FINAL.drawio.png)
+# 요구사항 정의서
+<details>
+ 
 
-#  요구사항 정의서 
 
+![9기-2팀_요구사항 정의서-이미지-0](https://github.com/user-attachments/assets/a139f032-1415-4b36-9c6e-7dbf8d9bcaee)
+
+
+![9기-2팀_요구사항 정의서-이미지-1](https://github.com/user-attachments/assets/f22abc69-620b-4851-a777-b41d96996e51)
+</details>
 
 #  화면설계서
+<details>
+ <summary>화면 설계서 </summary>
+  
+![9기-2팀_화면 설계서_page-0002](https://github.com/user-attachments/assets/6f5ace46-6fb7-4e02-a19a-2360696d8e4e)
+
+![9기-2팀_화면 설계서_page-0016](https://github.com/user-attachments/assets/4165b1bf-2f79-45e3-9b17-ec6f8582d6ee)
+
+![9기-2팀_화면 설계서_page-0017](https://github.com/user-attachments/assets/2a9cf1f9-6e69-4110-a68d-e568e21da911)
+
+![9기-2팀_화면 설계서_page-0019](https://github.com/user-attachments/assets/3b485886-82c3-47fa-b5d8-8f8743afae70)
+
+![9기-2팀_화면 설계서_page-0020](https://github.com/user-attachments/assets/a6cf7b77-dcd6-4caf-bc9e-325d9f3eadfa)
+
+</details>
+
+
+[화면설계서 자세히 보러가기 ](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%ED%99%94%EB%A9%B4%20%EC%84%A4%EA%B3%84%EC%84%9C.pdf)
+
+
 
 #  WBS
 
+![9기-2팀_WBS_page-0001](https://github.com/user-attachments/assets/6d37a57b-b68e-4e07-99eb-06900ed28b2b)
+
 #  테스트 계획 및 결과 보고서 
-<테스트 계획서>
+<details>
+ <summary>테스트 계획 및 결과보고서 </summary> 
+
+### <테스트 계획>
    
-<결과 보고서>
- 
+![9기-2팀_모델 테스트 계획 및 결과 보고서_page-0001](https://github.com/user-attachments/assets/c05cb468-e338-478f-b98a-a61128bd611b)
+  
+![9기-2팀_모델 테스트 계획 및 결과 보고서_page-0002](https://github.com/user-attachments/assets/8c67cb6d-8758-4577-a82e-64c4f7c978d1)
+
+![9기-2팀_모델 테스트 계획 및 결과 보고서_page-0003](https://github.com/user-attachments/assets/e5ffaf14-6440-4354-a32f-edea5be3bc84)
+
+
+   
+### <테스트 결과>
+ ![9기-2팀_모델 테스트 계획 및 결과 보고서_page-0008](https://github.com/user-attachments/assets/88892af8-a4c1-4a91-83fa-f98e31f7bd61)
+![9기-2팀_모델 테스트 계획 및 결과 보고서_page-0009](https://github.com/user-attachments/assets/8760f02a-3fc5-491c-b8b0-83f34b8ec9e2)
+
+
+</details>
+
+[테스트 계획 및 결과 보고서 자세히 보러가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EB%AA%A8%EB%8D%B8%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EA%B3%84%ED%9A%8D%20%EB%B0%8F%20%EA%B2%B0%EA%B3%BC%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf)
+
+
 #  수행결과(테스트/시연 페이지)
 
 
