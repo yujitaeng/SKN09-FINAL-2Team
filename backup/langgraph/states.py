@@ -67,33 +67,33 @@ def robust_json_extract(text: str):
 
 def extract_situation(state, llm=None, prompt_template=None) -> dict:
     try:
-        print("\n==== extract_situation 진입 ====")
+        logging.debug("==== extract_situation 진입 ====")
         chat_str = "\n".join(state["chat_history"][-10:])
         current_info = "\n".join(state["situation_info"])
         prompt = prompt_template.format(chat_history=chat_str, current_info=current_info)
         llm_response = llm.invoke(prompt)
-        print("\n--- [LLM 응답 원문] ---")
-        print(llm_response)
+        logging.debug("--- [LLM 응답 원문] ---")
+        logging.debug(llm_response)
         if hasattr(llm_response, "content"):
             llm_text = llm_response.content
         else:
             llm_text = str(llm_response)
-        print(f"[LLM 최종 텍스트 응답]: {llm_text}")
+        logging.debug(f"[LLM 최종 텍스트 응답]: {llm_text}")
         extracted = robust_json_extract(llm_text)
-        print("--- [파싱 결과] ---")
-        print(extracted)
-        print("-----------------------")
+        logging.debug("--- [파싱 결과] ---")
+        logging.debug(extracted)
+        logging.debug("-----------------------")
         if not isinstance(extracted, dict):
-            print(f"[extract_situation] dict 아님! extracted={extracted}")
+            logging.warning(f"[extract_situation] dict 아님! extracted={extracted}")
             extracted = {}
         for k in state["situation_info"]:
             if extracted.get(k):
                 state["situation_info"][k] = extracted[k]
-        print("==== extract_situation 종료 ====\n")
+        logging.debug("==== extract_situation 종료 ====")
         # 이 함수만 state 전체 반환 (FSM 흐름상 상황정보 누적 때문)
         return state
     except Exception as e:
-        print(f"[extract_situation 전체 예외]: {e}")
+        logging.error(f"[extract_situation 전체 예외]: {e}")
         return state
 
 def is_situation_complete(situation_info: dict, chat_history) -> bool:
