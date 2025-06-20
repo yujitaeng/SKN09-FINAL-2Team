@@ -93,9 +93,19 @@
 <br>
 <br>
 
-## 프로젝트 소개서
-🔗 [프로젝트 소개서 보기 (PDF)](링크)
+## 프로젝트 기획서
+<details>
+ <summary>프로젝트 기획서</summary>
+ 
+ ![9기-2팀_프로젝트기획서_page-0001](https://github.com/user-attachments/assets/4996933b-5a97-44b2-836c-8669b3344a90)
 
+ ![9기-2팀_프로젝트기획서_page-0002](https://github.com/user-attachments/assets/e6fad165-e690-4af1-9151-e543bf5ba737)
+
+ ![9기-2팀_프로젝트기획서_page-0003](https://github.com/user-attachments/assets/d133a12c-8314-46b2-8a02-3f96737cba92)
+
+
+ [프로젝트 기획서 자세히 보기 (PDF)](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EA%B8%B0%ED%9A%8D%EC%84%9C.pdf)
+</details>
 <br>
 <br>
 
@@ -171,12 +181,19 @@
 <br>
 <br>
 
-#  AI/추천 시스템 설계
-
-<br>
-<br>
-
 # 시나리오 설계서
+<details>
+ <summary>시나리오 설계서 </summary>
+ 
+![9기-2팀_시나리오 설계서_page-0001](https://github.com/user-attachments/assets/c2b4f42d-6da5-46f1-886d-23dc60d2cb08)
+
+![9기-2팀_시나리오 설계서_page-0002](https://github.com/user-attachments/assets/0e650787-510e-4f35-84a7-340f006965a4)
+
+![9기-2팀_시나리오 설계서_page-0003](https://github.com/user-attachments/assets/bbaaf75c-836b-4173-a059-85b646fd26d5)
+
+[시나리오 설계서 자세히 보러가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4%20%EC%84%A4%EA%B3%84%EC%84%9C.pdf)
+
+</details>
 
 ### 주요 기능 요약
 
@@ -216,12 +233,26 @@
 
 #  AI/추천 시스템 설계
 
-(시나리오 설계서 pdf 일부 및 링크)
+
 
 사용 모델: OpenAI GPT-4 + 사용자 시나리오 기반 Prompt 설계
 
+<details>
+ <summary>데이터 전처리 결과서 </summary>
+ 
+  ![9기-2팀_데이터전처리-결과서_page-0001](https://github.com/user-attachments/assets/a69f22f0-63e2-462a-ae77-0c7d0621eb2a)
+ 
+  ![9기-2팀_데이터전처리-결과서_page-0002](https://github.com/user-attachments/assets/4f9706f4-3225-4d79-ad11-3401c0d66619)
+  
+  ![9기-2팀_데이터전처리-결과서_page-0003](https://github.com/user-attachments/assets/0de22ee8-1eb5-45cc-9126-2edd51d5cb33)
 
-(데이터 전처리 과정 요약들어가야함)
+
+
+[데이터 전처리 결서 자세히 보러가기 ](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%A0%84%EC%B2%98%EB%A6%AC-%EA%B2%B0%EA%B3%BC%EC%84%9C.pdf)
+
+</details>
+
+
 
 
 추천 알고리즘 / 다중 에이전트 설계
@@ -231,7 +262,7 @@
 
 ## AI 학습 결과서
 
-🔗 [AI 학습 결과서 보기 (PDF)](9기-2팀_인공지능 학습 결과서.pdf)
+ [AI 학습 결과서 보기 (PDF)](9기-2팀_인공지능 학습 결과서.pdf)
 
 <br>
 <br>
@@ -264,7 +295,7 @@
 
 #  수행결과(테스트/시연 페이지)
 
-[시연 영상 (YouTube)](링크)
+[시연 영상](링크)
 
 <br>
 
