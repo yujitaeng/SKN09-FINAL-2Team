@@ -257,19 +257,8 @@
 
 추천 알고리즘 / 다중 에이전트 설계
 
-<br>
-
-
-## AI 학습 결과서
-
- [AI 학습 결과서 보기 (PDF)](9기-2팀_인공지능 학습 결과서.pdf)
-
-<br>
-<br>
-
-#  테스트 계획 및 결과 보고서 
 <details>
- <summary>테스트 계획 및 결과보고서 </summary> 
+ <summary>모델 테스트 계획 및 결과보고서 </summary> 
 
 ### <테스트 계획>
    
@@ -291,16 +280,78 @@
 </details>
 
 <br>
+
+
+## AI 학습 결과서
+<details>
+ <summary>AI 학습 결과서</summary>
+ 
+
+ ![9기-2팀_인공지능 학습 결과서_page-0001](https://github.com/user-attachments/assets/83970e3d-2f81-4c2c-931e-9163d5f7729a)
+
+![9기-2팀_인공지능 학습 결과서_page-0002](https://github.com/user-attachments/assets/15324d7b-57f6-4196-bc39-6ef017060940)
+
+![9기-2팀_인공지능 학습 결과서_page-0003](https://github.com/user-attachments/assets/29977c9d-cfff-440f-9f84-d849d9234b3c)
+
+![9기-2팀_인공지능 학습 결과서_page-0004](https://github.com/user-attachments/assets/841a565d-95f5-45cd-94ec-fd04dd5f7820)
+
+ [AI 학습 결과서 자세히 보기 ](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5%20%ED%95%99%EC%8A%B5%20%EA%B2%B0%EA%B3%BC%EC%84%9C.pdf)
+</details>
+<br>
 <br>
 
-#  수행결과(테스트/시연 페이지)
+#  시스템 테스트 계획 및 결과 보고서 
+<details>
+ <summary>테스트 계획 및 결과보고서 </summary> 
+
+### <테스트 계획>
+
+![9기-2팀_시스템 테스트 계획 및 결과서_page-0001](https://github.com/user-attachments/assets/4b23df85-425c-41e3-8e7a-6db68db0fe90)
+
+
+<br>
+   
+### <테스트 결과>
+
+![9기-2팀_시스템 테스트 계획 및 결과서_page-0003](https://github.com/user-attachments/assets/f7eeb14e-a810-493e-8f57-87c8040fe770)
+
+![9기-2팀_시스템 테스트 계획 및 결과서_page-0004](https://github.com/user-attachments/assets/ffa38123-df94-4e30-bad8-53466a2161fc)
+
+![9기-2팀_시스템 테스트 계획 및 결과서_page-0005](https://github.com/user-attachments/assets/f42d9fac-0101-4eaf-b32f-17d1fcb7b270)
+
+[시스템 테스트 계획 및 결과 보고서 자세히 보러가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EC%8B%9C%EC%8A%A4%ED%85%9C%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EA%B3%84%ED%9A%8D%20%EB%B0%8F%20%EA%B2%B0%EA%B3%BC%EC%84%9C.pdf)
+
+</details>
+
+<br>
+<br>
+
+#  결론
+
+## 시연 영상
 
 [시연 영상](링크)
 
 <br>
 
 ## 결과 및 사용자 피드백
-[사용자 테스트 설문 결과](링크)
+[사용자 테스트 설문 결과]
+
+![image](https://github.com/user-attachments/assets/1888b47e-33e8-48c1-a84a-3b2f708cdbe0)
+
+
+[평가]
+
+![image](https://github.com/user-attachments/assets/a1bc90e7-c62d-46ae-aea3-fbeae3387abf)
+
+[기대 효과]
+
+![image](https://github.com/user-attachments/assets/878c4c7c-bde9-4f78-827c-471d7728ce60)
+
+[확장 가능성]
+
+![image](https://github.com/user-attachments/assets/c9991fa9-9c44-4a3d-98bf-426c42705560)
+
 
 <br>
 <br>
