@@ -143,7 +143,7 @@
 | 모델 테스트 계획 및 결과서 | 주요 기능 테스트 및 성능 평가 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EB%AA%A8%EB%8D%B8%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EA%B3%84%ED%9A%8D%20%EB%B0%8F%20%EA%B2%B0%EA%B3%BC%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf) |
 | 시스 테스트 계획 및 결과서 | 주요 기능 테스트 및 성능 평가 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EC%8B%9C%EC%8A%A4%ED%85%9C%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EA%B3%84%ED%9A%8D%20%EB%B0%8F%20%EA%B2%B0%EA%B3%BC%EC%84%9C.pdf) |
 | 데이터 전처리 결과서 | 수집 및 정제 과정 설명 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%A0%84%EC%B2%98%EB%A6%AC-%EA%B2%B0%EA%B3%BC%EC%84%9C.pdf) |
-| 프로젝트 ppt | 전체 프로젝트 설명 | [ 바로가기]() |
+| 프로젝트 ppt | 전체 프로젝트 설명 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0_2%ED%8C%80_%EC%B5%9C%EC%A2%85PPT.pptx) |
 
 
 
@@ -348,7 +348,8 @@
 
 ## 시연 영상
 
-[시연 영상](링크)
+
+[시연 영상](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/2%ED%8C%80%20%EC%B5%9C%EC%A2%85%20%EC%8B%9C%EC%97%B0%20%EC%98%81%EC%83%81.mp4)
 
 <br>
 
