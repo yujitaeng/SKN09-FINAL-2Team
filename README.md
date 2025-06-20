@@ -53,7 +53,7 @@
 - [3. 기술 스택](#3-기술-스택)
 - [4. 기능 및 화면 설계](#4-기능-및-화면-설계)
 - [5. 데이터 설계](#5-데이터-설계)
-- [6. AI추천-시스템-설계](#6-AI추천-시스템-설계)
+- [6. AI추천-시스템-설계](#6-ai추천-시스템-설계)
 - [7. 결론](#7-결론)
 - [8. 회고](#8-회고)
  
@@ -220,7 +220,8 @@
 - 6개의 업무 구분과 20개의 요구사항 ID를 정의
 
 
-![image](https://github.com/user-attachments/assets/18f990bc-725b-4b0d-b7a9-08beef29ef35)
+![9기_2팀_최종PPT pptx](https://github.com/user-attachments/assets/808fe021-22d8-4953-bd97-a57b4e3e1836)
+
 
 <details>
 
@@ -236,14 +237,11 @@
 
 ## UI/UX 설계
 
-![image](https://github.com/user-attachments/assets/b8db9918-0844-4dce-a760-d09e2b0296c8)
+![9기_2팀_최종PPT pptx (1)](https://github.com/user-attachments/assets/03399e97-12c5-41da-ac51-fc1cb06d56cf)
 
+![9기_2팀_최종PPT pptx (2)](https://github.com/user-attachments/assets/3cd16fb7-243d-47ed-bd51-6e6bab5338f0)
 
-![image](https://github.com/user-attachments/assets/73510db0-5a1d-426d-96bd-433d13c74f4b)
-
-![image](https://github.com/user-attachments/assets/801e08ae-e30e-4c45-8dc0-0c6ef713a12b)
-
-
+![9기_2팀_최종PPT pptx (3)](https://github.com/user-attachments/assets/9179a272-fdd4-4731-8b4c-d4fc6ed555f1)
 
 <details>
  <summary>시나리오 설계서 </summary>
@@ -281,11 +279,11 @@
 <br>
 
 # 5. 데이터 설계
-![image](https://github.com/user-attachments/assets/5d0d1a9d-69e6-4bbb-af3d-877fa8ab1c22)
+![9기_2팀_최종PPT pptx (4)](https://github.com/user-attachments/assets/39cda04a-7f3b-42ba-bd36-8f719bbbd5d2)
+
 
 **[ERD]**
-
-![image](https://github.com/user-attachments/assets/3db1089e-9b66-48da-9db0-ac1d02221eaa)
+![9기_2팀_최종PPT pptx (5)](https://github.com/user-attachments/assets/1265585e-6557-4bd1-a5de-b34648259f88)
 
 
 <details>
@@ -309,12 +307,14 @@
 #  6. AI/추천 시스템 설계
 
 - 사용 모델: OpenAI GPT-4 + 사용자 시나리오 기반 Prompt 설계
-  
-![image](https://github.com/user-attachments/assets/f38d0a2b-26b8-494d-92d1-a5a6dfdc6a36)
+
+![9기_2팀_최종PPT pptx (6)](https://github.com/user-attachments/assets/d856449f-4f1b-46e2-9430-e74617a27bb1)
+
 
 **[모델 구조]**
+![9기_2팀_최종PPT pptx (7)](https://github.com/user-attachments/assets/0b6c3562-8a69-4e33-b64a-e051b42dba12)
 
-![image](https://github.com/user-attachments/assets/539cc254-3f4b-4c52-b7c0-1e8114f6bc0f)
+
 
 
 
@@ -342,9 +342,10 @@
 
 **[Agent 구조]**
 
-![image](https://github.com/user-attachments/assets/d2c21802-e0f6-426e-80a8-d28846c6574d)
+![9기_2팀_최종PPT pptx (8)](https://github.com/user-attachments/assets/29c6ac42-b9ee-4186-81e4-15cccdfc43fa)
 
-![image](https://github.com/user-attachments/assets/c37e073e-6275-4332-941b-d4fb289872da)
+![9기_2팀_최종PPT pptx (9)](https://github.com/user-attachments/assets/a603709c-70e7-4dd0-97d0-06c53a05756f)
+
 
 
 <br>
