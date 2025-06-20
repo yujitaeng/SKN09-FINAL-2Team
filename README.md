@@ -108,7 +108,6 @@
 <br>
 <br>
 
-## 프로젝트 기획서
 <details>
  <summary>프로젝트 기획서</summary>
  
@@ -137,13 +136,14 @@
 | 문서명 | 설명 | 링크 |
 |--------|------|------|
 | 프로젝트 기획서 | 서비스의 기획 배경 및 시장 문제 정의 |  [ 바로가기 ](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EA%B8%B0%ED%9A%8D%EC%84%9C.pdf) |
+| 프로젝트 ppt | 전체 프로젝트 설명 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0_2%ED%8C%80_%EC%B5%9C%EC%A2%85PPT.pptx) |
 | 요구사항 정의서 | 기능 명세, 비기능 요건 등 포함 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%A0%95%EC%9D%98%EC%84%9C.pdf)|
 | 화면 설계서 | 실제 페이지 흐름과 UI 구조 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%ED%99%94%EB%A9%B4%20%EC%84%A4%EA%B3%84%EC%84%9C.pdf) |
 | 데이터베이스 설계서 | 테이블 구조 및 관계도 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%E1%84%80%E1%85%B5-2%E1%84%90%E1%85%B5%E1%86%B7_%E1%84%83%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%90%E1%85%A5%E1%84%87%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%89%E1%85%B3%E1%84%89%E1%85%A5%E1%86%AF%E1%84%80%E1%85%A8%E1%84%89%E1%85%A5.pdf)|
 | 모델 테스트 계획 및 결과서 | 주요 기능 테스트 및 성능 평가 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EB%AA%A8%EB%8D%B8%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EA%B3%84%ED%9A%8D%20%EB%B0%8F%20%EA%B2%B0%EA%B3%BC%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf) |
 | 시스 테스트 계획 및 결과서 | 주요 기능 테스트 및 성능 평가 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EC%8B%9C%EC%8A%A4%ED%85%9C%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EA%B3%84%ED%9A%8D%20%EB%B0%8F%20%EA%B2%B0%EA%B3%BC%EC%84%9C.pdf) |
 | 데이터 전처리 결과서 | 수집 및 정제 과정 설명 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%A0%84%EC%B2%98%EB%A6%AC-%EA%B2%B0%EA%B3%BC%EC%84%9C.pdf) |
-| 프로젝트 ppt | 전체 프로젝트 설명 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0_2%ED%8C%80_%EC%B5%9C%EC%A2%85PPT.pptx) |
+
 
 
 
