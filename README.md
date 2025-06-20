@@ -36,11 +36,11 @@
       </td>
       </tr>
     <tr>
-      <td><a href="https://github.com/YUJINDL01"><div align=center>@kwj9942</div></a></td>
-      <td><a href="https://github.com/syc9811"><div align=center>@pprain1999</div></a></td>
-      <td><a href="https://github.com/SIQRIT"><div align=center>@syc9811</div></a></td>
-      <td><a href="https://github.com/devunis"><div align=center>@yujitaeng</div></a></td>
-      <td><a href="https://github.com/YUJINDL01"><div align=center>@devunis</div></a></td>
+      <td><a href="https://github.com/kwj9942"><div align=center>@kwj9942</div></a></td>
+      <td><a href="https://github.com/pprain19991"><div align=center>@pprain1999</div></a></td>
+      <td><a href="https://github.com/syc9811"><div align=center>@syc9811</div></a></td>
+      <td><a href="https://github.com/yujitaeng"><div align=center>@yujitaeng</div></a></td>
+      <td><a href="https://github.com/devunis"><div align=center>@devunis</div></a></td>
     </tr>
   </tbody>
 </table>
