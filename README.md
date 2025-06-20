@@ -212,7 +212,8 @@
 
 - 6개의 업무 구분과 20개의 요구사항 ID를 정의
 
-ppt내의 요구사항 자세히 다룬 페이지 넣기
+
+![image](https://github.com/user-attachments/assets/18f990bc-725b-4b0d-b7a9-08beef29ef35)
 
 <details>
 
@@ -228,7 +229,14 @@ ppt내의 요구사항 자세히 다룬 페이지 넣기
 
 ## UI/UX 설계
 
-ppt내 uiux 부분 발췌
+![image](https://github.com/user-attachments/assets/b8db9918-0844-4dce-a760-d09e2b0296c8)
+
+
+![image](https://github.com/user-attachments/assets/73510db0-5a1d-426d-96bd-433d13c74f4b)
+
+![image](https://github.com/user-attachments/assets/801e08ae-e30e-4c45-8dc0-0c6ef713a12b)
+
+
 
 <details>
  <summary>시나리오 설계서 </summary>
@@ -266,9 +274,12 @@ ppt내 uiux 부분 발췌
 <br>
 
 # 5. 데이터 설계
-- 어떤 데이터를 어디서 어떻게 얼마나, 등등 (ppt 안에있던 내용을 텍스트로 발췌)
+![image](https://github.com/user-attachments/assets/5d0d1a9d-69e6-4bbb-af3d-877fa8ab1c22)
 
-ERD 이미지 넣기
+**[ERD]**
+
+![image](https://github.com/user-attachments/assets/3db1089e-9b66-48da-9db0-ac1d02221eaa)
+
 
 <details>
  <summary>데이터 전처리 결과서 </summary>
@@ -291,10 +302,14 @@ ERD 이미지 넣기
 #  6. AI/추천 시스템 설계
 
 - 사용 모델: OpenAI GPT-4 + 사용자 시나리오 기반 Prompt 설계
+  
+![image](https://github.com/user-attachments/assets/f38d0a2b-26b8-494d-92d1-a5a6dfdc6a36)
 
-ppt 내 내용 이미지로 넣기
-(랭체인-> 랭그래프)
-(모델구조)
+**[모델 구조]**
+
+![image](https://github.com/user-attachments/assets/539cc254-3f4b-4c52-b7c0-1e8114f6bc0f)
+
+
 
 <details>
  <summary>모델 테스트 계획 및 결과보고서 </summary> 
@@ -318,9 +333,14 @@ ppt 내 내용 이미지로 넣기
 
 </details>
 
-<br>
+**[Agent 구조]**
 
-(ppt이미지 - 에이전트 구조)
+![image](https://github.com/user-attachments/assets/d2c21802-e0f6-426e-80a8-d28846c6574d)
+
+![image](https://github.com/user-attachments/assets/c37e073e-6275-4332-941b-d4fb289872da)
+
+
+<br>
 
 <details>
  <summary>AI 학습 결과서</summary>
@@ -420,7 +440,7 @@ ppt 내 내용 이미지로 넣기
 <br>
 
 # 8. 회고
-- 🤓김우중:
+- 🤓김우중:이번 프로젝트를 통해 사용자 정보 수집부터 AI 기반 추천까지 전반적인 서비스 흐름을 직접 구현하며 큰 성장을 느꼈습니다. 특히 소셜 로그인 후 불완전한 사용자 정보를 단계적으로 수집하는 로직 설계가 어려웠지만, 조건 분기와 리디렉션 구조를 정교하게 조정해 문제를 해결할 수 있었습니다. 전체적으로 사용자 경험을 중심에 둔 개발의 중요성을 다시 한번 체감 했습니다.
 - 🙂박주은:
 - 🫡서예찬: 초기에는 LangChain의 ReAct 기반 구조만으로 선물 추천을 구현했지만, 조건이 충분하지 않아도 추천이 이뤄지는 문제가 있었습니다. 이를 해결하기 위해 LangGraph 기반 FSM 구조로 재설계하고, 상황 정보가 모두 충족된 경우에만 agent를 실행하도록 흐름을 통제했습니다. 그 결과 추천 정확도와 사용자 만족도가 향상되었고, 프론트와 백엔드 간 조건 판단 기준도 일관되게 유지할 수 있었습니다. 이 과정을 통해 단순한 agent 호출만으로는 복잡한 대화 흐름을 제어하기 어렵다는 점을 체감했고, FSM 기반 제어의 중요성과 안정성을 직접 경험할 수 있었습니다.
 - 😜유지은: 이번 프로젝트는 감정과 관계 같은 비정형 정보를 기반으로 한 정서형 선물 추천 서비스로, 기획 초기부터 구조화된 데이터 설계와 프론트–백엔드–모델 간의 유기적 연결이 중요했습니다. 진행 과정에서 추천 결과와 사용자 맥락 간 불일치 문제가 발생해, 이를 해결하기 위해 프롬프트를 상황별로 세분화하고 top-k 값을 조정해 추천 정확도를 높였습니다. 그 결과, 추천의 맥락 일치도가 향상되었고, 기획과 기술을 연결하는 문제 해결 역량을 강화할 수 있었습니다. 시장성 있는 서비스 개발을 기획부터 설계, 개발을 하고 테스트를 할 수 있었던 값진 경험이었습니다.
