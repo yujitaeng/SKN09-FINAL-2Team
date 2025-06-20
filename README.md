@@ -3,11 +3,11 @@
 > 
 > 프로젝트 기간: 25.04.23 - 25.06.20
 <br>
-팀 규모: 5인 팀 프로젝트
 
 #  팀 소개
 >
 >### 팀명: Senpick
+>- 센스 있는 선택
 >>### 팀원 소개
 ><table align=center>
 >  <tbody>
@@ -64,16 +64,14 @@
   </details>
 
 
->현재 대부분의 추천 시스템은 다음과 같은 한계를 가지고 있습니다:
->
->감정이나 관계, 상황 맥락을 제대로 반영하지 못함
->
->단순한 조건 필터링에만 의존
+>현재 대부분의 추천 시스템은 다음과 같은 한계를 가지고 있습니다.
+>- 감정이나 관계, 상황 맥락을 제대로 반영하지 못함
+>- 단순한 조건 필터링에만 의존
 >
 >→ 이로 인해 사용자 만족도가 낮은 문제가 지속되고 있습니다.
 >
 <details>
-<summary> 시장조사 </summary>
+<summary> 기존 서비스 분석 </summary>
 <p align="center"> <img src="https://github.com/user-attachments/assets/b975715c-e7d0-4217-b708-6df43a59093a" width="600"/><br/> 
   <img src="https://github.com/user-attachments/assets/214ceb47-7fdc-4d3c-bf7c-a2a0dce0c59d" width="600"/> </p>
 </details>
@@ -92,8 +90,14 @@
 >→ 이를 통해 사용자 만족도를 높이고,
 >고민 없는 선물 선택 경험을 제공하는 것이 Senpick의 핵심 목표입니다.
 
+<br>
+<br>
+
 ## 프로젝트 소개서
 🔗 [프로젝트 소개서 보기 (PDF)](링크)
+
+<br>
+<br>
 
 #  WBS
 <details>
@@ -102,8 +106,8 @@
  ![image](https://github.com/user-attachments/assets/5c2b0f10-e901-4541-9090-600982fafccd)
  
 </details>
-이 프로젝트는 체계적인 SW 개발 프로세스를 기반으로 진행되었으며, 아래와 같은 공식 문서를 작성하였습니다:
-
+이 프로젝트는 체계적인 SW 개발 프로세스를 기반으로 진행되었으며, 아래와 같은 공식 문서를 작성하였습니다.
+<br><br>
 
 | 문서명 | 설명 | 링크 |
 |--------|------|------|
@@ -115,9 +119,8 @@
 | 데이터 전처리 결과서 | 수집 및 정제 과정 설명 | [ 바로가기] |
 
 
-
-
-
+<br>
+<br>
 
 # 2. 기술 스택
 **개발 환경 및 프로그래밍**
@@ -143,13 +146,19 @@
 **협업 및 형상관리**
 
 ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white) 
+
+<br>
+
 ##  시스템 구성도
 
 ![시스템 아키텍처](docs/9기-2팀_시스템아키텍쳐%20FINAL.drawio.png)
 
+<br>
+<br>
+
 # 요구사항 정의서
+6개의 업무 구분과 20개의 요구사항 ID를 정의
 <details>
- 
 
 
 ![9기-2팀_요구사항 정의서-이미지-0](https://github.com/user-attachments/assets/a139f032-1415-4b36-9c6e-7dbf8d9bcaee)
@@ -158,7 +167,14 @@
 ![9기-2팀_요구사항 정의서-이미지-1](https://github.com/user-attachments/assets/f22abc69-620b-4851-a777-b41d96996e51)
 </details>
 
+
+<br>
+<br>
+
 #  AI/추천 시스템 설계
+
+<br>
+<br>
 
 # 시나리오 설계서
 
@@ -170,6 +186,9 @@
 -  **자연스러운 대화 흐름**: 관계, 스타일, 예산 등을 대화 속에서 자연스럽게 수집
 -  **추천 내역 저장 및 복원**: 세션 중 이전 추천 다시 확인 가능
 -  **LLM + 벡터 RAG 통합 구조**: Qdrant 기반 실시간 정보 검색 및 반영
+
+<br>
+<br>
 
 #  화면설계서
 
@@ -192,7 +211,8 @@
 
 </details>
 
-
+<br>
+<br>
 
 #  AI/추천 시스템 설계
 
@@ -206,9 +226,15 @@
 
 추천 알고리즘 / 다중 에이전트 설계
 
+<br>
+
+
 ## AI 학습 결과서
 
 🔗 [AI 학습 결과서 보기 (PDF)](9기-2팀_인공지능 학습 결과서.pdf)
+
+<br>
+<br>
 
 #  테스트 계획 및 결과 보고서 
 <details>
@@ -222,7 +248,7 @@
 
 ![9기-2팀_모델 테스트 계획 및 결과 보고서_page-0003](https://github.com/user-attachments/assets/e5ffaf14-6440-4354-a32f-edea5be3bc84)
 
-
+<br>
    
 ### <테스트 결과>
  ![9기-2팀_모델 테스트 계획 및 결과 보고서_page-0008](https://github.com/user-attachments/assets/88892af8-a4c1-4a91-83fa-f98e31f7bd61)
@@ -233,24 +259,24 @@
 
 </details>
 
+<br>
+<br>
+
 #  수행결과(테스트/시연 페이지)
 
 [시연 영상 (YouTube)](링크)
 
+<br>
+
 ## 결과 및 사용자 피드백
 [사용자 테스트 설문 결과](링크)
 
-## 프로젝트 실행 방법
- 클론
-git clone https://github.com/yourname/senpick.git
-
-# 실행
-cd backend
-python manage.py runserver
-
-
----
-
+<br>
+<br>
 
 # 회고
-
+- 김우중:
+- 박주은:
+- 서예찬:
+- 유지은:
+- 허정윤:
