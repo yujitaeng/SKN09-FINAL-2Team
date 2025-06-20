@@ -55,7 +55,7 @@
 - [5. 데이터 설계](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/edit/main/README.md#5-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%84%A4%EA%B3%84)
 - [6. AI/추천 시스템 설계](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/edit/main/README.md#6-ai%EC%B6%94%EC%B2%9C-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EC%84%A4%EA%B3%84)
 - [7. 결론](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/edit/main/README.md#7-%EA%B2%B0%EB%A1%A0)
-- [8. 회고](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/edit/main/README.md#8-%ED%9A%8C%EA%B3%A0)  
+- [8. 회고](#8.-회고)  
 
 <br>
 <br>
