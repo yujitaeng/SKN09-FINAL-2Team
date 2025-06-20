@@ -19,7 +19,22 @@
 >      <td align=center><b>유지은</b></td>
 >       <td align=center><b>허정윤</b></td>
 >    </tr>
->    
+>    <tr>
+>      <td align="center">
+>          <img alt="Image" src="https://github.com/user-attachments/assets/6388e59a-e07b-4bf0-add1-b02155c4823a" width="200px;" alt="김우중"/>
+>      <td align="center">
+>          <img alt="Image" src="https://github.com/user-attachments/assets/4cac2da3-8cbe-41d0-b380-cfe1a1d36792" width="200px;" alt="박주은"/>
+>      </td>
+>      <td align="center">
+>        <img alt="Image" src="https://github.com/user-attachments/assets/4aa26058-5332-480d-83e0-16ae9d5afa44" width="200px;"alt="서예찬" />
+>      </td>
+>      <td align="center">
+>        <img alt="Image" src="https://github.com/user-attachments/assets/c04c8959-5265-4bd4-9c7c-782f0d63d147" width="200px;" alt="유지은"/>
+>      </td>
+>       <td align="center">
+>        <img alt="Image" src="https://github.com/user-attachments/assets/568d6707-31a3-4095-b6bd-8b7fab0b1d36" width="200px;" alt="허정윤"/>
+>      </td>
+>      </tr>
 >    <tr>
 >      <td><a href="https://github.com/YUJINDL01"><div align=center>@kwj9942</div></a></td>
 >      <td><a href="https://github.com/syc9811"><div align=center>@pprain1999</div></a></td>
@@ -121,12 +136,15 @@
 
 | 문서명 | 설명 | 링크 |
 |--------|------|------|
-| 프로젝트 기획서 | 서비스의 기획 배경 및 시장 문제 정의 | [ 바로가기] |
-| 요구사항 정의서 | 기능 명세, 비기능 요건 등 포함 | [ 바로가기] |
-| 화면 설계서 | 실제 페이지 흐름과 UI 구조 | [ 바로가기] |
-| 데이터베이스 설계서 | 테이블 구조 및 관계도 | [ 바로가기]|
-| 모델/시스템 테스트 계획 및 결과서 | 주요 기능 테스트 및 성능 평가 | [ 바로가기] |
-| 데이터 전처리 결과서 | 수집 및 정제 과정 설명 | [ 바로가기] |
+| 프로젝트 기획서 | 서비스의 기획 배경 및 시장 문제 정의 |  [ 바로가기 ](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EA%B8%B0%ED%9A%8D%EC%84%9C.pdf) |
+| 요구사항 정의서 | 기능 명세, 비기능 요건 등 포함 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%20%EC%A0%95%EC%9D%98%EC%84%9C.pdf)|
+| 화면 설계서 | 실제 페이지 흐름과 UI 구조 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%ED%99%94%EB%A9%B4%20%EC%84%A4%EA%B3%84%EC%84%9C.pdf) |
+| 데이터베이스 설계서 | 테이블 구조 및 관계도 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%E1%84%80%E1%85%B5-2%E1%84%90%E1%85%B5%E1%86%B7_%E1%84%83%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%90%E1%85%A5%E1%84%87%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%89%E1%85%B3%E1%84%89%E1%85%A5%E1%86%AF%E1%84%80%E1%85%A8%E1%84%89%E1%85%A5.pdf)|
+| 모델 테스트 계획 및 결과서 | 주요 기능 테스트 및 성능 평가 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EB%AA%A8%EB%8D%B8%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EA%B3%84%ED%9A%8D%20%EB%B0%8F%20%EA%B2%B0%EA%B3%BC%20%EB%B3%B4%EA%B3%A0%EC%84%9C.pdf) |
+| 시스 테스트 계획 및 결과서 | 주요 기능 테스트 및 성능 평가 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EC%8B%9C%EC%8A%A4%ED%85%9C%20%ED%85%8C%EC%8A%A4%ED%8A%B8%20%EA%B3%84%ED%9A%8D%20%EB%B0%8F%20%EA%B2%B0%EA%B3%BC%EC%84%9C.pdf) |
+| 데이터 전처리 결과서 | 수집 및 정제 과정 설명 | [ 바로가기](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/9%EA%B8%B0-2%ED%8C%80_%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%A0%84%EC%B2%98%EB%A6%AC-%EA%B2%B0%EA%B3%BC%EC%84%9C.pdf) |
+| 프로젝트 ppt | 전체 프로젝트 설명 | [ 바로가기]() |
+
 
 
 <br>
@@ -361,4 +379,4 @@
 - 박주은:
 - 서예찬:
 - 유지은:
-- 허정윤:
+- 허정윤:이번 프로젝트 SenPick은 GPT API 단일 모델에 프롬프트를 적용하는 방식에서 벗어나, LangChain과 LangGraph를 활용해 각 기능에 특화된 프롬프트를 설계하고 조합함으로써 복합적인 추천 서비스를 구현한 경험이었습니다. 대화를 진행하는 모델, 상황을 추출하는 모델, 추천을 수행하는 모델, 사용자의 의도를 파악하는 모델 등 여러 역할을 분리해 구성한 점이 특히 인상 깊었습니다. 각기 다른 모델이 협력해 하나의 결과를 만들어내는 과정이 신기했고, 단순한 챗봇을 넘어 더 정교한 AI 시스템을 만들어본 특별한 경험이었습니다.
