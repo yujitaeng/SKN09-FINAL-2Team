@@ -9,7 +9,7 @@
 >### 팀명: Senpick
 >- 센스 있는 선택
 >>### 팀원 소개
-><table align=center>
+><table>
 >  <tbody>
 >   <tr>
 >    <br>
@@ -153,27 +153,41 @@
 # 2. 기술 스택
 **개발 환경 및 프로그래밍**
 
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white) ![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white) ![Jupyter](https://img.shields.io/badge/Jupyter-%23FA0F00.svg?style=for-the-badge&logo=Jupyter&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-%23FA0F00.svg?style=for-the-badge&logo=Jupyter&logoColor=white)
 
-**서비스 구현 기술 (웹 + 서버)**
+**웹 서비스 및 인프라 구성**
 
-![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=Django&logoColor=white) ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white) ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=black)  ![CSS3](https://img.shields.io/badge/CSS3-663399?style=for-the-badge&logo=css3&logoColor=white)
-
+![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=Django&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=black)
+![CSS3](https://img.shields.io/badge/CSS3-264de4?style=for-the-badge&logo=css&logoColor=white)
 ![MySQL](https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Amazon RDS](https://img.shields.io/badge/Amazon%20RDS-527FFF?style=for-the-badge&logo=amazonrds&logoColor=white)
+![Amazon S3](https://img.shields.io/badge/Amazon%20S3-232F3E?style=for-the-badge&logo=amazons3&logoColor=white)
 
-![nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white) ![Gunicorn](https://img.shields.io/badge/Gunicorn-499848?style=for-the-badge&logo=Gunicorn&logoColor=white)
+![Amazon EC2](https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white)
+![nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
+![Gunicorn](https://img.shields.io/badge/Gunicorn-499848?style=for-the-badge&logo=Gunicorn&logoColor=white)
+![Amazon AWS](https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white)
 
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white) ![Amazon AWS](https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white") 
+**AI 모델 및 프레임워크**
 
-**AI 및 데이터 처리**
+![GPT-4o](https://img.shields.io/badge/GPT--4o-7F27FF?style=for-the-badge&logo=OpenAI&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-005F73?style=for-the-badge&logo=LangChain&logoColor=white)
+![LangGraph](https://img.shields.io/badge/LangGraph-0F4C81?style=for-the-badge&logo=LangChain&logoColor=white)
 
-![GPT-4o](https://img.shields.io/badge/GPT--4o-7F27FF?style=for-the-badge&logo=OpenAI&logoColor=white) ![LangChain](https://img.shields.io/badge/LangChain-005F73?style=for-the-badge&logo=LangChain&logoColor=white) ![LangGraph](https://img.shields.io/badge/LangGraph-0F4C81?style=for-the-badge&logo=LangChain&logoColor=white)
+**임베딩 및 벡터 검색**
 
-![Qdrant](https://img.shields.io/badge/Qdrant-16B1B1?style=for-the-badge&logo=Qdrant&logoColor=white) [![HuggingFace](https://img.shields.io/badge/HuggingFace-multilingual--e5--large--instruct-blue?logo=huggingface)](https://huggingface.co/intfloat/multilingual-e5-large-instruct)
+![HuggingFace](https://img.shields.io/badge/HuggingFace-multilingual--e5--large--instruct-blue?logo=huggingface)
+![Qdrant](https://img.shields.io/badge/Qdrant-8084b7?style=for-the-badge&logo=Qdrant&logoColor=white)
 
 **협업 및 형상관리**
 
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white) ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white) 
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white)
 
 <br>
 
