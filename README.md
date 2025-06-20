@@ -48,14 +48,15 @@
 <br>
 
 # 목차
-- [1.프로젝트 개요](#1.-프로젝트-개요)
-- [2.WBS](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/edit/main/README.md#2-wbs)
-- [3. 기술 스택](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/edit/main/README.md#3-%EA%B8%B0%EC%88%A0-%EC%8A%A4%ED%83%9D)
-- [4. 기능 및 화면 설계](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/edit/main/README.md#4-%EA%B8%B0%EB%8A%A5-%EB%B0%8F-%ED%99%94%EB%A9%B4-%EC%84%A4%EA%B3%84)
-- [5. 데이터 설계](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/edit/main/README.md#5-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%84%A4%EA%B3%84)
-- [6. AI/추천 시스템 설계](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/edit/main/README.md#6-ai%EC%B6%94%EC%B2%9C-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EC%84%A4%EA%B3%84)
-- [7. 결론](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/edit/main/README.md#7-%EA%B2%B0%EB%A1%A0)
-- [8. 회고](#8.-회고)  
+- [1. 프로젝트 개요](#1-프로젝트-개요)
+- [2. WBS](#2-wbs)
+- [3. 기술 스택](#3-기술-스택)
+- [4. 기능 및 화면 설계](#4-기능-및-화면-설계)
+- [5. 데이터 설계](#5-데이터-설계)
+- [6. ai추천-시스템-설계](#6-ai추천-시스템-설계)
+- [7. 결론](#7-결론)
+- [8. 회고](#8-회고)
+ 
 
 <br>
 <br>
