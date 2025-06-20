@@ -362,8 +362,19 @@
 
 ## 시연 영상
 
+[시연 영상]
 
-[시연 영상](https://github.com/SKNETWORKS-FAMILY-AICAMP/SKN09-FINAL-2Team/blob/main/docs/2%ED%8C%80%20%EC%B5%9C%EC%A2%85%20%EC%8B%9C%EC%97%B0%20%EC%98%81%EC%83%81.mp4)
+
+![2팀 최종 시연 영상 (1) (1)](https://github.com/user-attachments/assets/27f1861e-7eab-4608-8385-e5f5ddfd7e98)
+
+![2팀 최종 시연 영상 (1) (2)](https://github.com/user-attachments/assets/ab87d282-e48a-4d6f-9028-4c55f4621a0f)
+
+![2팀 최종 시연 영상 (1) (3)](https://github.com/user-attachments/assets/5db8af20-60b3-443f-927f-a4c2af668266)
+
+![2팀 최종 시연 영상 (1) (4)](https://github.com/user-attachments/assets/dfe86078-a1af-4e2a-8fe6-26fd5a4a996e)
+
+![2팀 최종 시연 영상 (1) (5)](https://github.com/user-attachments/assets/2dd41af5-4164-4bf9-b139-0f5c2e9f71b1)
+
 
 <br>
 
