@@ -37,7 +37,7 @@
       </tr>
     <tr>
       <td><a href="https://github.com/kwj9942"><div align=center>@kwj9942</div></a></td>
-      <td><a href="https://github.com/pprain19991"><div align=center>@pprain1999</div></a></td>
+      <td><a href="https://github.com/pprain1999"><div align=center>@pprain1999</div></a></td>
       <td><a href="https://github.com/syc9811"><div align=center>@syc9811</div></a></td>
       <td><a href="https://github.com/yujitaeng"><div align=center>@yujitaeng</div></a></td>
       <td><a href="https://github.com/devunis"><div align=center>@devunis</div></a></td>
@@ -435,19 +435,23 @@
 ## 결과 및 사용자 피드백
 [사용자 테스트 설문 결과]
 
-![image](https://github.com/user-attachments/assets/1888b47e-33e8-48c1-a84a-3b2f708cdbe0)
+![image](https://github.com/user-attachments/assets/d937af9d-45cc-429e-9250-340adee14b28)
+
 
 [평가]
 
-![image](https://github.com/user-attachments/assets/a1bc90e7-c62d-46ae-aea3-fbeae3387abf)
+![9기_2팀_최종PPT pptx (10)](https://github.com/user-attachments/assets/79a8810e-f80f-4dec-8af3-648d152ce795)
+
 
 [기대 효과]
 
-![image](https://github.com/user-attachments/assets/878c4c7c-bde9-4f78-827c-471d7728ce60)
+![9기_2팀_최종PPT pptx (11)](https://github.com/user-attachments/assets/5c1836a7-8fd5-43a9-bf0b-ca08b4bdc531)
+
 
 [확장 가능성]
 
-![image](https://github.com/user-attachments/assets/c9991fa9-9c44-4a3d-98bf-426c42705560)
+![9기_2팀_최종PPT pptx (12)](https://github.com/user-attachments/assets/2b924d7e-67c9-4aae-a3d4-a8b1adc40773)
+
 
 
 <br>
